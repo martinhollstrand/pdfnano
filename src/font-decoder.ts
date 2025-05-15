@@ -78,6 +78,7 @@ export interface FontInfo {
   isEmbedded: boolean;
   customEncoding: Map<number, string> | null;
   toUnicode: Map<number, string> | null;
+  isCIDFont?: boolean;
 }
 
 /**
@@ -169,6 +170,12 @@ export class FontDecoder {
       isEmbedded = true;
     }
     
+    // Detect CID font (Type0 with Identity-H or DescendantFonts)
+    let isCIDFont = false;
+    if (fontType === 'Type0' && (encodingName === 'Identity-H' || dict.get('DescendantFonts'))) {
+      isCIDFont = true;
+    }
+    
     // Create font info and cache it
     const fontInfo: FontInfo = {
       fontName,
@@ -177,7 +184,8 @@ export class FontDecoder {
       isSymbolic,
       isEmbedded,
       customEncoding,
-      toUnicode: unicodeMap
+      toUnicode: unicodeMap,
+      isCIDFont
     };
     
     this.fontCache.set(fontRef, fontInfo);
@@ -190,20 +198,38 @@ export class FontDecoder {
    * @param fontInfo Font information
    * @returns Decoded text
    */
-  public decodeText(text: string, fontInfo: FontInfo): string {
+  public decodeText(text: string | Buffer, fontInfo: FontInfo): string {
     if (!fontInfo) {
-      return text;
+      return typeof text === 'string' ? text : text.toString('binary');
+    }
+    
+    // Handle CID fonts (Type0/Identity-H)
+    if (fontInfo.isCIDFont) {
+      const buf = typeof text === 'string' ? Buffer.from(text, 'binary') : text;
+      const result: string[] = [];
+      for (let i = 0; i < buf.length; i += 2) {
+        if (i + 1 >= buf.length) break;
+        const cid = (buf[i] << 8) | buf[i + 1];
+        if (fontInfo.toUnicode && fontInfo.toUnicode.has(cid)) {
+          const uni = fontInfo.toUnicode.get(cid)!;
+          result.push(uni);
+        } else {
+          result.push(String.fromCharCode(cid));
+        }
+      }
+      return result.join('');
     }
     
     // For simple cases, just return the text
     if (!fontInfo.isSymbolic && !fontInfo.customEncoding && !fontInfo.toUnicode) {
-      return text;
+      return typeof text === 'string' ? text : text.toString('binary');
     }
     
     // Convert string to character codes
+    const str = typeof text === 'string' ? text : text.toString('binary');
     const codes: number[] = [];
-    for (let i = 0; i < text.length; i++) {
-      codes.push(text.charCodeAt(i));
+    for (let i = 0; i < str.length; i++) {
+      codes.push(str.charCodeAt(i));
     }
     
     // Decode using available mappings
@@ -301,12 +327,23 @@ export class FontDecoder {
         for (const mapping of mappings) {
           const parts = mapping.trim().split(/\s+/);
           if (parts.length >= 2) {
-            // Parse hex strings
-            const srcCode = parseInt(parts[0].replace(/<|>/g, ''), 16);
-            const destCode = parseInt(parts[1].replace(/<|>/g, ''), 16);
-            
-            if (!isNaN(srcCode) && !isNaN(destCode)) {
-              result.set(srcCode, String.fromCharCode(destCode));
+            // Parse hex strings (support multi-byte CIDs and Unicode)
+            const srcHex = parts[0].replace(/<|>/g, '');
+            const dstHex = parts[1].replace(/<|>/g, '');
+            const cid = parseInt(srcHex, 16);
+            // Unicode can be >2 bytes, decode as UTF-16BE
+            let unicode = '';
+            if (dstHex.length % 4 === 0) {
+              for (let i = 0; i < dstHex.length; i += 4) {
+                const code = parseInt(dstHex.slice(i, i + 4), 16);
+                unicode += String.fromCharCode(code);
+              }
+            } else {
+              // Fallback: treat as single code point
+              unicode = String.fromCharCode(parseInt(dstHex, 16));
+            }
+            if (!isNaN(cid)) {
+              result.set(cid, unicode);
             }
           }
         }
@@ -321,16 +358,24 @@ export class FontDecoder {
         for (const range of ranges) {
           const parts = range.trim().split(/\s+/);
           if (parts.length >= 3) {
-            // Parse range
-            const startCode = parseInt(parts[0].replace(/<|>/g, ''), 16);
-            const endCode = parseInt(parts[1].replace(/<|>/g, ''), 16);
-            
-            // Simple range mapping
+            const startHex = parts[0].replace(/<|>/g, '');
+            const endHex = parts[1].replace(/<|>/g, '');
+            const startCode = parseInt(startHex, 16);
+            const endCode = parseInt(endHex, 16);
             if (!parts[2].includes('[')) {
-              const destCode = parseInt(parts[2].replace(/<|>/g, ''), 16);
-              
+              const dstHex = parts[2].replace(/<|>/g, '');
+              // Unicode can be >2 bytes, decode as UTF-16BE
               for (let i = 0; i <= endCode - startCode; i++) {
-                result.set(startCode + i, String.fromCharCode(destCode + i));
+                let unicode = '';
+                if (dstHex.length % 4 === 0) {
+                  for (let j = 0; j < dstHex.length; j += 4) {
+                    const code = parseInt(dstHex.slice(j, j + 4), 16) + i;
+                    unicode += String.fromCharCode(code);
+                  }
+                } else {
+                  unicode = String.fromCharCode(parseInt(dstHex, 16) + i);
+                }
+                result.set(startCode + i, unicode);
               }
             }
             // Array mapping (not fully implemented)

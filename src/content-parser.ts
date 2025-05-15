@@ -205,37 +205,36 @@ export class ContentParser {
       } else if (char === '(') {
         // String object
         let str = '';
+        let bytes: number[] = [];
         let nestingLevel = 0;
         let escapeNext = false;
         pos++;
-        
         while (pos < this.buffer.length) {
           const ch = String.fromCharCode(this.buffer[pos]);
-          
           if (escapeNext) {
             escapeNext = false;
-            
+            let code = 0;
             switch (ch) {
-              case 'n': str += '\n'; break;
-              case 'r': str += '\r'; break;
-              case 't': str += '\t'; break;
-              case 'b': str += '\b'; break;
-              case 'f': str += '\f'; break;
-              case '(': str += '('; break;
-              case ')': str += ')'; break;
-              case '\\': str += '\\'; break;
-              default: str += ch;
+              case 'n': str += '\n'; code = 0x0A; break;
+              case 'r': str += '\r'; code = 0x0D; break;
+              case 't': str += '\t'; code = 0x09; break;
+              case 'b': str += '\b'; code = 0x08; break;
+              case 'f': str += '\f'; code = 0x0C; break;
+              case '(': str += '('; code = 0x28; break;
+              case ')': str += ')'; code = 0x29; break;
+              case '\\': str += '\\'; code = 0x5C; break;
+              default: str += ch; code = ch.charCodeAt(0); break;
             }
-            
+            bytes.push(code);
             pos++;
             continue;
           }
-          
           if (ch === '\\') {
             escapeNext = true;
           } else if (ch === '(') {
             nestingLevel++;
             str += ch;
+            bytes.push(0x28);
           } else if (ch === ')') {
             if (nestingLevel === 0) {
               pos++;
@@ -243,14 +242,15 @@ export class ContentParser {
             }
             nestingLevel--;
             str += ch;
+            bytes.push(0x29);
           } else {
             str += ch;
+            bytes.push(ch.charCodeAt(0));
           }
-          
           pos++;
         }
-        
-        operands.push(str);
+        // Push both string and Buffer for downstream use
+        operands.push({ str, buf: Buffer.from(bytes) });
       } else if (char === '<' && pos + 1 < this.buffer.length && this.buffer[pos + 1] === 0x3C) {
         // Dictionary - not fully implemented for content streams
         // Skip to closing '>>'
@@ -293,121 +293,124 @@ export class ContentParser {
           pos++;
         }
         
-        // Convert hex string to normal string
+        // Convert hex string to normal string and buffer
         let hexStr = '';
+        let hexBytes: number[] = [];
         for (let i = 0; i < hex.length; i += 2) {
           const hexPair = hex.substring(i, i + 2);
           if (hexPair.length === 2) {
-            hexStr += String.fromCharCode(parseInt(hexPair, 16));
+            const val = parseInt(hexPair, 16);
+            hexStr += String.fromCharCode(val);
+            hexBytes.push(val);
           }
         }
-        
-        operands.push(hexStr);
+        operands.push({ str: hexStr, buf: Buffer.from(hexBytes) });
       } else if (char === '[') {
         // Array
         const array: any[] = [];
         pos++;
-        
-        let arrayOperands: any[] = [];
-        let arrayPos = pos;
-        let arrayNestingLevel = 0;
-        
-        while (arrayPos < this.buffer.length) {
+        while (pos < this.buffer.length) {
           // Skip whitespace
-          while (arrayPos < this.buffer.length) {
-            const ch = String.fromCharCode(this.buffer[arrayPos]);
+          while (pos < this.buffer.length) {
+            const ch = String.fromCharCode(this.buffer[pos]);
             if (ch !== ' ' && ch !== '\t' && ch !== '\r' && ch !== '\n') break;
-            arrayPos++;
+            pos++;
           }
-          
-          if (arrayPos >= this.buffer.length) break;
-          
-          const arrayChar = String.fromCharCode(this.buffer[arrayPos]);
-          
-          if (arrayChar === ']' && arrayNestingLevel === 0) {
-            // End of array
-            pos = arrayPos + 1;
+          if (pos >= this.buffer.length) break;
+          const arrayChar = String.fromCharCode(this.buffer[pos]);
+          if (arrayChar === ']') {
+            pos++;
             break;
           }
-          
-          // Parse array elements recursively - simplified for now
-          if (arrayChar === '[') {
-            arrayNestingLevel++;
-          } else if (arrayChar === ']') {
-            arrayNestingLevel--;
-          }
-          
-          // Simple number parsing for arrays
-          if (
-            (arrayChar >= '0' && arrayChar <= '9') || 
-            arrayChar === '-' || 
-            arrayChar === '.'
-          ) {
-            let numStr = '';
-            
-            while (arrayPos < this.buffer.length) {
-              const ch = String.fromCharCode(this.buffer[arrayPos]);
-              if (!((ch >= '0' && ch <= '9') || ch === '-' || ch === '.')) break;
-              numStr += ch;
-              arrayPos++;
-            }
-            
-            array.push(parseFloat(numStr));
-          } else if (arrayChar === '(') {
-            // String in array (for TJ operator)
+          if (arrayChar === '(') {
+            // String in array
             let str = '';
+            let bytes: number[] = [];
             let nestingLevel = 0;
             let escapeNext = false;
-            arrayPos++;
-            
-            while (arrayPos < this.buffer.length) {
-              const ch = String.fromCharCode(this.buffer[arrayPos]);
-              
+            pos++;
+            while (pos < this.buffer.length) {
+              const ch = String.fromCharCode(this.buffer[pos]);
               if (escapeNext) {
                 escapeNext = false;
-                
+                let code = 0;
                 switch (ch) {
-                  case 'n': str += '\n'; break;
-                  case 'r': str += '\r'; break;
-                  case 't': str += '\t'; break;
-                  case 'b': str += '\b'; break;
-                  case 'f': str += '\f'; break;
-                  case '(': str += '('; break;
-                  case ')': str += ')'; break;
-                  case '\\': str += '\\'; break;
-                  default: str += ch;
+                  case 'n': str += '\n'; code = 0x0A; break;
+                  case 'r': str += '\r'; code = 0x0D; break;
+                  case 't': str += '\t'; code = 0x09; break;
+                  case 'b': str += '\b'; code = 0x08; break;
+                  case 'f': str += '\f'; code = 0x0C; break;
+                  case '(': str += '('; code = 0x28; break;
+                  case ')': str += ')'; code = 0x29; break;
+                  case '\\': str += '\\'; code = 0x5C; break;
+                  default: str += ch; code = ch.charCodeAt(0); break;
                 }
-                
-                arrayPos++;
+                bytes.push(code);
+                pos++;
                 continue;
               }
-              
               if (ch === '\\') {
                 escapeNext = true;
               } else if (ch === '(') {
                 nestingLevel++;
                 str += ch;
+                bytes.push(0x28);
               } else if (ch === ')') {
                 if (nestingLevel === 0) {
-                  arrayPos++;
+                  pos++;
                   break;
                 }
                 nestingLevel--;
                 str += ch;
+                bytes.push(0x29);
               } else {
                 str += ch;
+                bytes.push(ch.charCodeAt(0));
               }
-              
-              arrayPos++;
+              pos++;
             }
-            
-            array.push(str);
+            array.push({ str, buf: Buffer.from(bytes) });
+          } else if (arrayChar === '<' && pos + 1 < this.buffer.length && this.buffer[pos + 1] !== 0x3C) {
+            // Hex string in array
+            let hex = '';
+            pos++;
+            while (pos < this.buffer.length) {
+              const ch = String.fromCharCode(this.buffer[pos]);
+              if (ch === '>') {
+                pos++;
+                break;
+              }
+              if ((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f')) {
+                hex += ch;
+              }
+              pos++;
+            }
+            let hexStr = '';
+            let hexBytes: number[] = [];
+            for (let i = 0; i < hex.length; i += 2) {
+              const hexPair = hex.substring(i, i + 2);
+              if (hexPair.length === 2) {
+                const val = parseInt(hexPair, 16);
+                hexStr += String.fromCharCode(val);
+                hexBytes.push(val);
+              }
+            }
+            array.push({ str: hexStr, buf: Buffer.from(hexBytes) });
+          } else if ((arrayChar >= '0' && arrayChar <= '9') || arrayChar === '-' || arrayChar === '.') {
+            // Number in array
+            let numStr = '';
+            while (pos < this.buffer.length) {
+              const ch = String.fromCharCode(this.buffer[pos]);
+              if (!((ch >= '0' && ch <= '9') || ch === '-' || ch === '.')) break;
+              numStr += ch;
+              pos++;
+            }
+            array.push(parseFloat(numStr));
           } else {
             // Skip other types for now
-            arrayPos++;
+            pos++;
           }
         }
-        
         operands.push(array);
       } else if (
         (char >= '0' && char <= '9') || 
@@ -461,6 +464,11 @@ export class ContentParser {
         // Skip unknown character
         pos++;
       }
+    }
+    
+    const operatorCounts: Record<string, number> = {};
+    for (const op of this.operations) {
+      operatorCounts[op.operator] = (operatorCounts[op.operator] || 0) + 1;
     }
   }
 
@@ -635,7 +643,6 @@ export class ContentParser {
             const textArray = operands[0];
             let textPiece = '';
             let currentX = this.textState.x;
-            
             for (const item of textArray) {
               if (typeof item === 'string') {
                 // Decode and add text
@@ -645,14 +652,16 @@ export class ContentParser {
                 // Negative numbers move right in TJ arrays
                 const offset = -item / 1000 * this.textState.fontSize;
                 currentX += offset;
-                
                 // Add a space for significant shifts
                 if (offset > this.textState.fontSize / 3 && textPiece) {
                   textPiece += ' ';
                 }
+              } else if (item && item.str) {
+                // If item is an object with str/buf (from string/hex parsing)
+                const decodedItem = this.decodeText(item);
+                textPiece += decodedItem;
               }
             }
-            
             if (textPiece) {
               result.text += textPiece;
               result.positions.push({
@@ -744,15 +753,26 @@ export class ContentParser {
   /**
    * Decode text using current font information
    */
-  private decodeText(text: string): string {
-    if (!text) return text;
-    
-    // Use font decoder if available
-    if (this.fontDecoder && this.textState.fontInfo) {
-      return this.fontDecoder.decodeText(text, this.textState.fontInfo);
+  private decodeText(text: string | Buffer | {str: string, buf: Buffer}): string {
+    if (!text) return '';
+    let str: string;
+    let buf: Buffer | undefined;
+    if (typeof text === 'string') {
+      str = text;
+    } else if (Buffer.isBuffer(text)) {
+      buf = text;
+      str = text.toString('binary');
+    } else {
+      str = text.str;
+      buf = text.buf;
     }
-    
-    return text;
+    if (this.fontDecoder && this.textState.fontInfo) {
+      if (this.textState.fontInfo.isCIDFont && buf) {
+        return this.fontDecoder.decodeText(buf, this.textState.fontInfo);
+      }
+      return this.fontDecoder.decodeText(str, this.textState.fontInfo);
+    }
+    return str;
   }
 
   /**
