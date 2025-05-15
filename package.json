@@ -1,0 +1,52 @@
+{
+  "name": "pdfnano",
+  "version": "0.1.0",
+  "description": "A pure JavaScript/TypeScript PDF parser with no external dependencies",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "build:ts": "tsc",
+    "test": "node test/parser.test.js",
+    "prepare": "npm run build",
+    "example": "node examples/basic-usage.js",
+    "example:ts": "node --max-old-space-size=4096 -r ts-node/register examples/enhanced-text-extraction.ts",
+    "clean": "rimraf dist",
+    "dev": "tsc --watch",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "pdf",
+    "parser",
+    "typescript",
+    "javascript",
+    "text extraction",
+    "image extraction"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.15.18",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.8.3"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/martinhollstrand/pdfnano.git"
+  },
+  "bugs": {
+    "url": "https://github.com/martinhollstrand/pdfnano/issues"
+  },
+  "homepage": "https://github.com/martinhollstrand/pdfnano#readme"
+}
