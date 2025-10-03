@@ -315,7 +315,21 @@ export class FontDecoder {
     
     try {
       // Get stream data
-      const streamData = toUnicodeStream.getDecodedData().toString('utf8');
+      const raw = toUnicodeStream.getDecodedData();
+      // Most ToUnicode CMaps are ASCII, but allow UTF-16BE with BOM
+      let streamData: string;
+      if (raw.length >= 2 && raw[0] === 0xFE && raw[1] === 0xFF) {
+        // UTF-16BE with BOM; Node doesn't support 'utf16be' directly.
+        // Swap byte order to LE and decode as 'utf16le'.
+        const swapped = Buffer.alloc(raw.length - 2);
+        for (let i = 2, j = 0; i + 1 < raw.length; i += 2, j += 2) {
+          swapped[j] = raw[i + 1];
+          swapped[j + 1] = raw[i];
+        }
+        streamData = swapped.toString('utf16le');
+      } else {
+        streamData = raw.toString('utf8');
+      }
       
       // Find beginbfchar/endbfchar sections for simple mappings
       const bfcharRegex = /beginbfchar\s+([\s\S]*?)endbfchar/g;
@@ -377,8 +391,27 @@ export class FontDecoder {
                 }
                 result.set(startCode + i, unicode);
               }
+            } else {
+              // Array mapping: third part is an array of destinations
+              const arrayStr = range.substring(range.indexOf('[') + 1, range.lastIndexOf(']')).trim();
+              const dsts = arrayStr.split(/\s+/).filter(Boolean);
+              let current = startCode;
+              for (const dst of dsts) {
+                const dstHex = dst.replace(/<|>/g, '');
+                let unicode = '';
+                if (dstHex.length % 4 === 0) {
+                  for (let j = 0; j < dstHex.length; j += 4) {
+                    const code = parseInt(dstHex.slice(j, j + 4), 16);
+                    unicode += String.fromCharCode(code);
+                  }
+                } else if (dstHex.length > 0) {
+                  unicode = String.fromCharCode(parseInt(dstHex, 16));
+                }
+                result.set(current, unicode);
+                current++;
+                if (current > endCode) break;
+              }
             }
-            // Array mapping (not fully implemented)
           }
         }
       }

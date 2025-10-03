@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
+import * as zlib from 'zlib';
 import { 
   PDFParseResult, 
   PDFPage, 
@@ -171,6 +172,26 @@ export class PDFParser {
   }
 
   /**
+   * Extract images from a PDF buffer
+   * @param buffer PDF buffer
+   * @returns Array of extracted images
+   */
+  public async extractImagesFromBuffer(buffer: Buffer): Promise<PDFImage[]> {
+    const result = await this.parseBuffer(buffer);
+    return result.images;
+  }
+
+  /**
+   * Extract images from a PDF file
+   * @param filePath Path to the PDF file
+   * @returns Array of extracted images
+   */
+  public async extractImagesFromFile(filePath: string): Promise<PDFImage[]> {
+    const result = await this.parseFile(filePath);
+    return result.images;
+  }
+
+  /**
    * Parse a PDF file and return result as JSON
    * @param filePath Path to the PDF file
    * @returns Promise with the parse result as JSON string
@@ -188,6 +209,99 @@ export class PDFParser {
     };
     
     return JSON.stringify(jsonResult, null, 2);
+  }
+
+  /**
+   * Parse a PDF buffer and return result as JSON
+   * @param buffer PDF buffer
+   * @returns Promise with the parse result as JSON string
+   */
+  public async parseBufferToJSON(buffer: Buffer): Promise<string> {
+    const result = await this.parseBuffer(buffer);
+    const jsonResult = {
+      ...result,
+      images: result.images.map(img => ({
+        ...img,
+        data: img.data.toString('base64')
+      }))
+    };
+    return JSON.stringify(jsonResult, null, 2);
+  }
+
+  /**
+   * Parse a PDF buffer and return Markdown
+   * @param buffer PDF buffer
+   * @returns Markdown string
+   */
+  public async parseBufferToMarkdown(buffer: Buffer): Promise<string> {
+    const result = await this.parseBuffer(buffer);
+    return this.convertResultToMarkdown(result);
+  }
+
+  /**
+   * Parse a PDF file and return Markdown
+   * @param filePath Path to the PDF file
+   * @returns Markdown string
+   */
+  public async parseFileToMarkdown(filePath: string): Promise<string> {
+    const result = await this.parseFile(filePath);
+    return this.convertResultToMarkdown(result);
+  }
+
+  /**
+   * Convert a parse result into readable Markdown
+   */
+  private convertResultToMarkdown(result: PDFParseResult): string {
+    const lines: string[] = [];
+    const meta = result.metadata || {} as PDFMetadata;
+
+    // Title
+    if (meta.title && meta.title.trim().length > 0) {
+      lines.push(`# ${meta.title.trim()}`);
+    }
+
+    // Metadata summary
+    const metaLines: string[] = [];
+    if (meta.author) metaLines.push(`- Author: ${meta.author}`);
+    if (meta.producer) metaLines.push(`- Producer: ${meta.producer}`);
+    if (meta.creator) metaLines.push(`- Creator: ${meta.creator}`);
+    if (typeof meta.pageCount === 'number') metaLines.push(`- Pages: ${meta.pageCount}`);
+    if (metaLines.length) {
+      lines.push(meta.title ? '' : '# Document');
+      lines.push('## Metadata');
+      lines.push(...metaLines);
+    }
+
+    // Pages
+    for (const page of result.pages) {
+      lines.push('');
+      lines.push(`## Page ${page.pageNumber}`);
+      const text = (page.text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      const normalized = text
+        // collapse 3+ newlines
+        .replace(/\n{3,}/g, '\n\n')
+        // trim trailing whitespace each line
+        .split('\n')
+        .map(l => l.replace(/[\t ]+$/g, ''))
+        .join('\n');
+      lines.push('');
+      lines.push(normalized);
+    }
+
+    if (result.images && result.images.length > 0) {
+      lines.push('');
+      lines.push('## Images');
+      lines.push(`Total images: ${result.images.length}`);
+      // Provide a short manifest; embedding binary is not suitable for MD
+      for (const img of result.images.slice(0, 20)) {
+        lines.push(`- Page ${img.pageNumber}: ${img.width}x${img.height} (${img.mimeType})`);
+      }
+      if (result.images.length > 20) {
+        lines.push(`- ...and ${result.images.length - 20} more`);
+      }
+    }
+
+    return lines.join('\n');
   }
 
   /**
@@ -360,6 +474,10 @@ export class PDFParser {
                 }
                 // Extract content
                 const content = this.extractPageContent(structure, obj);
+                // Ensure images have the correct page number
+                for (const img of content.images) {
+                  img.pageNumber = pages.length + 1;
+                }
                 pages.push({
                   pageNumber: pages.length + 1,
                   width,
@@ -423,6 +541,10 @@ export class PDFParser {
           
           // Extract content
           const content = this.extractPageContent(structure, pageDict);
+          // Ensure images have the correct page number
+          for (const img of content.images) {
+            img.pageNumber = i + 1;
+          }
           
           pages.push({
             pageNumber: i + 1,
@@ -634,11 +756,36 @@ export class PDFParser {
         return null;
       }
       
-      // Get image data
-      const imageData = xObject.getDecodedData();
+      // Get image data (decoded according to Filter)
+      let imageData = xObject.getDecodedData();
       
       // Determine image type
-      const mimeType = detectImageMimeType(imageData);
+      let mimeType = detectImageMimeType(imageData);
+      
+      // If undecided, try to wrap raw pixels into a PNG when feasible
+      if ((!mimeType || mimeType === 'application/octet-stream') && width.value > 0 && height.value > 0) {
+        // Infer components from ColorSpace
+        let components = 0;
+        const cs = dict.get('ColorSpace');
+        if (cs instanceof PDFName) {
+          if (cs.name === '/DeviceGray') components = 1;
+          if (cs.name === '/DeviceRGB') components = 3;
+          if (cs.name === '/DeviceCMYK') components = 4; // not PNG-friendly
+        }
+        const bpc = dict.get('BitsPerComponent');
+        const bitsPerComponent = bpc instanceof PDFNumber ? bpc.value : 8;
+        const expectedLen = components > 0 && bitsPerComponent === 8 
+          ? width.value * height.value * components 
+          : -1;
+        if (expectedLen > 0 && imageData.length === expectedLen && (components === 1 || components === 3 || components === 4)) {
+          try {
+            imageData = this.encodePNGFromRaw(width.value, height.value, imageData, components);
+            mimeType = 'image/png';
+          } catch {
+            // leave as-is
+          }
+        }
+      }
       
       // Create the image object
       const image: PDFImage = {
@@ -657,6 +804,64 @@ export class PDFParser {
       // If image extraction fails, return null
       return null;
     }
+  }
+
+  /**
+   * Encode raw 8-bit grayscale/RGB/RGBA pixel data as a minimal PNG
+   */
+  private encodePNGFromRaw(width: number, height: number, raw: Buffer, components: number): Buffer {
+    const crcTable = (() => {
+      const table = new Uint32Array(256);
+      for (let n = 0; n < 256; n++) {
+        let c = n;
+        for (let k = 0; k < 8; k++) {
+          c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        table[n] = c >>> 0;
+      }
+      return table;
+    })();
+    const crc32 = (buf: Buffer): number => {
+      let c = 0xFFFFFFFF;
+      for (let i = 0; i < buf.length; i++) {
+        c = crcTable[(c ^ buf[i]) & 0xFF] ^ (c >>> 8);
+      }
+      return (c ^ 0xFFFFFFFF) >>> 0;
+    };
+    const chunk = (type: string, data: Buffer) => {
+      const len = Buffer.alloc(4);
+      len.writeUInt32BE(data.length, 0);
+      const typeBuf = Buffer.from(type, 'ascii');
+      const crc = Buffer.alloc(4);
+      const crcVal = crc32(Buffer.concat([typeBuf, data]));
+      crc.writeUInt32BE(crcVal, 0);
+      return Buffer.concat([len, typeBuf, data, crc]);
+    };
+    const header = Buffer.from([0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A]);
+    const colorType = components === 4 ? 6 : (components === 3 ? 2 : 0);
+    const ihdr = Buffer.alloc(13);
+    ihdr.writeUInt32BE(width, 0);
+    ihdr.writeUInt32BE(height, 4);
+    ihdr.writeUInt8(8, 8); // bit depth
+    ihdr.writeUInt8(colorType, 9);
+    ihdr.writeUInt8(0, 10); // compression
+    ihdr.writeUInt8(0, 11); // filter
+    ihdr.writeUInt8(0, 12); // interlace
+    const bpp = components;
+    const stride = width * bpp;
+    const scanlined = Buffer.alloc((stride + 1) * height);
+    for (let y = 0; y < height; y++) {
+      scanlined[(stride + 1) * y] = 0; // filter type 0
+      raw.copy(scanlined, (stride + 1) * y + 1, y * stride, y * stride + stride);
+    }
+    const idatData = zlib.deflateSync(scanlined);
+    const iend = Buffer.alloc(0);
+    return Buffer.concat([
+      header,
+      chunk('IHDR', ihdr),
+      chunk('IDAT', idatData),
+      chunk('IEND', iend)
+    ]);
   }
 
   /**
