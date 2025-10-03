@@ -441,7 +441,7 @@ export class ContentParser {
         
         while (pos < this.buffer.length) {
           const ch = String.fromCharCode(this.buffer[pos]);
-          if (!((ch >= 'a' && ch <= 'z') || (ch >= 'A' && char <= 'Z') || ch === '*')) break;
+          if (!((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch === '*' || ch === '"' || ch === '\'')) break;
           operator += ch;
           pos++;
         }
