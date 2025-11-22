@@ -26,6 +26,8 @@ export interface XRefEntry {
   offset: number;
   generation: number;
   inUse: boolean;
+  compressed?: boolean;
+  objStreamNum?: number; // The object number of the Object Stream containing this object
 }
 
 /**
@@ -436,8 +438,15 @@ export class PDFStructure {
             generation: genOrIndex,
             inUse: false
           });
+        } else if (type === 2) { // Compressed object
+          this.xref.set(objNum, {
+            offset: genOrIndex, // Index in the stream
+            generation: 0,
+            inUse: true,
+            compressed: true,
+            objStreamNum: offsetOrIndex // Object number of the stream
+          });
         }
-        // Type 2 (compressed objects) are not yet supported
       }
     }
   }
@@ -473,6 +482,10 @@ export class PDFStructure {
         console.log(`XRef reconstruction: Found ${added} objects in chunk [${offset}, ${endOffset}), total so far: ${objectCount}`);
       }
       console.log(`XRef reconstruction complete. Total objects found: ${objectCount}`);
+      
+      // Step 2: Scan for Object Streams to find compressed objects
+      this.scanForObjectStreams();
+      
       this.findTrailerInReconstructedXRef();
     } catch (err) {
       console.log(`Warning: Error during reconstruction: ${err}`);
@@ -596,6 +609,177 @@ export class PDFStructure {
   }
 
   /**
+   * Scan found objects to identify and process Object Streams
+   */
+  private scanForObjectStreams(): void {
+    console.log('Scanning for Object Streams...');
+    const keys = Array.from(this.xref.keys());
+    let foundStreams = 0;
+    let foundObjects = 0;
+    
+    for (const objNum of keys) {
+      const entry = this.xref.get(objNum);
+      if (!entry || !entry.inUse || entry.compressed) continue;
+      
+      try {
+        const obj = this.parseObject(objNum, entry.generation);
+        if (obj instanceof PDFStream) {
+           const type = obj.dictionary.get('Type');
+           if (type instanceof PDFName && type.name === '/ObjStm') {
+             const added = this.processObjectStream(objNum, obj);
+             if (added > 0) {
+                foundStreams++;
+                foundObjects += added;
+             }
+           }
+        }
+      } catch (e) {
+        if (DEBUG) console.log(`Error checking object ${objNum} for ObjStm: ${e}`);
+      }
+    }
+    console.log(`Found ${foundStreams} Object Streams containing ${foundObjects} additional objects.`);
+  }
+
+  /**
+   * Process an Object Stream and add contained objects to xref
+   */
+  private processObjectStream(streamObjNum: number, stream: PDFStream): number {
+     const nObj = stream.dictionary.get('N');
+     const firstObj = stream.dictionary.get('First');
+     
+     if (!(nObj instanceof PDFNumber) || !(firstObj instanceof PDFNumber)) {
+        return 0;
+     }
+     
+     const n = nObj.value;
+     const first = firstObj.value;
+     
+     let added = 0;
+     try {
+         const data = stream.getDecodedData();
+         
+         let pos = 0;
+         const entries: {objNum: number, offset: number}[] = [];
+         
+         // Parse N pairs of (objNum, offset)
+         for (let i = 0; i < n; i++) {
+            const numRes = this.readIntFromData(data, pos);
+            if (numRes.value === null) break;
+            pos = numRes.newPos;
+            
+            const offRes = this.readIntFromData(data, pos);
+            if (offRes.value === null) break;
+            pos = offRes.newPos;
+            
+            entries.push({objNum: numRes.value!, offset: offRes.value!});
+         }
+         
+         // Add to XRef
+         for (let i = 0; i < entries.length; i++) {
+            const {objNum} = entries[i];
+            if (!this.xref.has(objNum)) {
+               this.xref.set(objNum, {
+                 offset: i, // Index in the stream
+                 generation: 0,
+                 inUse: true,
+                 compressed: true,
+                 objStreamNum: streamObjNum
+               });
+               added++;
+            }
+         }
+     } catch (e) {
+         if (DEBUG) console.log(`Error processing ObjStm ${streamObjNum}: ${e}`);
+     }
+     return added;
+  }
+
+  /**
+   * Read integer from buffer, skipping whitespace
+   */
+  private readIntFromData(buffer: Buffer, pos: number): { value: number | null, newPos: number } {
+      // Skip whitespace
+      while (pos < buffer.length && this.isWhitespace(buffer[pos])) {
+          pos++;
+      }
+      if (pos >= buffer.length) return { value: null, newPos: pos };
+      
+      let str = '';
+      while (pos < buffer.length) {
+          const ch = buffer[pos];
+          if (ch >= 0x30 && ch <= 0x39) { // 0-9
+              str += String.fromCharCode(ch);
+              pos++;
+          } else {
+              break;
+          }
+      }
+      
+      if (str.length === 0) return { value: null, newPos: pos };
+      return { value: parseInt(str, 10), newPos: pos };
+  }
+
+  /**
+   * Parse a compressed object from an Object Stream
+   */
+  private parseCompressedObject(objectNumber: number, streamObjNum: number, index: number): PDFObject {
+      const streamObj = this.getObject(streamObjNum); 
+      
+      if (!(streamObj instanceof PDFStream)) {
+          throw new Error(`Object ${streamObjNum} is not a stream`);
+      }
+      
+      const firstObj = streamObj.dictionary.get('First');
+      if (!(firstObj instanceof PDFNumber)) {
+          throw new Error(`ObjStm ${streamObjNum} missing First entry`);
+      }
+      const firstOffset = firstObj.value;
+      const data = streamObj.getDecodedData();
+      
+      let pos = 0;
+      let targetObjOffset = -1;
+      
+      for (let i = 0; i <= index; i++) {
+          const numRes = this.readIntFromData(data, pos);
+          pos = numRes.newPos;
+          const offRes = this.readIntFromData(data, pos);
+          pos = offRes.newPos;
+          
+          if (numRes.value === null || offRes.value === null) {
+             throw new Error(`Error parsing ObjStm header in ${streamObjNum}`);
+          }
+
+          if (i === index) {
+              targetObjOffset = offRes.value;
+          }
+      }
+      
+      if (targetObjOffset === -1) {
+          throw new Error(`Could not find index ${index} in ObjStm ${streamObjNum}`);
+      }
+      
+      const absolutePos = firstOffset + targetObjOffset;
+      
+      if (absolutePos >= data.length) {
+          throw new Error(`Object offset ${absolutePos} out of bounds in ObjStm ${streamObjNum}`);
+      }
+      
+      const originalBuffer = this.buffer;
+      try {
+          this.buffer = data;
+          const { value } = this.parseValue(absolutePos);
+          if (value instanceof PDFObject) {
+              value.objectNumber = objectNumber;
+              value.generation = 0;
+          }
+          // If it's a dictionary, ensure it is not treated as a stream (ObjStm objects are not streams)
+          return value;
+      } finally {
+          this.buffer = originalBuffer;
+      }
+  }
+
+  /**
    * Find the trailer dictionary in a reconstructed xref table
    */
   private findTrailerInReconstructedXRef(): void {
@@ -668,13 +852,13 @@ export class PDFStructure {
   private findRootCatalog(): void {
     console.log(`Debug: Entering findRootCatalog. XRef size: ${this.xref.size}`);
     // Look for /Type /Catalog in objects
-    const MAX_CATALOG_SEARCH_OBJS = 20; // Further reduced limit
+    const MAX_CATALOG_SEARCH_OBJS = 1000; // Increased limit to ensure we find Catalog
     let objectsSearched = 0;
 
     // Prioritize lower object numbers by sorting keys, if xref is large
     const objectNumbers = Array.from(this.xref.keys());
     if (objectNumbers.length > MAX_CATALOG_SEARCH_OBJS) {
-      objectNumbers.sort((a, b) => a - b);
+      objectNumbers.sort((a, b) => a - b); // Check lowest IDs first
     }
 
     for (const objNum of objectNumbers) {
@@ -781,6 +965,13 @@ export class PDFStructure {
     }
     this.currentlyParsingObjects.add(cacheKey);
     try {
+      // Handle compressed objects
+      if (entry.compressed && entry.objStreamNum !== undefined) {
+        const obj = this.parseCompressedObject(objectNumber, entry.objStreamNum, entry.offset);
+        this.objectCache.set(objectNumber, obj);
+        return obj;
+      }
+
       const offset = entry.offset;
       const objHeader = this.buffer.toString('ascii', offset, offset + 50); // Assuming header < 50 bytes
       const match = objHeader.match(/^(\d+)\s+(\d+)\s+obj/);
