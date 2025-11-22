@@ -476,8 +476,8 @@ export class ContentParser {
    * Interpret the parsed content stream operations
    * @returns Extracted text with positions and other information
    */
-  public interpret(): { text: string, positions: Array<{ text: string, x: number, y: number }> } {
-    const result: { text: string, positions: Array<{ text: string, x: number, y: number }> } = {
+  public interpret(): { text: string, positions: Array<{ text: string, x: number, y: number, width: number, fontSize: number }> } {
+    const result: { text: string, positions: Array<{ text: string, x: number, y: number, width: number, fontSize: number }> } = {
       text: '',
       positions: []
     };
@@ -572,11 +572,17 @@ export class ContentParser {
             
             // Add text to result
             result.text += decodedText;
+            const width = this.getEstimatedWidth(decodedText);
             result.positions.push({
               text: decodedText,
               x: this.textState.x,
-              y: this.textState.y
+              y: this.textState.y,
+              width,
+              fontSize: this.textState.fontSize
             });
+            
+            // Advance position
+            this.textState.x += width;
           }
           break;
           
@@ -597,13 +603,19 @@ export class ContentParser {
             // Then show text
             const rawText = operands[0];
             const decodedText = this.decodeText(rawText);
+            const width = this.getEstimatedWidth(decodedText);
             
             result.text += decodedText;
             result.positions.push({
               text: decodedText,
               x: this.textState.x,
-              y: this.textState.y
+              y: this.textState.y,
+              width,
+              fontSize: this.textState.fontSize
             });
+            
+            // Advance position
+            this.textState.x += width;
           }
           break;
           
@@ -628,13 +640,19 @@ export class ContentParser {
             // Show text
             const rawText = operands[2];
             const decodedText = this.decodeText(rawText);
+            const width = this.getEstimatedWidth(decodedText);
             
             result.text += decodedText;
             result.positions.push({
               text: decodedText,
               x: this.textState.x,
-              y: this.textState.y
+              y: this.textState.y,
+              width,
+              fontSize: this.textState.fontSize
             });
+            
+            // Advance position
+            this.textState.x += width;
           }
           break;
           
@@ -642,33 +660,41 @@ export class ContentParser {
           if (operands.length === 1 && Array.isArray(operands[0])) {
             const textArray = operands[0];
             let textPiece = '';
-            let currentX = this.textState.x;
+            const startX = this.textState.x;
+            let currentX = startX;
+            
             for (const item of textArray) {
               if (typeof item === 'string') {
                 // Decode and add text
                 const decodedItem = this.decodeText(item);
                 textPiece += decodedItem;
+                currentX += this.getEstimatedWidth(decodedItem);
               } else if (typeof item === 'number') {
                 // Negative numbers move right in TJ arrays
                 const offset = -item / 1000 * this.textState.fontSize;
                 currentX += offset;
-                // Add a space for significant shifts
-                if (offset > this.textState.fontSize / 3 && textPiece) {
+                // Add a space for significant shifts (increase threshold to > 60% of font size)
+                if (offset > this.textState.fontSize * 0.6 && textPiece) {
                   textPiece += ' ';
                 }
               } else if (item && item.str) {
                 // If item is an object with str/buf (from string/hex parsing)
                 const decodedItem = this.decodeText(item);
                 textPiece += decodedItem;
+                currentX += this.getEstimatedWidth(decodedItem);
               }
             }
+            
             if (textPiece) {
               result.text += textPiece;
               result.positions.push({
                 text: textPiece,
-                x: this.textState.x,
-                y: this.textState.y
+                x: startX,
+                y: this.textState.y,
+                width: currentX - startX,
+                fontSize: this.textState.fontSize
               });
+              this.textState.x = currentX;
             }
           }
           break;
@@ -774,6 +800,18 @@ export class ContentParser {
       return this.fontDecoder.decodeText(str, this.textState.fontInfo);
     }
     return str;
+  }
+
+  /**
+   * Calculate estimated width of text string
+   * @param text Text string to measure
+   */
+  private getEstimatedWidth(text: string): number {
+    // Average character width is approx 0.5em to 0.6em
+    // We use 0.55em as a safe estimate
+    const width = text.length * this.textState.fontSize * 0.55;
+    // Apply horizontal scaling if not 100%
+    return width * (this.textState.horizontalScale / 100);
   }
 
   /**

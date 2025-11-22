@@ -979,14 +979,29 @@ export class PDFParser {
       // If this is a new line, add a line break
       if (lastY !== null && Math.abs(pos.y - lastY) > 5) {
         textParts.push('\n');
-      } else if (lastY !== null && pos.x - lastX > pos.text.length * 2) {
+      } else if (lastY !== null) {
         // If there's a significant gap, add some space
-        textParts.push(' ');
+        // We use a small threshold to detect word breaks
+        // Use fontSize based threshold if available, otherwise default to 2 units
+        // Increased threshold to 0.6em to avoid splitting words in PDFs with wide tracking
+        const threshold = (pos as any).fontSize ? ((pos as any).fontSize * 0.6) : 3;
+        
+        if (pos.x - lastX > threshold) {
+          textParts.push(' ');
+        }
       }
 
       textParts.push(pos.text);
       lastY = pos.y;
-      lastX = pos.x + pos.text.length;
+      
+      // Update lastX based on width if available (it should be with updated ContentParser)
+      if (typeof pos.width === 'number') {
+        lastX = pos.x + pos.width;
+      } else {
+        // Fallback heuristic if width not available
+        // Assume ~5 units per character (reasonable for avg 10-12pt font)
+        lastX = pos.x + (pos.text.length * 5);
+      }
     }
 
     return textParts.join('');
