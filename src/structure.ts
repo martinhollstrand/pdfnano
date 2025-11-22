@@ -90,11 +90,11 @@ export class PDFStructure {
     const maxHeaderSize = 20; // PDF header usually within first 20 bytes
     const headerStr = this.buffer.toString('ascii', 0, maxHeaderSize);
     const match = headerStr.match(Constants.PDF_HEADER_REGEX);
-    
+
     if (!match || !match[1]) {
       throw new Error('Invalid PDF: Could not determine PDF version');
     }
-    
+
     return match[1];
   }
 
@@ -106,12 +106,12 @@ export class PDFStructure {
     const lastBytes = Math.min(1024, this.buffer.length);
     const tail = this.buffer.slice(this.buffer.length - lastBytes);
     const tailStr = tail.toString('ascii');
-    
+
     const startxrefIndex = tailStr.lastIndexOf(Constants.STARTXREF_MARKER);
     if (startxrefIndex < 0) {
       return -1;
     }
-    
+
     return this.buffer.length - lastBytes + startxrefIndex;
   }
 
@@ -121,14 +121,14 @@ export class PDFStructure {
   private readStartXRef(startxrefPos: number): number {
     // Skip 'startxref' keyword and any whitespace
     let pos = startxrefPos + Constants.STARTXREF_MARKER.length;
-    
+
     // Skip whitespace
     while (pos < this.buffer.length) {
       const ch = String.fromCharCode(this.buffer[pos]);
       if (ch !== ' ' && ch !== '\t' && ch !== '\r' && ch !== '\n') break;
       pos++;
     }
-    
+
     // Read offset
     let offsetStr = '';
     while (pos < this.buffer.length) {
@@ -137,11 +137,11 @@ export class PDFStructure {
       offsetStr += ch;
       pos++;
     }
-    
+
     if (!offsetStr) {
       throw new Error('Invalid PDF: No xref offset found after startxref');
     }
-    
+
     return parseInt(offsetStr, 10);
   }
 
@@ -155,20 +155,20 @@ export class PDFStructure {
       this.reconstructXRefFromObjects();
       return;
     }
-    
+
     // Check if this is an xref stream instead of a traditional xref table
     // In PDF 1.5+, the xref can be a stream object
     // Let's check what's at the offset
     try {
       const possibleObjHeader = this.buffer.toString('ascii', offset, offset + 20).trim();
       const objHeaderMatch = possibleObjHeader.match(/^(\d+)\s+(\d+)\s+obj/);
-      
+
       if (objHeaderMatch) {
         // This appears to be an xref stream, handle it differently
         this.parseXRefStream(offset);
         return;
       }
-      
+
       // Read xref marker
       const xrefMarker = this.buffer.toString('ascii', offset, offset + Constants.XREF_MARKER.length);
       if (xrefMarker !== Constants.XREF_MARKER) {
@@ -177,22 +177,22 @@ export class PDFStructure {
         this.reconstructXRefFromObjects();
         return;
       }
-      
+
       let pos = offset + Constants.XREF_MARKER.length;
-      
+
       // Skip whitespace and comments
       while (pos < this.buffer.length) {
         const ch = String.fromCharCode(this.buffer[pos]);
         if ((ch !== ' ' && ch !== '\t' && ch !== '\r' && ch !== '\n') && ch !== '%') break;
-        
+
         // Skip comment lines
         if (ch === '%') {
           while (pos < this.buffer.length && this.buffer[pos] !== 0x0A) pos++;
         }
-        
+
         pos++;
       }
-      
+
       // Process xref subsections
       while (pos < this.buffer.length) {
         // Skip whitespace
@@ -201,7 +201,7 @@ export class PDFStructure {
           if (ch !== ' ' && ch !== '\t' && ch !== '\r' && ch !== '\n') break;
           pos++;
         }
-        
+
         // Check for trailer
         if (pos + Constants.TRAILER_MARKER.length <= this.buffer.length) {
           const trailerCheck = this.buffer.toString('ascii', pos, pos + Constants.TRAILER_MARKER.length);
@@ -210,13 +210,13 @@ export class PDFStructure {
             break;
           }
         }
-        
+
         // Process a subsection
         try {
           // Read subsection header: "first count"
           let firstObjNum = 0;
           let count = 0;
-          
+
           // Read first object number
           let numStr = '';
           while (pos < this.buffer.length) {
@@ -226,14 +226,14 @@ export class PDFStructure {
             pos++;
           }
           firstObjNum = parseInt(numStr, 10);
-          
+
           // Skip whitespace
           while (pos < this.buffer.length) {
             const ch = String.fromCharCode(this.buffer[pos]);
             if (ch !== ' ' && ch !== '\t' && ch !== '\r' && ch !== '\n') break;
             pos++;
           }
-          
+
           // Read count
           numStr = '';
           while (pos < this.buffer.length) {
@@ -243,37 +243,37 @@ export class PDFStructure {
             pos++;
           }
           count = parseInt(numStr, 10);
-          
+
           // Skip whitespace
           while (pos < this.buffer.length) {
             const ch = String.fromCharCode(this.buffer[pos]);
             if (ch !== ' ' && ch !== '\t' && ch !== '\r' && ch !== '\n') break;
             pos++;
           }
-          
+
           // Guard against unreasonable values
           if (firstObjNum < 0 || count < 0 || count > 1000000) {
             console.log(`Warning: Invalid xref subsection values: first=${firstObjNum}, count=${count}`);
             this.reconstructXRefFromObjects();
             return;
           }
-          
+
           // Read entries
           for (let i = 0; i < count; i++) {
             // Each entry is 20 bytes: "offset 5 generation 5 n/f 2"
             const entryStr = this.buffer.toString('ascii', pos, pos + 20);
             const entryMatch = entryStr.match(/^(\d{10}) (\d{5}) (n|f)/);
-            
+
             if (!entryMatch) {
               console.log(`Warning: Invalid xref entry at position ${pos}`);
               pos += 20;
               continue;
             }
-            
+
             const offset = parseInt(entryMatch[1], 10);
             const gen = parseInt(entryMatch[2], 10);
             const inUse = entryMatch[3] === 'n';
-            
+
             // Only add in-use objects to the xref table
             if (inUse && offset > 0) {
               this.xref.set(firstObjNum + i, {
@@ -282,7 +282,7 @@ export class PDFStructure {
                 inUse: true
               });
             }
-            
+
             pos += 20;
           }
         } catch (err) {
@@ -305,18 +305,18 @@ export class PDFStructure {
     try {
       // Read object header: "obj_num gen_num obj"
       const objHeader = this.buffer.toString('ascii', offset, offset + 50); // Assuming header < 50 bytes
-      const match = objHeader.match(/^(\d+) (\d+) obj/);
-      
+      const match = objHeader.match(/^(\d+)\s+(\d+)\s+obj/);
+
       if (!match) {
         throw new Error(`Invalid object header at offset ${offset}`);
       }
-      
+
       const objNum = parseInt(match[1], 10);
       const genNum = parseInt(match[2], 10);
-      
+
       // Skip header
       let pos = offset + match[0].length;
-      
+
       // Skip whitespace
       while (pos < this.buffer.length) {
         const ch = String.fromCharCode(this.buffer[pos]);
@@ -325,11 +325,11 @@ export class PDFStructure {
       }
       // Parse dictionary and stream
       const { value: obj } = this.parseValue(pos);
-      
+
       if (obj instanceof PDFStream) {
         // Store this stream for later analysis of the trailer
         this.trailer = obj.dictionary;
-        
+
         // The stream contains the xref data
         const streamData = obj.getDecodedData();
         this.parseXRefStreamData(obj.dictionary, streamData);
@@ -354,27 +354,27 @@ export class PDFStructure {
       this.reconstructXRefFromObjects();
       return;
     }
-    
+
     // Get size (highest object number + 1)
     const sizeObj = dict.get('Size');
     if (!(sizeObj instanceof PDFNumber)) {
       this.reconstructXRefFromObjects();
       return;
     }
-    
+
     // Get width array (sizes of each field in bytes)
     const widthObj = dict.get('W');
     if (!(widthObj instanceof PDFArray) || widthObj.length < 3) {
       this.reconstructXRefFromObjects();
       return;
     }
-    
+
     const fieldWidths = [
       (widthObj.get(0) as PDFNumber).value,
       (widthObj.get(1) as PDFNumber).value,
       (widthObj.get(2) as PDFNumber).value
     ];
-    
+
     // Get index array (optional, default is [0, Size])
     let indexArr: number[] = [0, (sizeObj as PDFNumber).value];
     const indexObj = dict.get('Index');
@@ -387,39 +387,39 @@ export class PDFStructure {
         }
       }
     }
-    
+
     // Parse the stream data
     const entrySize = fieldWidths[0] + fieldWidths[1] + fieldWidths[2];
-    
+
     let dataPos = 0;
     for (let i = 0; i < indexArr.length; i += 2) {
       const startObjNum = indexArr[i];
       const count = indexArr[i + 1];
-      
+
       for (let j = 0; j < count; j++) {
         const objNum = startObjNum + j;
-        
+
         // Read type field
         let type = 0;
         if (fieldWidths[0] > 0) {
           type = this.readIntFromBuffer(data, dataPos, fieldWidths[0]);
           dataPos += fieldWidths[0];
         }
-        
+
         // Read offset/objstream position
         let offsetOrIndex = 0;
         if (fieldWidths[1] > 0) {
           offsetOrIndex = this.readIntFromBuffer(data, dataPos, fieldWidths[1]);
           dataPos += fieldWidths[1];
         }
-        
+
         // Read generation/index
         let genOrIndex = 0;
         if (fieldWidths[2] > 0) {
           genOrIndex = this.readIntFromBuffer(data, dataPos, fieldWidths[2]);
           dataPos += fieldWidths[2];
         }
-        
+
         // Create xref entry based on type
         // Type 0: free object
         // Type 1: normal object
@@ -441,7 +441,7 @@ export class PDFStructure {
       }
     }
   }
-  
+
   /**
    * Read an integer from a buffer at a given position with specified length
    */
@@ -479,7 +479,23 @@ export class PDFStructure {
       this.trailer = new PDFDictionary();
     }
   }
-  
+
+  /**
+   * Scan a chunk of the buffer for PDF objects
+   * Returns the number of objects added
+   */
+  /**
+   * Check if a byte code is a whitespace character
+   */
+  private isWhitespace(code: number): boolean {
+    return code === 0x20 || // Space
+      code === 0x09 || // Tab
+      code === 0x0D || // CR
+      code === 0x0A || // LF
+      code === 0x0C || // FF
+      code === 0x00;   // Null
+  }
+
   /**
    * Scan a chunk of the buffer for PDF objects
    * Returns the number of objects added
@@ -487,98 +503,90 @@ export class PDFStructure {
   private scanBufferChunkForObjects(startOffset: number, endOffset: number, maxToAdd: number = MAX_XREF_OBJECTS): number {
     let added = 0;
     try {
-      const chunkBuffer = this.buffer.slice(startOffset, endOffset);
-      // Loosened pattern: search for 'obj' (no leading space)
+      // Search for 'obj' keyword directly in the main buffer to avoid chunk slicing issues
       const objKeyword = Buffer.from('obj', 'ascii');
-      let currentPos = 0;
-      while (currentPos < chunkBuffer.length && added < maxToAdd) {
-        const objKeywordPos = chunkBuffer.indexOf(objKeyword, currentPos);
-        if (objKeywordPos === -1) break;
-        // Log context around each match
-        const contextStart = Math.max(0, objKeywordPos - 20);
-        const contextEnd = Math.min(chunkBuffer.length, objKeywordPos + 20);
-        const context = chunkBuffer.slice(contextStart, contextEnd).toString('ascii');
-        console.log(`Found 'obj' at chunk offset ${objKeywordPos}, context: ...${context}...`);
-        // Potential object found. Now backtrack to find objNum and genNum.
-        // Search backwards for the generation number, then the object number.
-        // Example: ... 123 0 obj ...
-        //            ^objKeywordPos (points to the space before 'obj')
+      let currentPos = startOffset;
 
-        let searchEnd = objKeywordPos;
-        let genNumStr = '';
-        let objNumStr = '';
-        let state = 'findGenNumEnd'; // states: findGenNumEnd, findGenNumStart, findObjNumEnd, findObjNumStart
+      while (currentPos < endOffset && added < maxToAdd) {
+        // Find next 'obj' occurrence
+        const objKeywordPos = this.buffer.indexOf(objKeyword, currentPos);
 
-        // Limit backward search to avoid excessive loops on malformed data
-        const MAX_BACKWARD_SEARCH = 100; 
-        let backwardPos = objKeywordPos - 1;
+        // If not found or beyond our chunk, stop
+        if (objKeywordPos === -1 || objKeywordPos >= endOffset) break;
 
-        for (let i = 0; i < MAX_BACKWARD_SEARCH && backwardPos >= 0; ++i, --backwardPos) {
-          const char = String.fromCharCode(chunkBuffer[backwardPos]);
-
-          if (state === 'findGenNumEnd') {
-            if (char >= '0' && char <= '9') {
-              state = 'findGenNumStart';
-              genNumStr = char + genNumStr;
-            } else if (char !== ' ') { // Expecting space before gen num
-              break; // Malformed: not a digit or space
-            }
-          } else if (state === 'findGenNumStart') {
-            if (char >= '0' && char <= '9') {
-              genNumStr = char + genNumStr;
-            } else if (char === ' ') { // Space before gen num found
-              state = 'findObjNumEnd'; 
-            } else {
-              break; // Malformed
-            }
-          } else if (state === 'findObjNumEnd') {
-            if (char >= '0' && char <= '9') {
-              state = 'findObjNumStart';
-              objNumStr = char + objNumStr;
-            } else if (char !== ' ') { // Expecting space before obj num
-              break; // Malformed
-            }
-          } else if (state === 'findObjNumStart') {
-            if (char >= '0' && char <= '9') {
-              objNumStr = char + objNumStr;
-            } else if (char === ' ') { // Space before obj num, or start of line
-              break; // Found object number
-            } else {
-              // This could be the start of the line or non-numeric char
-              // If objNumStr is populated, we consider it found.
-              if (objNumStr.length > 0) break; 
-              // Otherwise, malformed
-              objNumStr = ''; // Reset if it wasn't a valid number sequence
-              break;
-            }
-          }
+        // Log context around each match (for debugging)
+        if (DEBUG) {
+          const contextStart = Math.max(0, objKeywordPos - 20);
+          const contextEnd = Math.min(this.buffer.length, objKeywordPos + 20);
+          const context = this.buffer.slice(contextStart, contextEnd).toString('ascii');
+          console.log(`Found 'obj' at offset ${objKeywordPos}, context: ...${context.replace(/\n/g, '\\n')}...`);
         }
-        
-        if (objNumStr && genNumStr) {
-          try {
-            const objNum = parseInt(objNumStr, 10);
-            const genNum = parseInt(genNumStr, 10);
-            if (Number.isFinite(objNum) && Number.isFinite(genNum) &&
+
+        // Potential object found. Now backtrack to find objNum and genNum.
+        // Pattern: [Object Number] [Whitespace] [Generation Number] [Whitespace] obj
+
+        let ptr = objKeywordPos - 1;
+
+        // 1. Skip whitespace before 'obj'
+        while (ptr >= 0 && this.isWhitespace(this.buffer[ptr])) {
+          ptr--;
+        }
+
+        // 2. Read Generation Number (digits)
+        const genEnd = ptr;
+        while (ptr >= 0 && this.buffer[ptr] >= 0x30 && this.buffer[ptr] <= 0x39) {
+          ptr--;
+        }
+        const genStart = ptr + 1;
+
+        if (genEnd >= genStart) {
+          // We found a generation number, now check for object number
+
+          // 3. Skip whitespace between numbers
+          while (ptr >= 0 && this.isWhitespace(this.buffer[ptr])) {
+            ptr--;
+          }
+
+          // 4. Read Object Number (digits)
+          const objEnd = ptr;
+          while (ptr >= 0 && this.buffer[ptr] >= 0x30 && this.buffer[ptr] <= 0x39) {
+            ptr--;
+          }
+          const objStart = ptr + 1;
+
+          if (objEnd >= objStart) {
+            // We found both numbers!
+            const objNumStr = this.buffer.toString('ascii', objStart, objEnd + 1);
+            const genNumStr = this.buffer.toString('ascii', genStart, genEnd + 1);
+
+            try {
+              const objNum = parseInt(objNumStr, 10);
+              const genNum = parseInt(genNumStr, 10);
+
+              if (Number.isFinite(objNum) && Number.isFinite(genNum) &&
                 objNum >= 0 && objNum <= 10000000 &&
                 genNum >= 0 && genNum <= 65535) {
-              const objectDefinitionStartInChunk = backwardPos + 1;
-              const correctedAbsoluteOffset = startOffset + objectDefinitionStartInChunk;
-              if (!this.xref.has(objNum)) {
-                this.xref.set(objNum, {
-                  offset: correctedAbsoluteOffset,
-                  generation: genNum,
-                  inUse: true
-                });
-                added++;
-                console.log(`XRef reconstruction: Found object ${objNum} ${genNum} at offset ${correctedAbsoluteOffset}`);
+
+                // The object starts at the object number
+                const correctedAbsoluteOffset = objStart;
+
+                if (!this.xref.has(objNum)) {
+                  this.xref.set(objNum, {
+                    offset: correctedAbsoluteOffset,
+                    generation: genNum,
+                    inUse: true
+                  });
+                  added++;
+                  if (DEBUG) console.log(`XRef reconstruction: Found object ${objNum} ${genNum} at offset ${correctedAbsoluteOffset}`);
+                }
               }
+            } catch (err) {
+              if (DEBUG) console.log(`XRef reconstruction: Error parsing object number/generation: ${err}`);
             }
-          } catch (err) {
-            console.log(`XRef reconstruction: Error parsing object number/generation: ${err}`);
           }
         }
-        
-        // Move past the ' obj' keyword to continue search
+
+        // Move past the 'obj' keyword to continue search
         currentPos = objKeywordPos + objKeyword.length;
       }
     } catch (err) {
@@ -586,7 +594,7 @@ export class PDFStructure {
     }
     return added;
   }
-  
+
   /**
    * Find the trailer dictionary in a reconstructed xref table
    */
@@ -595,33 +603,33 @@ export class PDFStructure {
       // Look for the trailer marker without converting entire PDF to string
       const trailerMarker = Constants.TRAILER_MARKER;
       const markerBytes = Buffer.from(trailerMarker, 'ascii');
-      
+
       // Do a chunked search for the trailer marker from the end of the file
       // This avoids loading the entire file into a string
       let trailerPos = -1;
       const CHUNK_SIZE = 10 * 1024; // 10KB chunks
-      
+
       for (let startPos = this.buffer.length - CHUNK_SIZE; startPos >= 0 && trailerPos === -1; startPos -= CHUNK_SIZE) {
         const chunkSize = Math.min(CHUNK_SIZE, startPos + CHUNK_SIZE);
         const chunk = this.buffer.slice(startPos, startPos + chunkSize);
         const chunkStr = chunk.toString('ascii');
-        
+
         const markerPos = chunkStr.lastIndexOf(trailerMarker);
         if (markerPos !== -1) {
           trailerPos = startPos + markerPos;
           break;
         }
-        
+
         // If we've searched more than 1MB from the end, stop looking
         if (this.buffer.length - startPos > 1024 * 1024) {
           break;
         }
       }
-      
+
       if (trailerPos >= 0) {
         // Skip trailer marker
         let pos = trailerPos + trailerMarker.length;
-        
+
         // Skip whitespace
         while (pos < this.buffer.length) {
           const ch = String.fromCharCode(this.buffer[pos]);
@@ -644,7 +652,7 @@ export class PDFStructure {
       } else {
         // No trailer found, create an empty one
         this.trailer = new PDFDictionary();
-        
+
         // Try to find catalog
         this.findRootCatalog();
       }
@@ -653,7 +661,7 @@ export class PDFStructure {
       this.trailer = new PDFDictionary();
     }
   }
-  
+
   /**
    * Find the root catalog in the PDF objects
    */
@@ -699,7 +707,7 @@ export class PDFStructure {
     }
 
     if (!this.rootCatalog) {
-        console.log(`Warning: Could not find Root Catalog after searching ${objectsSearched} objects.`);
+      console.log(`Warning: Could not find Root Catalog after searching ${objectsSearched} objects.`);
     }
   }
 
@@ -713,28 +721,28 @@ export class PDFStructure {
       const lastBytes = Math.min(2048, this.buffer.length);
       const tail = this.buffer.slice(this.buffer.length - lastBytes);
       const tailStr = tail.toString('ascii');
-      
+
       const trailerIndex = tailStr.lastIndexOf(Constants.TRAILER_MARKER);
       if (trailerIndex >= 0) {
         trailerPos = this.buffer.length - lastBytes + trailerIndex;
       }
-      
+
       if (trailerPos < 0) {
         console.log('Warning: Could not find trailer, reconstructing xref table...');
         this.reconstructXRefFromObjects();
         return this.trailer;
       }
-      
+
       // Skip trailer marker
       let pos = trailerPos + Constants.TRAILER_MARKER.length;
-      
+
       // Skip whitespace
       while (pos < this.buffer.length) {
         const ch = String.fromCharCode(this.buffer[pos]);
         if (ch !== ' ' && ch !== '\t' && ch !== '\r' && ch !== '\n') break;
         pos++;
       }
-      
+
       // Parse trailer dictionary
       try {
         const { value: result } = this.parseDictionary(pos);
@@ -775,7 +783,7 @@ export class PDFStructure {
     try {
       const offset = entry.offset;
       const objHeader = this.buffer.toString('ascii', offset, offset + 50); // Assuming header < 50 bytes
-      const match = objHeader.match(/^(\d+) (\d+) obj/);
+      const match = objHeader.match(/^(\d+)\s+(\d+)\s+obj/);
       if (!match) {
         throw new Error(`Invalid object header at offset ${offset}`);
       }
@@ -809,26 +817,26 @@ export class PDFStructure {
       console.log(`Warning: Requested unreasonable object number: ${objectNumber}`);
       return new PDFDictionary(); // Return empty dictionary as fallback
     }
-    
+
     // Check cache first
     if (this.objectCache.has(objectNumber)) {
       return this.objectCache.get(objectNumber)!;
     }
-    
+
     // Track the number of objects retrieved to prevent infinite loops
     if (!this.objectRetrievalCount) {
       this.objectRetrievalCount = 0;
     }
-    
+
     // Safety limit - prevent excessive object retrievals which may indicate circular references
     const MAX_OBJECT_RETRIEVALS = 5000;
     this.objectRetrievalCount++;
-    
+
     if (this.objectRetrievalCount > MAX_OBJECT_RETRIEVALS) {
       console.log(`Warning: Exceeded maximum object retrievals (${MAX_OBJECT_RETRIEVALS}), possible circular reference`);
       return new PDFDictionary(); // Return empty dictionary as fallback
     }
-    
+
     try {
       // Parse the object
       return this.parseObject(objectNumber, generation);
@@ -950,9 +958,9 @@ export class PDFStructure {
         pos++;
         break;
       }
-      if ((char >= '0' && char <= '9') || 
-          (char >= 'A' && char <= 'F') || 
-          (char >= 'a' && char <= 'f')) {
+      if ((char >= '0' && char <= '9') ||
+        (char >= 'A' && char <= 'F') ||
+        (char >= 'a' && char <= 'f')) {
         value += char;
       }
       pos++;
@@ -968,10 +976,10 @@ export class PDFStructure {
     pos++;
     while (pos < this.buffer.length) {
       const char = String.fromCharCode(this.buffer[pos]);
-      if (char === ' ' || char === '\t' || char === '\r' || char === '\n' || 
-          char === '(' || char === ')' || char === '<' || char === '>' || 
-          char === '[' || char === ']' || char === '{' || char === '}' || 
-          char === '/' || char === '%') {
+      if (char === ' ' || char === '\t' || char === '\r' || char === '\n' ||
+        char === '(' || char === ')' || char === '<' || char === '>' ||
+        char === '[' || char === ']' || char === '{' || char === '}' ||
+        char === '/' || char === '%') {
         break;
       }
       name += char;
@@ -1093,7 +1101,7 @@ export class PDFStructure {
   private parseStream(dict: PDFDictionary, pos: number): PDFStream {
     // Skip 'stream' keyword
     pos += 6;
-    
+
     // The stream content must start after a CRLF or LF
     if (this.buffer[pos] === 0x0D && this.buffer[pos + 1] === 0x0A) { // CRLF
       pos += 2;
@@ -1102,11 +1110,11 @@ export class PDFStructure {
     } else {
       throw new Error('Invalid stream: expected CRLF or LF after stream keyword');
     }
-    
+
     // Get the stream length
     let length = 0;
     const lengthObj = dict.get('Length');
-    
+
     if (lengthObj instanceof PDFReference) {
       // Resolve reference
       const obj = this.getObject(lengthObj.objectNumber, lengthObj.generation);
@@ -1118,28 +1126,28 @@ export class PDFStructure {
     } else {
       throw new Error('Invalid stream: missing or invalid Length entry');
     }
-    
+
     // Extract stream data
     const data = this.buffer.slice(pos, pos + length);
-    
+
     // Check for 'endstream' marker
     pos += length;
-    
+
     // Skip whitespace
     while (pos < this.buffer.length) {
       const ch = String.fromCharCode(this.buffer[pos]);
       if (ch !== ' ' && ch !== '\t' && ch !== '\r' && ch !== '\n') break;
       pos++;
     }
-    
+
     // Check for 'endstream' keyword
-    if (pos + 9 < this.buffer.length && 
-        this.buffer.toString('ascii', pos, pos + 9) === 'endstream') {
+    if (pos + 9 < this.buffer.length &&
+      this.buffer.toString('ascii', pos, pos + 9) === 'endstream') {
       pos += 9;
     } else {
       throw new Error('Invalid stream: missing endstream marker');
     }
-    
+
     return new PDFStream(dict, data);
   }
 

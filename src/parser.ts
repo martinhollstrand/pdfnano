@@ -2,17 +2,17 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
 import * as zlib from 'zlib';
-import { 
-  PDFParseResult, 
-  PDFPage, 
-  PDFImage, 
-  PDFMetadata 
+import {
+  PDFParseResult,
+  PDFPage,
+  PDFImage,
+  PDFMetadata
 } from './types';
-import { 
-  readFileAsBuffer, 
-  generateUniqueId, 
+import {
+  readFileAsBuffer,
+  generateUniqueId,
   bytesToBuffer,
-  detectImageMimeType 
+  detectImageMimeType
 } from './utils';
 import * as Constants from './constants';
 import { PDFStructure } from './structure';
@@ -36,7 +36,7 @@ export class PDFParser {
   /**
    * Creates a new PDF parser instance
    */
-  constructor() {}
+  constructor() { }
 
   /**
    * Parse a PDF file
@@ -46,14 +46,14 @@ export class PDFParser {
   public async parseFile(filePath: string): Promise<PDFParseResult> {
     try {
       const fileStats = fs.statSync(filePath);
-      
+
       // Check file size before loading into memory
       const MAX_SAFE_SIZE = 20 * 1024 * 1024; // 20MB
       if (DEBUG) console.log(`Warning: Large PDF detected (${Math.round(fileStats.size / (1024 * 1024))}MB), using limited parsing mode`);
       if (fileStats.size > MAX_SAFE_SIZE) {
         return this.parseLargeFile(filePath);
       }
-      
+
       const buffer = await readFileAsBuffer(filePath);
       return this.parseBuffer(buffer);
     } catch (err: unknown) {
@@ -125,21 +125,21 @@ export class PDFParser {
           }
         };
       }
-      
+
       // Parse the PDF structure
       const structure = new PDFStructure(buffer);
       structure.parse();
-      
+
       // Extract metadata from structure
       const metadata = this.extractMetadata(structure);
-      
+
       // Extract pages from structure
       const pages = this.extractPages(structure);
-      
+
       // Extract images, but limit the total number to prevent memory issues
       const MAX_IMAGES = 50;
       const allImages: PDFImage[] = [];
-      
+
       let imageCount = 0;
       for (const page of pages) {
         for (const image of page.images) {
@@ -150,15 +150,19 @@ export class PDFParser {
             break;
           }
         }
-        
+
         if (imageCount >= MAX_IMAGES) {
           break;
         }
       }
-      
+
       // Combine all text
       const fullText = pages.map(page => page.text).join('\n\n');
-      
+
+      if (pages.length === 0 && structure.xref.size === 0) {
+        throw new Error('Invalid PDF: No pages found and structure is empty');
+      }
+
       return {
         text: fullText,
         pages,
@@ -198,7 +202,7 @@ export class PDFParser {
    */
   public async parseFileToJSON(filePath: string): Promise<string> {
     const result = await this.parseFile(filePath);
-    
+
     // Convert Buffer data to base64 for JSON serialization
     const jsonResult = {
       ...result,
@@ -207,7 +211,7 @@ export class PDFParser {
         data: img.data.toString('base64')
       }))
     };
-    
+
     return JSON.stringify(jsonResult, null, 2);
   }
 
@@ -321,42 +325,42 @@ export class PDFParser {
       pageCount: 0,
       isEncrypted: false
     };
-    
+
     // Get info dictionary
     if (structure.info) {
       const info = structure.info;
-      
+
       // Extract common metadata fields
       const title = info.get('Title');
       if (title instanceof PDFString) {
         result.title = title.value;
       }
-      
+
       const author = info.get('Author');
       if (author instanceof PDFString) {
         result.author = author.value;
       }
-      
+
       const subject = info.get('Subject');
       if (subject instanceof PDFString) {
         result.subject = subject.value;
       }
-      
+
       const keywords = info.get('Keywords');
       if (keywords instanceof PDFString) {
         result.keywords = keywords.value;
       }
-      
+
       const creator = info.get('Creator');
       if (creator instanceof PDFString) {
         result.creator = creator.value;
       }
-      
+
       const producer = info.get('Producer');
       if (producer instanceof PDFString) {
         result.producer = producer.value;
       }
-      
+
       // Parse dates
       const creationDate = info.get('CreationDate');
       if (creationDate instanceof PDFString) {
@@ -368,7 +372,7 @@ export class PDFParser {
           // Ignore date parsing errors
         }
       }
-      
+
       const modDate = info.get('ModDate');
       if (modDate instanceof PDFString) {
         try {
@@ -378,30 +382,30 @@ export class PDFParser {
         }
       }
     }
-    
+
     // Get page count from pages tree
     if (structure.rootCatalog) {
       const catalogDict = structure.rootCatalog;
       const pagesRef = catalogDict.get('Pages');
-      
+
       if (pagesRef instanceof PDFReference) {
         const pagesDict = structure.getObject(pagesRef.objectNumber, pagesRef.generation);
-        
+
         if (pagesDict instanceof PDFDictionary) {
           const count = pagesDict.get('Count');
-          
+
           if (count instanceof PDFNumber) {
             result.pageCount = count.value;
           }
         }
       }
     }
-    
+
     // Check if the PDF is encrypted
     const trailer = structure.trailer;
     const encrypt = trailer.get('Encrypt');
     result.isEncrypted = encrypt !== undefined;
-    
+
     return result;
   }
 
@@ -412,7 +416,7 @@ export class PDFParser {
    */
   private extractPages(structure: PDFStructure): PDFPage[] {
     const pages: PDFPage[] = [];
-    
+
     try {
       // Get the page tree
       if (!structure.rootCatalog) {
@@ -494,58 +498,58 @@ export class PDFParser {
         if (DEBUG) console.log(`Best-effort extraction summary: ${dictCount} dictionaries scanned, ${pageCount} pages found.`);
         return pages;
       }
-      
+
       const pagesRef = structure.rootCatalog.get('Pages');
       if (!(pagesRef instanceof PDFReference)) {
         return pages;
       }
-      
+
       const pagesDict = structure.getObject(pagesRef.objectNumber, pagesRef.generation);
       if (!(pagesDict instanceof PDFDictionary)) {
         return pages;
       }
-      
+
       // Initialize a set to track processed page node references for this extraction
       const processedPageNodeRefs = new Set<string>();
-      
+
       // Get all page nodes from the page tree
       const pageNodes = this.getPageNodesFromPageTree(structure, pagesDict, processedPageNodeRefs);
-      
+
       // Extract content from each page
       // Limit the number of pages to process to prevent memory issues
       const MAX_PAGES = 100;
       const pagesToProcess = Math.min(pageNodes.length, MAX_PAGES);
-      
+
       if (pageNodes.length > MAX_PAGES) {
         if (DEBUG) console.log(`Warning: PDF has ${pageNodes.length} pages, limiting to processing ${MAX_PAGES} pages only`);
       }
-      
+
       for (let i = 0; i < pagesToProcess; i++) {
         const pageDict = pageNodes[i];
-        
+
         try {
           // Get page dimensions
           const mediaBox = pageDict.get('MediaBox');
           let width = 0;
           let height = 0;
-          
+
           if (mediaBox instanceof PDFArray && mediaBox.length >= 4) {
             const x1 = (mediaBox.get(0) instanceof PDFNumber) ? (mediaBox.get(0) as PDFNumber).value : 0;
             const y1 = (mediaBox.get(1) instanceof PDFNumber) ? (mediaBox.get(1) as PDFNumber).value : 0;
             const x2 = (mediaBox.get(2) instanceof PDFNumber) ? (mediaBox.get(2) as PDFNumber).value : 0;
             const y2 = (mediaBox.get(3) instanceof PDFNumber) ? (mediaBox.get(3) as PDFNumber).value : 0;
-            
+
             width = x2 - x1;
             height = y2 - y1;
           }
-          
+
           // Extract content
           const content = this.extractPageContent(structure, pageDict);
           // Ensure images have the correct page number
           for (const img of content.images) {
             img.pageNumber = i + 1;
           }
-          
+
           pages.push({
             pageNumber: i + 1,
             width,
@@ -556,7 +560,7 @@ export class PDFParser {
         } catch (err) {
           // If a single page fails, continue with other pages
           if (DEBUG) console.log(`Warning: Error extracting content from page ${i + 1}: ${err}`);
-          
+
           // Add a placeholder entry
           pages.push({
             pageNumber: i + 1,
@@ -570,7 +574,7 @@ export class PDFParser {
     } catch (err) {
       if (DEBUG) console.log(`Warning: Error extracting pages: ${err}`);
     }
-    
+
     return pages;
   }
 
@@ -584,15 +588,15 @@ export class PDFParser {
    */
   private getPageNodesFromPageTree(structure: PDFStructure, pagesDict: PDFDictionary, processedRefs: Set<string>, depth: number = 0): PDFDictionary[] {
     const result: PDFDictionary[] = [];
-    
+
     // Circuit breaker: prevent infinite recursion
     if (depth > 30) {
       if (DEBUG) console.log("Warning: Maximum recursion depth reached in page tree. Stopping to prevent infinite recursion.");
       return result;
     }
-    
+
     const type = pagesDict.get('Type');
-    
+
     if (type instanceof PDFName) {
       if (type.name === '/Page') {
         // This is a leaf node (actual page)
@@ -600,19 +604,19 @@ export class PDFParser {
       } else if (type.name === '/Pages') {
         // This is an internal node, process its kids
         const kids = pagesDict.get('Kids');
-        
+
         if (kids instanceof PDFArray) {
           // Limit the number of kids to process to prevent memory issues
           const MAX_KIDS = 1000;
           const kidsToProcess = Math.min(kids.length, MAX_KIDS);
-          
+
           if (kids.length > MAX_KIDS) {
             if (DEBUG) console.log(`Warning: Page tree has ${kids.length} kids, limiting to processing ${MAX_KIDS} to prevent memory issues`);
           }
-          
+
           for (let i = 0; i < kidsToProcess; i++) {
             const kidRef = kids.get(i);
-            
+
             if (kidRef instanceof PDFReference) {
               // Check for circular references using the persistent set
               const refKey = `${kidRef.objectNumber}_${kidRef.generation}`;
@@ -621,10 +625,10 @@ export class PDFParser {
                 continue;
               }
               processedRefs.add(refKey);
-              
+
               try {
                 const kid = structure.getObject(kidRef.objectNumber, kidRef.generation);
-                
+
                 if (kid instanceof PDFDictionary) {
                   const subPages = this.getPageNodesFromPageTree(structure, kid, processedRefs, depth + 1);
                   result.push(...subPages);
@@ -637,7 +641,7 @@ export class PDFParser {
         }
       }
     }
-    
+
     return result;
   }
 
@@ -652,11 +656,11 @@ export class PDFParser {
       text: '',
       images: [] as PDFImage[]
     };
-    
+
     // Get resources dictionary first (needed for fonts and other resources)
     let resourcesDict: PDFDictionary | undefined;
     const resources = pageDict.get('Resources');
-    
+
     if (resources instanceof PDFDictionary) {
       resourcesDict = resources;
     } else if (resources instanceof PDFReference) {
@@ -665,10 +669,10 @@ export class PDFParser {
         resourcesDict = resourcesObj;
       }
     }
-    
+
     // Get contents
     const contents = pageDict.get('Contents');
-    
+
     if (!contents) {
       if (DEBUG) console.log('Page has no /Contents entry.');
     } else if (contents instanceof PDFReference) {
@@ -707,24 +711,24 @@ export class PDFParser {
     } else {
       if (DEBUG) console.log(`/Contents is of unexpected type: ${contents.constructor.name}`);
     }
-    
+
     // Extract images from resources
     if (resourcesDict) {
       const xObjects = resourcesDict.get('XObject');
-      
+
       if (xObjects instanceof PDFDictionary) {
         // Process each XObject
         for (const [name, xObjectRef] of xObjects.entries.entries()) {
           if (xObjectRef instanceof PDFReference) {
             const xObject = structure.getObject(xObjectRef.objectNumber, xObjectRef.generation);
-            
+
             if (xObject instanceof PDFStream) {
               const subtype = xObject.dictionary.get('Subtype');
-              
+
               if (subtype instanceof PDFName && subtype.name === '/Image') {
                 // This is an image, extract it
                 const image = this.extractImageFromXObject(xObject, pageDict);
-                
+
                 if (image) {
                   result.images.push(image);
                 }
@@ -734,7 +738,7 @@ export class PDFParser {
         }
       }
     }
-    
+
     return result;
   }
 
@@ -747,21 +751,21 @@ export class PDFParser {
   private extractImageFromXObject(xObject: PDFStream, pageDict: PDFDictionary): PDFImage | null {
     try {
       const dict = xObject.dictionary;
-      
+
       // Get image dimensions
       const width = dict.get('Width');
       const height = dict.get('Height');
-      
+
       if (!(width instanceof PDFNumber) || !(height instanceof PDFNumber)) {
         return null;
       }
-      
+
       // Get image data (decoded according to Filter)
       let imageData = xObject.getDecodedData();
-      
+
       // Determine image type
       let mimeType = detectImageMimeType(imageData);
-      
+
       // If undecided, try to wrap raw pixels into a PNG when feasible
       if ((!mimeType || mimeType === 'application/octet-stream') && width.value > 0 && height.value > 0) {
         // Infer components from ColorSpace
@@ -774,8 +778,8 @@ export class PDFParser {
         }
         const bpc = dict.get('BitsPerComponent');
         const bitsPerComponent = bpc instanceof PDFNumber ? bpc.value : 8;
-        const expectedLen = components > 0 && bitsPerComponent === 8 
-          ? width.value * height.value * components 
+        const expectedLen = components > 0 && bitsPerComponent === 8
+          ? width.value * height.value * components
           : -1;
         if (expectedLen > 0 && imageData.length === expectedLen && (components === 1 || components === 3 || components === 4)) {
           try {
@@ -786,7 +790,7 @@ export class PDFParser {
           }
         }
       }
-      
+
       // Create the image object
       const image: PDFImage = {
         id: generateUniqueId(),
@@ -798,7 +802,7 @@ export class PDFParser {
         x: 0, // Placeholder
         y: 0  // Placeholder
       };
-      
+
       return image;
     } catch (err) {
       // If image extraction fails, return null
@@ -837,7 +841,7 @@ export class PDFParser {
       crc.writeUInt32BE(crcVal, 0);
       return Buffer.concat([len, typeBuf, data, crc]);
     };
-    const header = Buffer.from([0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A]);
+    const header = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
     const colorType = components === 4 ? 6 : (components === 3 ? 2 : 0);
     const ihdr = Buffer.alloc(13);
     ihdr.writeUInt32BE(width, 0);
@@ -876,7 +880,7 @@ export class PDFParser {
     const parser = new ContentParser(contentStream, resources, structure);
     parser.parse();
     const result = parser.interpret();
-    
+
     // Sort text by position (approximately top-to-bottom, left-to-right)
     // This helps maintain reading order
     result.positions.sort((a, b) => {
@@ -887,12 +891,12 @@ export class PDFParser {
       }
       return a.x - b.x; // Within a line, sort left to right
     });
-    
+
     // Convert positions to text with some attempt at proper spacing
     let lastY = null;
     let lastX = 0;
     const textParts: string[] = [];
-    
+
     for (const pos of result.positions) {
       // If this is a new line, add a line break
       if (lastY !== null && Math.abs(pos.y - lastY) > 5) {
@@ -901,12 +905,12 @@ export class PDFParser {
         // If there's a significant gap, add some space
         textParts.push(' ');
       }
-      
+
       textParts.push(pos.text);
       lastY = pos.y;
       lastX = pos.x + pos.text.length;
     }
-    
+
     return textParts.join('');
   }
 
@@ -918,13 +922,13 @@ export class PDFParser {
   private parsePDFDate(dateString: string): Date {
     // PDF dates are in the format: D:YYYYMMDDHHmmSSOHH'mm'
     // where O is the relationship of local time to UTC (+ or -)
-    
+
     // Remove 'D:' prefix if present
     let dateStr = dateString;
     if (dateStr.startsWith('D:')) {
       dateStr = dateStr.substring(2);
     }
-    
+
     // Basic parsing
     const year = parseInt(dateStr.substring(0, 4)) || 0;
     const month = parseInt(dateStr.substring(4, 6)) || 1;
@@ -932,7 +936,7 @@ export class PDFParser {
     const hour = parseInt(dateStr.substring(8, 10)) || 0;
     const minute = parseInt(dateStr.substring(10, 12)) || 0;
     const second = parseInt(dateStr.substring(12, 14)) || 0;
-    
+
     return new Date(year, month - 1, day, hour, minute, second);
   }
 } 
