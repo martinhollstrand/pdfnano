@@ -1,6 +1,11 @@
 # PDFNano Changelog
 
-## Version 0.1.1 (Latest)
+## Version 0.2.3 (Latest)
+
+### Bug Fixes
+- **Fixed**: Text extraction for PDFs with "jammed" ToUnicode CMap streams (where hex tokens are not space-separated). This resolves issues where text would be extracted as garbage characters for certain custom-encoded fonts.
+
+## Version 0.1.1
 
 ### Major Enhancements
 
