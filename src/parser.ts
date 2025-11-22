@@ -579,6 +579,94 @@ export class PDFParser {
   }
 
   /**
+   * Get all resources for a page, merging with inherited resources
+   * @param structure PDF structure
+   * @param pageDict Page dictionary
+   * @returns Merged resources dictionary
+   */
+  private getAllResources(structure: PDFStructure, pageDict: PDFDictionary): PDFDictionary {
+    // Resources can be inherited. We need to walk up the chain and merge them.
+    // Child resources override parent resources.
+    
+    const resourceChain: PDFDictionary[] = [];
+    let currentDict = pageDict;
+    const visited = new Set<string>();
+    
+    while (true) {
+      const resources = currentDict.get('Resources');
+      
+      if (resources instanceof PDFDictionary) {
+        resourceChain.push(resources);
+      } else if (resources instanceof PDFReference) {
+        const resourcesObj = structure.getObject(resources.objectNumber, resources.generation);
+        if (resourcesObj instanceof PDFDictionary) {
+          resourceChain.push(resourcesObj);
+        }
+      }
+      
+      // Move to parent
+      const parentRef = currentDict.get('Parent');
+      if (!(parentRef instanceof PDFReference)) {
+        break;
+      }
+      
+      const refKey = `${parentRef.objectNumber}_${parentRef.generation}`;
+      if (visited.has(refKey)) break;
+      visited.add(refKey);
+      
+      const parentObj = structure.getObject(parentRef.objectNumber, parentRef.generation);
+      if (!(parentObj instanceof PDFDictionary)) break;
+      
+      currentDict = parentObj;
+    }
+    
+    // Merge from root down to leaf (so leaf overrides root)
+    // We iterate backwards because we pushed child first, then parent
+    const mergedResources = new PDFDictionary();
+    
+    for (let i = resourceChain.length - 1; i >= 0; i--) {
+      const res = resourceChain[i];
+      for (const [key, value] of res.entries.entries()) {
+        // If it's a sub-dictionary (like Font, XObject), we should merge those too?
+        // Simple implementation: just merge top-level keys.
+        // Better implementation: If key is Font/XObject/etc, merge their contents.
+        
+        // Keys in dictionary always start with /
+        // But we want to match specific resource types
+        const resourceTypes = ['/Font', '/XObject', '/ExtGState', '/ColorSpace', '/Pattern', '/Shading', '/Properties'];
+        
+        if (resourceTypes.includes(key)) {
+          let existing = mergedResources.get(key);
+          let incoming = value;
+          
+          // Resolve references for merging
+          if (existing instanceof PDFReference) {
+             existing = structure.getObject(existing.objectNumber, existing.generation);
+          }
+          if (incoming instanceof PDFReference) {
+             incoming = structure.getObject(incoming.objectNumber, incoming.generation);
+          }
+
+          if (existing instanceof PDFDictionary && incoming instanceof PDFDictionary) {
+            // Merge sub-dictionary
+            for (const [subKey, subValue] of incoming.entries.entries()) {
+              existing.set(subKey, subValue);
+            }
+          } else {
+            // Overwrite if not merging two dictionaries
+            // Use incoming (which might be resolved from reference) instead of raw value
+            mergedResources.set(key, incoming);
+          }
+        } else {
+          mergedResources.set(key, value);
+        }
+      }
+    }
+    
+    return mergedResources;
+  }
+
+  /**
    * Extract all page nodes from page tree
    * @param structure PDF structure
    * @param pagesDict Pages dictionary
@@ -657,18 +745,8 @@ export class PDFParser {
       images: [] as PDFImage[]
     };
 
-    // Get resources dictionary first (needed for fonts and other resources)
-    let resourcesDict: PDFDictionary | undefined;
-    const resources = pageDict.get('Resources');
-
-    if (resources instanceof PDFDictionary) {
-      resourcesDict = resources;
-    } else if (resources instanceof PDFReference) {
-      const resourcesObj = structure.getObject(resources.objectNumber, resources.generation);
-      if (resourcesObj instanceof PDFDictionary) {
-        resourcesDict = resourcesObj;
-      }
-    }
+    // Get all resources (page + inherited)
+    const resourcesDict = this.getAllResources(structure, pageDict);
 
     // Get contents
     const contents = pageDict.get('Contents');

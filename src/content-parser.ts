@@ -766,6 +766,7 @@ export class ContentParser {
       str = text.str;
       buf = text.buf;
     }
+
     if (this.fontDecoder && this.textState.fontInfo) {
       if (this.textState.fontInfo.isCIDFont && buf) {
         return this.fontDecoder.decodeText(buf, this.textState.fontInfo);

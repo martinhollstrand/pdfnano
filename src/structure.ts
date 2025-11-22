@@ -74,6 +74,21 @@ export class PDFStructure {
         this.reconstructXRefFromObjects();
       }
       this.trailer = this.parseTrailer();
+      
+      // Extract Root Catalog
+      const rootRef = this.trailer.get('Root');
+      if (rootRef instanceof PDFReference) {
+        const rootObj = this.getObject(rootRef.objectNumber, rootRef.generation);
+        if (rootObj instanceof PDFDictionary) {
+          this.rootCatalog = rootObj;
+        }
+      } else if (rootRef instanceof PDFDictionary) {
+        this.rootCatalog = rootRef;
+      } else {
+        if (DEBUG) console.log('Root Catalog not found in trailer, searching objects...');
+        this.findRootCatalog();
+      }
+
       const infoRef = this.trailer.get('Info');
       if (infoRef && infoRef instanceof PDFReference) {
         this.info = this.getObject(infoRef.objectNumber, infoRef.generation) as PDFDictionary;
@@ -105,7 +120,8 @@ export class PDFStructure {
    */
   private findStartXRef(): number {
     // startxref is normally near the end of the file, so start from the end
-    const lastBytes = Math.min(1024, this.buffer.length);
+    // Increase search window to 4KB to handle files with garbage at end or large trailers
+    const lastBytes = Math.min(4096, this.buffer.length);
     const tail = this.buffer.slice(this.buffer.length - lastBytes);
     const tailStr = tail.toString('ascii');
 
@@ -850,9 +866,8 @@ export class PDFStructure {
    * Find the root catalog in the PDF objects
    */
   private findRootCatalog(): void {
-    console.log(`Debug: Entering findRootCatalog. XRef size: ${this.xref.size}`);
     // Look for /Type /Catalog in objects
-    const MAX_CATALOG_SEARCH_OBJS = 1000; // Increased limit to ensure we find Catalog
+    const MAX_CATALOG_SEARCH_OBJS = 10000; // Increased limit to ensure we find Catalog
     let objectsSearched = 0;
 
     // Prioritize lower object numbers by sorting keys, if xref is large
@@ -874,12 +889,21 @@ export class PDFStructure {
         try {
           const obj = this.parseObject(objNum, entry.generation);
           if (obj instanceof PDFDictionary) {
-            const typeObj = obj.get('Type');
+            let typeObj = obj.get('Type');
+            
+            // Resolve type reference if needed
+            if (typeObj instanceof PDFReference) {
+               try {
+                 typeObj = this.getObject(typeObj.objectNumber, typeObj.generation);
+               } catch (e) {
+                 // Ignore
+               }
+            }
+
             if (typeObj instanceof PDFName && typeObj.name === '/Catalog') {
               // Found root catalog
               this.rootCatalog = obj;
               this.trailer.set('Root', new PDFReference(objNum, entry.generation));
-              console.log(`Found Root Catalog: Object ${objNum}`);
               break;
             }
           }

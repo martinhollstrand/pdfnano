@@ -4,6 +4,7 @@
 
 ### Bug Fixes
 - **Fixed**: Text extraction for PDFs with "jammed" ToUnicode CMap streams (where hex tokens are not space-separated). This resolves issues where text would be extracted as garbage characters for certain custom-encoded fonts.
+- **Fixed**: Resource dictionary inheritance and merging. Fixed an issue where font resources were not being correctly identified and merged from parent pages, leading to missing font information and garbage text extraction for some PDFs (e.g., those using `/Font` keys in `Resources`).
 
 ## Version 0.1.1
 
