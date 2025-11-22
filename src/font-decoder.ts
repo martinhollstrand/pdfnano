@@ -331,13 +331,6 @@ export class FontDecoder {
         streamData = raw.toString('utf8');
       }
       
-      console.log(`[DEBUG] Parsing ToUnicode CMap. Length: ${streamData.length}`);
-      if (streamData.length < 2000) {
-         console.log(`[DEBUG] Full CMap:\n${streamData}`);
-      } else {
-         console.log(`[DEBUG] CMap snippet: ${streamData.substring(0, 200)}...`);
-      }
-      
       // Find beginbfchar/endbfchar sections for simple mappings
       const bfcharRegex = /beginbfchar\s+([\s\S]*?)endbfchar/g;
       let match;
