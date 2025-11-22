@@ -339,8 +339,10 @@ export class FontDecoder {
         const mappings = match[1].trim().split(/\s*\n\s*/);
         
         for (const mapping of mappings) {
-          const parts = mapping.trim().split(/\s+/);
-          if (parts.length >= 2) {
+          // Find all hex strings in the line (handles both space-separated and jammed formats)
+          const parts = mapping.match(/<[0-9a-fA-F]+>/g);
+          
+          if (parts && parts.length >= 2) {
             // Parse hex strings (support multi-byte CIDs and Unicode)
             const srcHex = parts[0].replace(/<|>/g, '');
             const dstHex = parts[1].replace(/<|>/g, '');
@@ -370,13 +372,23 @@ export class FontDecoder {
         const ranges = match[1].trim().split(/\s*\n\s*/);
         
         for (const range of ranges) {
-          const parts = range.trim().split(/\s+/);
-          if (parts.length >= 3) {
+          // Find all hex strings in the line
+          const parts = range.match(/<[0-9a-fA-F]+>/g);
+          
+          if (parts && parts.length >= 3) {
             const startHex = parts[0].replace(/<|>/g, '');
             const endHex = parts[1].replace(/<|>/g, '');
             const startCode = parseInt(startHex, 16);
             const endCode = parseInt(endHex, 16);
-            if (!parts[2].includes('[')) {
+            
+            // Check if the third part is an array (not fully supported by this regex approach if jammed)
+            // If jammed like <start><end>[<v1><v2>], the regex /<...>/g will just find start, end, v1, v2...
+            // We need to distinguish between range mapping <start><end><dst> and array mapping <start><end>[<v1>...]
+            
+            const lineContent = range.trim();
+            const hasArray = lineContent.includes('[') && lineContent.includes(']');
+            
+            if (!hasArray) {
               const dstHex = parts[2].replace(/<|>/g, '');
               // Unicode can be >2 bytes, decode as UTF-16BE
               for (let i = 0; i <= endCode - startCode; i++) {
@@ -392,9 +404,9 @@ export class FontDecoder {
                 result.set(startCode + i, unicode);
               }
             } else {
-              // Array mapping: third part is an array of destinations
-              const arrayStr = range.substring(range.indexOf('[') + 1, range.lastIndexOf(']')).trim();
-              const dsts = arrayStr.split(/\s+/).filter(Boolean);
+              // Array mapping: <start> <end> [ <v1> <v2> ... ]
+              // We can use the parts array, but we need to skip start and end
+              const dsts = parts.slice(2);
               let current = startCode;
               for (const dst of dsts) {
                 const dstHex = dst.replace(/<|>/g, '');
