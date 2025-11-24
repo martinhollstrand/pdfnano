@@ -17,7 +17,7 @@ const MAX_XREF_OBJECTS = 10000; // Hard cap for reconstructed XRef
 const MAX_PARSE_DEPTH = 50;     // Max recursion depth for value/dictionary parsing
 const MAX_DICT_ENTRIES = 1000;  // Max entries in a dictionary
 const MAX_ARRAY_ENTRIES = 1000; // Max entries in an array
-export const DEBUG = false; // Set to true for verbose debug logging
+export const DEBUG = process.env.PDFNANO_DEBUG === 'true'; // Set to true for verbose debug logging
 
 /**
  * Represents a PDF cross-reference entry
@@ -68,7 +68,8 @@ export class PDFStructure {
       const startxrefPos = this.findStartXRef();
       if (startxrefPos >= 0) {
         const xrefOffset = this.readStartXRef(startxrefPos);
-        this.parseXRef(xrefOffset);
+        // Parse xref tables, following Prev chain for incremental updates
+        this.parseXRefChain(xrefOffset);
       } else {
         if (DEBUG) console.log('No startxref found, attempting XRef reconstruction');
         this.reconstructXRefFromObjects();
@@ -164,14 +165,34 @@ export class PDFStructure {
   }
 
   /**
-   * Parse the cross-reference table
+   * Parse xref table chain, following Prev references for incremental updates
    */
-  private parseXRef(offset: number): void {
+  private parseXRefChain(startOffset: number): void {
+    const visitedOffsets = new Set<number>();
+    let currentOffset: number | null = startOffset;
+    
+    // Parse xref tables starting from the most recent, following Prev chain backwards
+    while (currentOffset !== null && !visitedOffsets.has(currentOffset)) {
+      visitedOffsets.add(currentOffset);
+      
+      // Parse the current xref table
+      const prevOffset = this.parseXRef(currentOffset);
+      
+      // Follow Prev chain if it exists
+      currentOffset = prevOffset;
+    }
+  }
+
+  /**
+   * Parse the cross-reference table
+   * @returns Previous xref offset if Prev exists, null otherwise
+   */
+  private parseXRef(offset: number): number | null {
     // Ensure offset is valid
     if (offset < 0 || offset >= this.buffer.length) {
       console.log(`Warning: Invalid xref offset: ${offset}, attempting to reconstruct`);
       this.reconstructXRefFromObjects();
-      return;
+      return null;
     }
 
     // Check if this is an xref stream instead of a traditional xref table
@@ -184,7 +205,8 @@ export class PDFStructure {
       if (objHeaderMatch) {
         // This appears to be an xref stream, handle it differently
         this.parseXRefStream(offset);
-        return;
+        // XRef streams don't have Prev in the same way, return null for now
+        return null;
       }
 
       // Read xref marker
@@ -193,7 +215,7 @@ export class PDFStructure {
         // If we don't find the xref marker, try to reconstruct the xref table from objects
         console.log(`Warning: Invalid xref table marker at offset ${offset}, attempting to reconstruct`);
         this.reconstructXRefFromObjects();
-        return;
+        return null;
       }
 
       let pos = offset + Constants.XREF_MARKER.length;
@@ -224,8 +246,13 @@ export class PDFStructure {
         if (pos + Constants.TRAILER_MARKER.length <= this.buffer.length) {
           const trailerCheck = this.buffer.toString('ascii', pos, pos + Constants.TRAILER_MARKER.length);
           if (trailerCheck === Constants.TRAILER_MARKER) {
-            // Reached the trailer, we're done
-            break;
+            // Reached the trailer, parse it to get Prev offset
+            const trailerStart = pos;
+            pos += Constants.TRAILER_MARKER.length;
+            
+            // Parse trailer to find Prev offset
+            const prevOffset = this.parseTrailerForPrev(trailerStart);
+            return prevOffset;
           }
         }
 
@@ -273,7 +300,7 @@ export class PDFStructure {
           if (firstObjNum < 0 || count < 0 || count > 1000000) {
             console.log(`Warning: Invalid xref subsection values: first=${firstObjNum}, count=${count}`);
             this.reconstructXRefFromObjects();
-            return;
+            return null;
           }
 
           // Read entries
@@ -306,12 +333,49 @@ export class PDFStructure {
         } catch (err) {
           console.log(`Warning: Error processing xref subsection: ${err}`);
           this.reconstructXRefFromObjects();
-          return;
+          return null;
         }
       }
+      
+      // If we didn't find trailer in the loop, return null (no Prev)
+      return null;
     } catch (err) {
       console.log(`Warning: Error parsing xref table: ${err}`);
       this.reconstructXRefFromObjects();
+      return null;
+    }
+  }
+
+  /**
+   * Parse trailer dictionary at a specific position and extract Prev offset
+   */
+  private parseTrailerForPrev(trailerPos: number): number | null {
+    try {
+      let pos = trailerPos + Constants.TRAILER_MARKER.length;
+      
+      // Skip whitespace
+      while (pos < this.buffer.length) {
+        const ch = String.fromCharCode(this.buffer[pos]);
+        if (ch !== ' ' && ch !== '\t' && ch !== '\r' && ch !== '\n') break;
+        pos++;
+      }
+      
+      // Parse trailer dictionary
+      const { value: trailerDict } = this.parseDictionary(pos);
+      if (!(trailerDict instanceof PDFDictionary)) {
+        return null;
+      }
+      
+      // Extract Prev offset
+      const prevRef = trailerDict.get('Prev');
+      if (prevRef instanceof PDFNumber) {
+        return prevRef.value;
+      }
+      
+      return null;
+    } catch (err) {
+      if (DEBUG) console.log(`Warning: Error parsing trailer for Prev: ${err}`);
+      return null;
     }
   }
 

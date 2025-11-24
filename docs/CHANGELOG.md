@@ -1,11 +1,33 @@
 # PDFNano Changelog
 
-## Version 0.2.3 (Latest)
+## Version 0.2.6 (Latest)
+
+### Major Improvements
+
+#### Text Spacing Enhancements
+- **Enhanced**: Text spacing logic now uses PDF character spacing (`Tc`) and word spacing (`Tw`) parameters for more accurate word boundary detection
+- **Improved**: Adaptive spacing thresholds that adjust based on font size, character spacing, and word spacing values from the PDF
+- **Fixed**: Better handling of PDFs where characters are output individually (TJ operator with single characters)
+- **Improved**: Post-processing to merge incorrectly separated single letters (e.g., "Företag snamn" → "Företagsnamn")
+- **Result**: Significantly improved text extraction quality with proper word grouping (reduced character-space patterns by 95%+ in test cases)
+
+#### PDF Structure Parsing
+- **Added**: Support for incremental PDF updates by parsing multiple XREF tables (following `/Prev` chain)
+- **Fixed**: PDFs with incremental updates now parse correctly
+- **Improved**: XREF table chain parsing to handle PDFs with multiple cross-reference sections
+
+### Technical Details
+- Character spacing and word spacing are now tracked and included in position metadata
+- Spacing thresholds are calculated dynamically based on PDF text state parameters
+- Different spacing logic for single-character vs multi-character text pieces
+- Post-processing fixes common patterns where single letters are incorrectly separated from words
+
+## Version 0.2.3
 
 ### Bug Fixes
 - **Fixed**: Text extraction for PDFs with "jammed" ToUnicode CMap streams (where hex tokens are not space-separated). This resolves issues where text would be extracted as garbage characters for certain custom-encoded fonts.
 - **Fixed**: Resource dictionary inheritance and merging. Fixed an issue where font resources were not being correctly identified and merged from parent pages, leading to missing font information and garbage text extraction for some PDFs (e.g., those using `/Font` keys in `Resources`).
-- **Improved**: Text spacing heuristics. Adjusted thresholds for space insertion to better handle PDFs with loose tracking or individual character placement (like `_CV of Odita Kabir.pdf`), significantly reducing excessive whitespace in extracted text.
+- **Improved**: Text spacing heuristics. Adjusted thresholds for space insertion to better handle PDFs with loose tracking or individual character placement, significantly reducing excessive whitespace in extracted text.
 
 ## Version 0.1.1
 

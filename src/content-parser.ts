@@ -476,8 +476,8 @@ export class ContentParser {
    * Interpret the parsed content stream operations
    * @returns Extracted text with positions and other information
    */
-  public interpret(): { text: string, positions: Array<{ text: string, x: number, y: number, width: number, fontSize: number }> } {
-    const result: { text: string, positions: Array<{ text: string, x: number, y: number, width: number, fontSize: number }> } = {
+  public interpret(): { text: string, positions: Array<{ text: string, x: number, y: number, width: number, fontSize: number, charSpacing: number, wordSpacing: number }> } {
+    const result: { text: string, positions: Array<{ text: string, x: number, y: number, width: number, fontSize: number, charSpacing: number, wordSpacing: number }> } = {
       text: '',
       positions: []
     };
@@ -573,16 +573,21 @@ export class ContentParser {
             // Add text to result
             result.text += decodedText;
             const width = this.getEstimatedWidth(decodedText);
+            // Character spacing is applied between characters, so for a string of length n,
+            // we add (n-1) * charSpacing to the width
+            const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
             result.positions.push({
               text: decodedText,
               x: this.textState.x,
               y: this.textState.y,
-              width,
-              fontSize: this.textState.fontSize
+              width: totalWidth,
+              fontSize: this.textState.fontSize,
+              charSpacing: this.textState.charSpacing,
+              wordSpacing: this.textState.wordSpacing
             });
             
             // Advance position
-            this.textState.x += width;
+            this.textState.x += totalWidth;
           }
           break;
           
@@ -604,18 +609,22 @@ export class ContentParser {
             const rawText = operands[0];
             const decodedText = this.decodeText(rawText);
             const width = this.getEstimatedWidth(decodedText);
+            // Character spacing is applied between characters
+            const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
             
             result.text += decodedText;
             result.positions.push({
               text: decodedText,
               x: this.textState.x,
               y: this.textState.y,
-              width,
-              fontSize: this.textState.fontSize
+              width: totalWidth,
+              fontSize: this.textState.fontSize,
+              charSpacing: this.textState.charSpacing,
+              wordSpacing: this.textState.wordSpacing
             });
             
             // Advance position
-            this.textState.x += width;
+            this.textState.x += totalWidth;
           }
           break;
           
@@ -641,18 +650,22 @@ export class ContentParser {
             const rawText = operands[2];
             const decodedText = this.decodeText(rawText);
             const width = this.getEstimatedWidth(decodedText);
+            // Character spacing is applied between characters
+            const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
             
             result.text += decodedText;
             result.positions.push({
               text: decodedText,
               x: this.textState.x,
               y: this.textState.y,
-              width,
-              fontSize: this.textState.fontSize
+              width: totalWidth,
+              fontSize: this.textState.fontSize,
+              charSpacing: this.textState.charSpacing,
+              wordSpacing: this.textState.wordSpacing
             });
             
             // Advance position
-            this.textState.x += width;
+            this.textState.x += totalWidth;
           }
           break;
           
@@ -662,26 +675,44 @@ export class ContentParser {
             let textPiece = '';
             const startX = this.textState.x;
             let currentX = startX;
+            let lastWasText = false;
+            let lastTextEndX = startX;
             
             for (const item of textArray) {
               if (typeof item === 'string') {
                 // Decode and add text
                 const decodedItem = this.decodeText(item);
                 textPiece += decodedItem;
-                currentX += this.getEstimatedWidth(decodedItem);
+                const itemWidth = this.getEstimatedWidth(decodedItem);
+                currentX += itemWidth;
+                lastTextEndX = currentX;
+                lastWasText = decodedItem.length > 0;
               } else if (typeof item === 'number') {
-                // Negative numbers move right in TJ arrays
-                const offset = -item / 1000 * this.textState.fontSize;
-                currentX += offset;
-                // Add a space for significant shifts (increase threshold to > 60% of font size)
-                if (offset > this.textState.fontSize * 0.6 && textPiece) {
+                // In TJ arrays, numbers adjust spacing (in thousandths of a unit of text space)
+                // Negative numbers move the text position right (reduce spacing)
+                // Positive numbers move the text position left (increase spacing)
+                const adjustment = -item / 1000 * this.textState.fontSize;
+                currentX += adjustment;
+                
+                // The adjustment already accounts for character spacing and word spacing
+                // We only add a space in the output text if this is a significant gap
+                // Use word spacing as a threshold - if adjustment is close to word spacing, it's likely a word break
+                const wordSpacingThreshold = Math.max(
+                  this.textState.wordSpacing * 0.7,  // 70% of word spacing
+                  this.textState.fontSize * 0.4      // Or 40% of font size
+                );
+                if (adjustment > wordSpacingThreshold && textPiece && lastWasText) {
                   textPiece += ' ';
                 }
+                lastWasText = false;
               } else if (item && item.str) {
                 // If item is an object with str/buf (from string/hex parsing)
                 const decodedItem = this.decodeText(item);
                 textPiece += decodedItem;
-                currentX += this.getEstimatedWidth(decodedItem);
+                const itemWidth = this.getEstimatedWidth(decodedItem);
+                currentX += itemWidth;
+                lastTextEndX = currentX;
+                lastWasText = decodedItem.length > 0;
               }
             }
             
@@ -692,7 +723,9 @@ export class ContentParser {
                 x: startX,
                 y: this.textState.y,
                 width: currentX - startX,
-                fontSize: this.textState.fontSize
+                fontSize: this.textState.fontSize,
+                charSpacing: this.textState.charSpacing,
+                wordSpacing: this.textState.wordSpacing
               });
               this.textState.x = currentX;
             }
