@@ -6,7 +6,8 @@ import {
   PDFParseResult,
   PDFPage,
   PDFImage,
-  PDFMetadata
+  PDFMetadata,
+  ParserOptions
 } from './types';
 import {
   readFileAsBuffer,
@@ -33,10 +34,19 @@ import { DEBUG } from './structure';
  * Main PDF Parser class
  */
 export class PDFParser {
+  private options: ParserOptions;
+
   /**
    * Creates a new PDF parser instance
+   * @param options Parser configuration options
    */
-  constructor() { }
+  constructor(options: ParserOptions = {}) {
+    this.options = {
+      maxPages: options.maxPages ?? 100,
+      maxSafeSize: options.maxSafeSize ?? 20 * 1024 * 1024, // 20MB
+      maxImages: options.maxImages ?? 50
+    };
+  }
 
   /**
    * Parse a PDF file
@@ -48,9 +58,8 @@ export class PDFParser {
       const fileStats = fs.statSync(filePath);
 
       // Check file size before loading into memory
-      const MAX_SAFE_SIZE = 20 * 1024 * 1024; // 20MB
       if (DEBUG) console.log(`Warning: Large PDF detected (${Math.round(fileStats.size / (1024 * 1024))}MB), using limited parsing mode`);
-      if (fileStats.size > MAX_SAFE_SIZE) {
+      if (fileStats.size > this.options.maxSafeSize!) {
         return this.parseLargeFile(filePath);
       }
 
@@ -100,9 +109,8 @@ export class PDFParser {
   public async parseBuffer(buffer: Buffer): Promise<PDFParseResult> {
     try {
       // Check buffer size
-      const MAX_SAFE_SIZE = 20 * 1024 * 1024; // 20MB
       if (DEBUG) console.log(`Warning: Large PDF buffer detected (${Math.round(buffer.length / (1024 * 1024))}MB), using limited parsing mode`);
-      if (buffer.length > MAX_SAFE_SIZE) {
+      if (buffer.length > this.options.maxSafeSize!) {
         return {
           text: "PDF buffer too large for complete text extraction",
           pages: [{
@@ -137,13 +145,12 @@ export class PDFParser {
       const pages = this.extractPages(structure);
 
       // Extract images, but limit the total number to prevent memory issues
-      const MAX_IMAGES = 50;
       const allImages: PDFImage[] = [];
 
       let imageCount = 0;
       for (const page of pages) {
         for (const image of page.images) {
-          if (imageCount < MAX_IMAGES) {
+          if (imageCount < this.options.maxImages!) {
             allImages.push(image);
             imageCount++;
           } else {
@@ -151,7 +158,7 @@ export class PDFParser {
           }
         }
 
-        if (imageCount >= MAX_IMAGES) {
+        if (imageCount >= this.options.maxImages!) {
           break;
         }
       }
@@ -517,11 +524,10 @@ export class PDFParser {
 
       // Extract content from each page
       // Limit the number of pages to process to prevent memory issues
-      const MAX_PAGES = 100;
-      const pagesToProcess = Math.min(pageNodes.length, MAX_PAGES);
+      const pagesToProcess = Math.min(pageNodes.length, this.options.maxPages!);
 
-      if (pageNodes.length > MAX_PAGES) {
-        if (DEBUG) console.log(`Warning: PDF has ${pageNodes.length} pages, limiting to processing ${MAX_PAGES} pages only`);
+      if (pageNodes.length > this.options.maxPages!) {
+        if (DEBUG) console.log(`Warning: PDF has ${pageNodes.length} pages, limiting to processing ${this.options.maxPages!} pages only`);
       }
 
       for (let i = 0; i < pagesToProcess; i++) {
@@ -587,14 +593,14 @@ export class PDFParser {
   private getAllResources(structure: PDFStructure, pageDict: PDFDictionary): PDFDictionary {
     // Resources can be inherited. We need to walk up the chain and merge them.
     // Child resources override parent resources.
-    
+
     const resourceChain: PDFDictionary[] = [];
     let currentDict = pageDict;
     const visited = new Set<string>();
-    
+
     while (true) {
       const resources = currentDict.get('Resources');
-      
+
       if (resources instanceof PDFDictionary) {
         resourceChain.push(resources);
       } else if (resources instanceof PDFReference) {
@@ -603,48 +609,48 @@ export class PDFParser {
           resourceChain.push(resourcesObj);
         }
       }
-      
+
       // Move to parent
       const parentRef = currentDict.get('Parent');
       if (!(parentRef instanceof PDFReference)) {
         break;
       }
-      
+
       const refKey = `${parentRef.objectNumber}_${parentRef.generation}`;
       if (visited.has(refKey)) break;
       visited.add(refKey);
-      
+
       const parentObj = structure.getObject(parentRef.objectNumber, parentRef.generation);
       if (!(parentObj instanceof PDFDictionary)) break;
-      
+
       currentDict = parentObj;
     }
-    
+
     // Merge from root down to leaf (so leaf overrides root)
     // We iterate backwards because we pushed child first, then parent
     const mergedResources = new PDFDictionary();
-    
+
     for (let i = resourceChain.length - 1; i >= 0; i--) {
       const res = resourceChain[i];
       for (const [key, value] of res.entries.entries()) {
         // If it's a sub-dictionary (like Font, XObject), we should merge those too?
         // Simple implementation: just merge top-level keys.
         // Better implementation: If key is Font/XObject/etc, merge their contents.
-        
+
         // Keys in dictionary always start with /
         // But we want to match specific resource types
         const resourceTypes = ['/Font', '/XObject', '/ExtGState', '/ColorSpace', '/Pattern', '/Shading', '/Properties'];
-        
+
         if (resourceTypes.includes(key)) {
           let existing = mergedResources.get(key);
           let incoming = value;
-          
+
           // Resolve references for merging
           if (existing instanceof PDFReference) {
-             existing = structure.getObject(existing.objectNumber, existing.generation);
+            existing = structure.getObject(existing.objectNumber, existing.generation);
           }
           if (incoming instanceof PDFReference) {
-             incoming = structure.getObject(incoming.objectNumber, incoming.generation);
+            incoming = structure.getObject(incoming.objectNumber, incoming.generation);
           }
 
           if (existing instanceof PDFDictionary && incoming instanceof PDFDictionary) {
@@ -662,7 +668,7 @@ export class PDFParser {
         }
       }
     }
-    
+
     return mergedResources;
   }
 
@@ -985,22 +991,22 @@ export class PDFParser {
       } else if (lastY !== null && lastX > 0) {
         // Calculate the gap between the end of the last text and start of this text
         const gap = pos.x - lastX;
-        
+
         // Get character spacing and word spacing for this position
         const charSpacing = (pos as any).charSpacing !== undefined ? (pos as any).charSpacing : lastCharSpacing;
         const wordSpacing = (pos as any).wordSpacing !== undefined ? (pos as any).wordSpacing : lastWordSpacing;
-        
+
         // Get the last text piece to check if it's a single character
         const lastText = textParts.length > 0 ? textParts[textParts.length - 1] : '';
         const isLastSingleChar = lastText.length === 1;
         const isCurrentSingleChar = pos.text.length === 1;
-        
+
         // Check if we're in a sequence of single characters (likely a word being built character by character)
-        const recentSingleChars = textParts.length >= 2 && 
+        const recentSingleChars = textParts.length >= 2 &&
           textParts.slice(-2).every(t => t.length === 1);
-        
+
         const fontSize = (pos as any).fontSize || 12;
-        
+
         // If both are single characters, use a balanced approach
         // This handles PDFs where each character is output individually
         if (isLastSingleChar && isCurrentSingleChar) {
@@ -1011,12 +1017,12 @@ export class PDFParser {
             charSpacing * 6,     // Or 6x character spacing (moderate)
             fontSize * 0.4       // Minimum: 40% of font size
           );
-          
+
           // Additional check: if gap is negative or very small, definitely don't add space
           // Also check if both are letters - if so, be more conservative for small gaps
           const lastIsLetter = /[a-zA-ZäöåÄÖÅ]/.test(lastText);
           const currentIsLetter = /[a-zA-ZäöåÄÖÅ]/.test(pos.text);
-          
+
           if (lastIsLetter && currentIsLetter && gap < fontSize * 0.5) {
             // Both are letters and gap is small - likely same word, don't add space
           } else if (gap > minGapForSpace) {
@@ -1031,13 +1037,13 @@ export class PDFParser {
             fontSize * 0.6,      // Or 60% of font size (balanced)
             charSpacing * 5      // Or 5x character spacing (moderate)
           );
-          
+
           // Additional heuristic: if the single char is a letter and the gap is small,
           // it might be part of the word
           const singleChar = isLastSingleChar ? lastText : pos.text;
           const multiChar = isLastSingleChar ? pos.text : lastText;
           const isLetter = /[a-zA-ZäöåÄÖÅ]/.test(singleChar);
-          
+
           // If single char is a letter and gap is less than 50% of font size, it's likely part of the word
           if (isLetter && gap < fontSize * 0.5) {
             // Likely part of the same word, don't add space
@@ -1052,7 +1058,7 @@ export class PDFParser {
             wordSpacing * 0.5,   // Or 50% of word spacing (allows more spaces)
             fontSize * 0.2       // Or 20% of font size as minimum (allows more spaces)
           );
-          
+
           // Only add space if gap is significant enough to indicate a word boundary
           if (gap > minGapForSpace) {
             textParts.push(' ');
@@ -1063,7 +1069,7 @@ export class PDFParser {
 
       textParts.push(pos.text);
       lastY = pos.y;
-      
+
       // Update lastX based on width if available
       if (typeof pos.width === 'number') {
         lastX = pos.x + pos.width;
@@ -1072,7 +1078,7 @@ export class PDFParser {
         // Assume ~5 units per character (reasonable for avg 10-12pt font)
         lastX = pos.x + (pos.text.length * 5);
       }
-      
+
       // Update spacing values for next iteration
       if ((pos as any).charSpacing !== undefined) {
         lastCharSpacing = (pos as any).charSpacing;
@@ -1083,7 +1089,7 @@ export class PDFParser {
     }
 
     let finalText = textParts.join('');
-    
+
     // Post-processing: Fix common patterns where single letters are incorrectly separated
     // Pattern: word + space + single letter + space + word → merge single letter appropriately
     // Examples: "Företag snamn" → "Företagsnamn", "regis treringsdatum" → "registreringsdatum"
@@ -1102,16 +1108,16 @@ export class PDFParser {
       }
       return match;
     });
-    
+
     // Pattern 2: word + space + single letter + word (no space between letter and word)
     // Examples: "Företag snamn" → "Företagsnamn"
     finalText = finalText.replace(/([a-zA-ZäöåÄÖÅ]{2,}) ([a-zA-ZäöåÄÖÅ])([a-zA-ZäöåÄÖÅ]{2,})/g, '$1$2$3');
-    
+
     // Pattern 3: Fix specific cases where we merged too much
     // "Företagsnamnetsregistreringsdatum" → "Företagsnamnets registreringsdatum"
     finalText = finalText.replace(/Företagsnamnetsregistreringsdatum/g, 'Företagsnamnets registreringsdatum');
     finalText = finalText.replace(/Objektetsregis treringsdatum/g, 'Objektets registreringsdatum');
-    
+
     // Pattern 4: Fix common merged word patterns - be conservative, only split clear cases
     // Only split when we're confident it's two separate words, not parts of compound words
     const commonSeparateWords = [
@@ -1132,11 +1138,11 @@ export class PDFParser {
       { pattern: /(Carl)(Johan)/gi, replacement: '$1 $2' },
       { pattern: /(Nils)(Olof)/gi, replacement: '$1 $2' }
     ];
-    
+
     for (const fix of commonSeparateWords) {
       finalText = finalText.replace(fix.pattern, fix.replacement);
     }
-    
+
     // Pattern 5: General fix for very long words that might be two words
     // Look for words 20+ characters that might be compound - be conservative
     finalText = finalText.replace(/([a-zA-ZäöåÄÖÅ]{10,})([a-zA-ZäöåÄÖÅ]{8,})/g, (match: string, word1: string, word2: string) => {
@@ -1149,7 +1155,7 @@ export class PDFParser {
       }
       return match;
     });
-    
+
     return finalText;
   }
 

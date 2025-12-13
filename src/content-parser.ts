@@ -138,11 +138,11 @@ export class ContentParser {
   constructor(buffer: Buffer, resources?: PDFDictionary, structure?: PDFStructure) {
     this.buffer = buffer;
     this.pdfStructure = structure || null;
-    
+
     if (this.pdfStructure) {
       this.fontDecoder = new FontDecoder(this.pdfStructure);
     }
-    
+
     this.initializeResources(resources);
   }
 
@@ -168,10 +168,10 @@ export class ContentParser {
   public parse(): void {
     // Reset state
     this.operations = [];
-    
+
     let pos = 0;
     let operands: any[] = [];
-    
+
     while (pos < this.buffer.length) {
       // Skip whitespace
       while (pos < this.buffer.length) {
@@ -179,28 +179,28 @@ export class ContentParser {
         if (ch !== ' ' && ch !== '\t' && ch !== '\r' && ch !== '\n') break;
         pos++;
       }
-      
+
       if (pos >= this.buffer.length) break;
-      
+
       const char = String.fromCharCode(this.buffer[pos]);
-      
+
       if (char === '/') {
         // Name object
         let name = '/';
         pos++;
-        
+
         while (pos < this.buffer.length) {
           const ch = String.fromCharCode(this.buffer[pos]);
-          if (ch === ' ' || ch === '\t' || ch === '\r' || ch === '\n' || 
-              ch === '(' || ch === ')' || ch === '<' || ch === '>' || 
-              ch === '[' || ch === ']' || ch === '{' || ch === '}' || 
-              ch === '/' || ch === '%') {
+          if (ch === ' ' || ch === '\t' || ch === '\r' || ch === '\n' ||
+            ch === '(' || ch === ')' || ch === '<' || ch === '>' ||
+            ch === '[' || ch === ']' || ch === '{' || ch === '}' ||
+            ch === '/' || ch === '%') {
             break;
           }
           name += ch;
           pos++;
         }
-        
+
         operands.push(name);
       } else if (char === '(') {
         // String object
@@ -256,7 +256,7 @@ export class ContentParser {
         // Skip to closing '>>'
         pos += 2;
         let nestedLevel = 1;
-        
+
         while (pos < this.buffer.length && nestedLevel > 0) {
           if (this.buffer[pos] === 0x3C && this.buffer[pos + 1] === 0x3C) {
             nestedLevel++;
@@ -268,31 +268,31 @@ export class ContentParser {
             pos++;
           }
         }
-        
+
         // Skip this for now
         operands.push({});
       } else if (char === '<') {
         // Hex string
         let hex = '';
         pos++;
-        
+
         while (pos < this.buffer.length) {
           const ch = String.fromCharCode(this.buffer[pos]);
-          
+
           if (ch === '>') {
             pos++;
             break;
           }
-          
-          if ((ch >= '0' && ch <= '9') || 
-              (ch >= 'A' && ch <= 'F') || 
-              (ch >= 'a' && ch <= 'f')) {
+
+          if ((ch >= '0' && ch <= '9') ||
+            (ch >= 'A' && ch <= 'F') ||
+            (ch >= 'a' && ch <= 'f')) {
             hex += ch;
           }
-          
+
           pos++;
         }
-        
+
         // Convert hex string to normal string and buffer
         let hexStr = '';
         let hexBytes: number[] = [];
@@ -413,51 +413,51 @@ export class ContentParser {
         }
         operands.push(array);
       } else if (
-        (char >= '0' && char <= '9') || 
-        char === '-' || 
+        (char >= '0' && char <= '9') ||
+        char === '-' ||
         char === '.'
       ) {
         // Number
         let numStr = '';
-        
+
         while (pos < this.buffer.length) {
           const ch = String.fromCharCode(this.buffer[pos]);
           if (!((ch >= '0' && ch <= '9') || ch === '-' || ch === '.')) break;
           numStr += ch;
           pos++;
         }
-        
+
         operands.push(parseFloat(numStr));
       } else if (
-        (char >= 'a' && char <= 'z') || 
-        (char >= 'A' && char <= 'Z') || 
-        char === '*' || 
-        char === '"' || 
-        char === '\'' || 
+        (char >= 'a' && char <= 'z') ||
+        (char >= 'A' && char <= 'Z') ||
+        char === '*' ||
+        char === '"' ||
+        char === '\'' ||
         char === '`'
       ) {
         // Operator
         let operator = '';
-        
+
         while (pos < this.buffer.length) {
           const ch = String.fromCharCode(this.buffer[pos]);
           if (!((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch === '*' || ch === '"' || ch === '\'')) break;
           operator += ch;
           pos++;
         }
-        
+
         // Special case for single character operators
         if (operator === '') {
           operator = char;
           pos++;
         }
-        
+
         // Record the operation
         this.operations.push({
           operator,
           operands: [...operands]
         });
-        
+
         // Clear operands for next operation
         operands = [];
       } else {
@@ -465,7 +465,7 @@ export class ContentParser {
         pos++;
       }
     }
-    
+
     const operatorCounts: Record<string, number> = {};
     for (const op of this.operations) {
       operatorCounts[op.operator] = (operatorCounts[op.operator] || 0) + 1;
@@ -481,7 +481,7 @@ export class ContentParser {
       text: '',
       positions: []
     };
-    
+
     // Reset state
     this.textState = {
       charSpacing: 0,
@@ -499,11 +499,11 @@ export class ContentParser {
       x: 0,
       y: 0
     };
-    
+
     // Process each operation
     for (const operation of this.operations) {
       const { operator, operands } = operation;
-      
+
       // Text operators
       switch (operator) {
         // Text positioning operators
@@ -516,7 +516,7 @@ export class ContentParser {
             this.textState.y = operands[5];
           }
           break;
-          
+
         case 'Td': // Move text position
           if (operands.length === 2) {
             const [tx, ty] = operands;
@@ -531,7 +531,7 @@ export class ContentParser {
             this.textState.y += ty;
           }
           break;
-          
+
         case 'TD': // Move text position and set leading
           if (operands.length === 2) {
             const [tx, ty] = operands;
@@ -548,7 +548,7 @@ export class ContentParser {
             this.textState.y += ty;
           }
           break;
-          
+
         case 'T*': // Move to start of next line
           // Same as Td(0, -leading)
           const tx = 0;
@@ -562,14 +562,14 @@ export class ContentParser {
           this.textState.x += tx;
           this.textState.y += ty;
           break;
-          
+
         // Text showing operators
         case 'Tj': // Show text
           if (operands.length === 1) {
             const rawText = operands[0];
             // Decode text with font information if available
             const decodedText = this.decodeText(rawText);
-            
+
             // Add text to result
             result.text += decodedText;
             const width = this.getEstimatedWidth(decodedText);
@@ -585,12 +585,12 @@ export class ContentParser {
               charSpacing: this.textState.charSpacing,
               wordSpacing: this.textState.wordSpacing
             });
-            
+
             // Advance position
             this.textState.x += totalWidth;
           }
           break;
-          
+
         case "'": // Move to next line and show text
           if (operands.length === 1) {
             // First perform T*
@@ -604,14 +604,14 @@ export class ContentParser {
             // Update current position
             this.textState.x += tx;
             this.textState.y += ty;
-            
+
             // Then show text
             const rawText = operands[0];
             const decodedText = this.decodeText(rawText);
             const width = this.getEstimatedWidth(decodedText);
             // Character spacing is applied between characters
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
-            
+
             result.text += decodedText;
             result.positions.push({
               text: decodedText,
@@ -622,18 +622,18 @@ export class ContentParser {
               charSpacing: this.textState.charSpacing,
               wordSpacing: this.textState.wordSpacing
             });
-            
+
             // Advance position
             this.textState.x += totalWidth;
           }
           break;
-          
+
         case '"': // Set word and character spacing, move to next line, and show text
           if (operands.length === 3) {
             // Set word and character spacing
             this.textState.wordSpacing = operands[0];
             this.textState.charSpacing = operands[1];
-            
+
             // T*
             const tx = 0;
             const ty = -this.textState.leading;
@@ -645,14 +645,14 @@ export class ContentParser {
             // Update current position
             this.textState.x += tx;
             this.textState.y += ty;
-            
+
             // Show text
             const rawText = operands[2];
             const decodedText = this.decodeText(rawText);
             const width = this.getEstimatedWidth(decodedText);
             // Character spacing is applied between characters
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
-            
+
             result.text += decodedText;
             result.positions.push({
               text: decodedText,
@@ -663,12 +663,12 @@ export class ContentParser {
               charSpacing: this.textState.charSpacing,
               wordSpacing: this.textState.wordSpacing
             });
-            
+
             // Advance position
             this.textState.x += totalWidth;
           }
           break;
-          
+
         case 'TJ': // Show text with individual positioning
           if (operands.length === 1 && Array.isArray(operands[0])) {
             const textArray = operands[0];
@@ -677,7 +677,7 @@ export class ContentParser {
             let currentX = startX;
             let lastWasText = false;
             let lastTextEndX = startX;
-            
+
             for (const item of textArray) {
               if (typeof item === 'string') {
                 // Decode and add text
@@ -693,7 +693,7 @@ export class ContentParser {
                 // Positive numbers move the text position left (increase spacing)
                 const adjustment = -item / 1000 * this.textState.fontSize;
                 currentX += adjustment;
-                
+
                 // The adjustment already accounts for character spacing and word spacing
                 // We only add a space in the output text if this is a significant gap
                 // Use word spacing as a threshold - if adjustment is close to word spacing, it's likely a word break
@@ -715,7 +715,7 @@ export class ContentParser {
                 lastWasText = decodedItem.length > 0;
               }
             }
-            
+
             if (textPiece) {
               result.text += textPiece;
               result.positions.push({
@@ -731,44 +731,44 @@ export class ContentParser {
             }
           }
           break;
-          
+
         // Text state operators
         case 'Tc': // Set character spacing
           if (operands.length === 1) {
             this.textState.charSpacing = operands[0];
           }
           break;
-          
+
         case 'Tw': // Set word spacing
           if (operands.length === 1) {
             this.textState.wordSpacing = operands[0];
           }
           break;
-          
+
         case 'Tz': // Set horizontal scaling
           if (operands.length === 1) {
             this.textState.horizontalScale = operands[0];
           }
           break;
-          
+
         case 'TL': // Set text leading
           if (operands.length === 1) {
             this.textState.leading = operands[0];
           }
           break;
-          
+
         case 'Tf': // Set text font and size
           if (operands.length === 2) {
             const fontName = operands[0];
             const fontSize = operands[1];
-            
+
             this.textState.font = fontName;
             this.textState.fontSize = fontSize;
-            
+
             // Look up font reference
             if (this.fontDict.has(fontName)) {
               this.textState.fontDict = this.fontDict.get(fontName)!;
-              
+
               // Get font info if font decoder available
               if (this.fontDecoder && this.pdfStructure) {
                 this.textState.fontInfo = this.fontDecoder.getFont(this.textState.fontDict);
@@ -776,25 +776,25 @@ export class ContentParser {
             }
           }
           break;
-          
+
         case 'Tr': // Set text rendering mode
           if (operands.length === 1) {
             this.textState.renderMode = operands[0];
           }
           break;
-          
+
         case 'Ts': // Set text rise
           if (operands.length === 1) {
             this.textState.rise = operands[0];
           }
           break;
-          
+
         // Graphics state operators
         case 'q': // Save graphics state
-          this.graphicsStateStack.push({...this.graphicsState});
-          this.textStateStack.push({...this.textState});
+          this.graphicsStateStack.push({ ...this.graphicsState });
+          this.textStateStack.push({ ...this.textState });
           break;
-          
+
         case 'Q': // Restore graphics state
           if (this.graphicsStateStack.length > 0) {
             this.graphicsState = this.graphicsStateStack.pop()!;
@@ -805,14 +805,47 @@ export class ContentParser {
           break;
       }
     }
-    
+
+    // Sort text positions for correct reading order
+    // Group by Y coordinate (with tolerance for same line) then sort by X
+    const sortedPositions = this.sortTextPositions(result.positions);
+
+    // Rebuild text from sorted positions
+    result.text = sortedPositions.map(p => p.text).join('');
+    result.positions = sortedPositions;
+
     return result;
+  }
+
+  /**
+   * Sort text positions by vertical position (Y, descending) then horizontal (X, ascending)
+   * Groups text on the same line using a tolerance based on font size
+   */
+  private sortTextPositions(positions: Array<{ text: string, x: number, y: number, width: number, fontSize: number, charSpacing: number, wordSpacing: number }>): Array<{ text: string, x: number, y: number, width: number, fontSize: number, charSpacing: number, wordSpacing: number }> {
+    if (positions.length === 0) return positions;
+
+    // Sort by Y (descending, since PDF Y increases upward), then by X (ascending)
+    const sorted = [...positions].sort((a, b) => {
+      // Determine line height tolerance (use larger fontSize of the two)
+      const tolerance = Math.max(a.fontSize, b.fontSize) * 0.5;
+
+      // If Y coordinates are within tolerance, they're on the same line
+      if (Math.abs(a.y - b.y) <= tolerance) {
+        // Sort by X (left to right)
+        return a.x - b.x;
+      }
+
+      // Otherwise sort by Y (top to bottom, so higher Y comes first)
+      return b.y - a.y;
+    });
+
+    return sorted;
   }
 
   /**
    * Decode text using current font information
    */
-  private decodeText(text: string | Buffer | {str: string, buf: Buffer}): string {
+  private decodeText(text: string | Buffer | { str: string, buf: Buffer }): string {
     if (!text) return '';
     let str: string;
     let buf: Buffer | undefined;
@@ -856,10 +889,10 @@ export class ContentParser {
     // | a b 0 |
     // | c d 0 |
     // | e f 1 |
-    
+
     const a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3], a4 = a[4], a5 = a[5];
     const b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3], b4 = b[4], b5 = b[5];
-    
+
     return [
       a0 * b0 + a1 * b2,
       a0 * b1 + a1 * b3,

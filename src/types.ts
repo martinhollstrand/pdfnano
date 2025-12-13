@@ -74,4 +74,16 @@ export interface PDFMetadata {
   pageCount: number;
   /** Whether the document is encrypted */
   isEncrypted: boolean;
+}
+
+/**
+ * Parser configuration options
+ */
+export interface ParserOptions {
+  /** Maximum number of pages to process (default: 100) */
+  maxPages?: number;
+  /** Maximum safe file size in bytes (default: 20MB) */
+  maxSafeSize?: number;
+  /** Maximum number of images to extract (default: 50) */
+  maxImages?: number;
 } 

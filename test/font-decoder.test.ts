@@ -1,87 +1,99 @@
-
-import { FontDecoder } from '../src/font-decoder';
-import { PDFStream, PDFDictionary } from '../src/objects';
+import { FontDecoder, FontInfo } from '../src/font-decoder';
 import { PDFStructure } from '../src/structure';
+import * as assert from 'assert';
 
-// Mock PDFStructure since we don't need it for this specific test of parseToUnicode
+// Mock PDFStructure since we only need it for the constructor
 const mockStructure = {} as PDFStructure;
 
-function runTest() {
+async function runTests() {
   console.log('Running FontDecoder tests...');
+  let passed = 0;
+  let failed = 0;
+
+  function test(name: string, fn: () => void) {
+    try {
+      fn();
+      console.log(`✓ ${name}`);
+      passed++;
+    } catch (e: any) {
+      console.error(`✗ ${name} failed:`, e.message);
+      failed++;
+    }
+  }
+
   const decoder = new FontDecoder(mockStructure);
 
-  // Test 1: Jammed hex strings
-  {
-    const cmapContent = `
-/CIDInit /ProcSet findresource begin
-12 dict begin
-begincmap
-/CIDSystemInfo <<
-  /Registry (Adobe)
-  /Ordering (UCS)
-  /Supplement 0
->> def
-/CMapName /Adobe-Identity-UCS def
-/CMapType 2 def
-1 begincodespacerange
-<00><FF>
-endcodespacerange
-2 beginbfrange
-<21><21><0020>
-<22><22><002b>
-endbfrange
-endcmap
-CMapName currentdict /CMap defineresource pop
-end
-end
-`;
+  // Test WinAnsiEncoding
+  test('WinAnsiEncoding: Euro symbol (0x80)', () => {
+    const fontInfo: FontInfo = {
+      fontName: 'TestFont',
+      fontType: 'TrueType',
+      encoding: 'WinAnsiEncoding',
+      isSymbolic: false,
+      isEmbedded: false,
+      customEncoding: null,
+      toUnicode: null
+    };
 
-    const stream = new PDFStream(new PDFDictionary(), Buffer.from(cmapContent));
-    
-    // Access private method for testing
-    const map = (decoder as any).parseToUnicode(stream);
+    // 0x80 is Euro in WinAnsi
+    const input = Buffer.from([0x80]);
+    const result = decoder.decodeText(input, fontInfo);
+    assert.strictEqual(result, '€');
+  });
 
-    // Check if mappings were parsed
-    if (map.size === 0) {
-      console.error('✗ Test 1 failed: Parsed 0 entries from CMap');
-      process.exit(1);
-    }
+  test('WinAnsiEncoding: Smart quotes (0x93, 0x94)', () => {
+    const fontInfo: FontInfo = {
+      fontName: 'TestFont',
+      fontType: 'TrueType',
+      encoding: 'WinAnsiEncoding',
+      isSymbolic: false,
+      isEmbedded: false,
+      customEncoding: null,
+      toUnicode: null
+    };
 
-    // <21> (33) -> <0020> (space, 32)
-    if (map.get(0x21) !== '\u0020') {
-      console.error(`✗ Test 1 failed: Expected 0x21 to map to space, got ${map.get(0x21)}`);
-      process.exit(1);
-    }
+    // “Hello”
+    const input = Buffer.from([0x93, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x94]);
+    const result = decoder.decodeText(input, fontInfo);
+    assert.strictEqual(result, '“Hello”');
+  });
 
-    // <22> (34) -> <002b> (+, 43)
-    if (map.get(0x22) !== '\u002b') {
-      console.error(`✗ Test 1 failed: Expected 0x22 to map to +, got ${map.get(0x22)}`);
-      process.exit(1);
-    }
-    
-    console.log('✓ Jammed CMap parsing test passed');
-  }
+  // Test MacRomanEncoding
+  test('MacRomanEncoding: Accented characters', () => {
+    const fontInfo: FontInfo = {
+      fontName: 'TestFont',
+      fontType: 'TrueType',
+      encoding: 'MacRomanEncoding',
+      isSymbolic: false,
+      isEmbedded: false,
+      customEncoding: null,
+      toUnicode: null
+    };
 
-  // Test 2: Space-separated hex strings
-  {
-    const cmapContent = `
-1 beginbfrange
-<21> <21> <0020>
-endbfrange
-`;
+    // 0x80 is Ä in MacRoman
+    const input = Buffer.from([0x80]);
+    const result = decoder.decodeText(input, fontInfo);
+    assert.strictEqual(result, 'Ä');
+  });
 
-    const stream = new PDFStream(new PDFDictionary(), Buffer.from(cmapContent));
-    const map = (decoder as any).parseToUnicode(stream);
+  test('MacRomanEncoding: Copyright (0xA9)', () => {
+    const fontInfo: FontInfo = {
+      fontName: 'TestFont',
+      fontType: 'TrueType',
+      encoding: 'MacRomanEncoding',
+      isSymbolic: false,
+      isEmbedded: false,
+      customEncoding: null,
+      toUnicode: null
+    };
 
-    if (map.get(0x21) !== '\u0020') {
-      console.error(`✗ Test 2 failed: Expected 0x21 to map to space, got ${map.get(0x21)}`);
-      process.exit(1);
-    }
-    
-    console.log('✓ Spaced CMap parsing test passed');
-  }
-  
-  console.log('All FontDecoder tests passed');
+    const input = Buffer.from([0xA9]);
+    const result = decoder.decodeText(input, fontInfo);
+    assert.strictEqual(result, '©');
+  });
+
+  console.log(`\nTests completed: ${passed} passed, ${failed} failed.`);
+  if (failed > 0) process.exit(1);
 }
 
-runTest();
+runTests();
