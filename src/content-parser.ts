@@ -147,17 +147,41 @@ export class ContentParser {
   }
 
   /**
+   * Normalize resource names.
+   *
+   * In PDF dictionaries, resource keys are typically stored without the leading "/"
+   * (e.g. "F7"), but in content streams they are referenced as name objects (e.g. "/F7").
+   * Normalizing avoids missing lookups for fonts/XObjects, which can cause garbled text.
+   */
+  private normalizeResourceName(name: string): string {
+    if (!name) return name;
+    return name.startsWith('/') ? name : `/${name}`;
+  }
+
+  /**
    * Initialize resources from a resource dictionary
    */
   private initializeResources(resources?: PDFDictionary): void {
     if (!resources) return;
 
     // Extract fonts from resources
-    const fontDict = resources.get('Font');
-    if (fontDict instanceof PDFDictionary) {
+    const fontEntry = resources.get('Font');
+    let fontDict: PDFDictionary | null = null;
+
+    if (fontEntry instanceof PDFDictionary) {
+      fontDict = fontEntry;
+    } else if (fontEntry instanceof PDFReference && this.pdfStructure) {
+      const resolved = this.pdfStructure.getObject(fontEntry.objectNumber, fontEntry.generation);
+      if (resolved instanceof PDFDictionary) {
+        fontDict = resolved;
+      }
+    }
+
+    if (fontDict) {
       for (const [name, fontRef] of fontDict.entries.entries()) {
         // Store font information for later use
-        this.fontDict.set(name, fontRef);
+        const normalized = this.normalizeResourceName(name);
+        this.fontDict.set(normalized, fontRef);
       }
     }
   }
@@ -506,6 +530,18 @@ export class ContentParser {
 
       // Text operators
       switch (operator) {
+        case 'BT': // Begin text object
+          // Reset text matrices per PDF spec
+          this.textState.matrix = [1, 0, 0, 1, 0, 0];
+          this.textState.lineMatrix = [1, 0, 0, 1, 0, 0];
+          this.textState.x = 0;
+          this.textState.y = 0;
+          break;
+
+        case 'ET': // End text object
+          // No-op for now
+          break;
+
         // Text positioning operators
         case 'Tm': // Text matrix
           if (operands.length === 6) {
@@ -576,10 +612,11 @@ export class ContentParser {
             // Character spacing is applied between characters, so for a string of length n,
             // we add (n-1) * charSpacing to the width
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
+            const { x: ux, y: uy } = this.transformPoint(this.graphicsState.ctm, this.textState.x, this.textState.y);
             result.positions.push({
               text: decodedText,
-              x: this.textState.x,
-              y: this.textState.y,
+              x: ux,
+              y: uy,
               width: totalWidth,
               fontSize: this.textState.fontSize,
               charSpacing: this.textState.charSpacing,
@@ -613,10 +650,11 @@ export class ContentParser {
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
 
             result.text += decodedText;
+            const { x: ux, y: uy } = this.transformPoint(this.graphicsState.ctm, this.textState.x, this.textState.y);
             result.positions.push({
               text: decodedText,
-              x: this.textState.x,
-              y: this.textState.y,
+              x: ux,
+              y: uy,
               width: totalWidth,
               fontSize: this.textState.fontSize,
               charSpacing: this.textState.charSpacing,
@@ -654,10 +692,11 @@ export class ContentParser {
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
 
             result.text += decodedText;
+            const { x: ux, y: uy } = this.transformPoint(this.graphicsState.ctm, this.textState.x, this.textState.y);
             result.positions.push({
               text: decodedText,
-              x: this.textState.x,
-              y: this.textState.y,
+              x: ux,
+              y: uy,
               width: totalWidth,
               fontSize: this.textState.fontSize,
               charSpacing: this.textState.charSpacing,
@@ -718,10 +757,11 @@ export class ContentParser {
 
             if (textPiece) {
               result.text += textPiece;
+              const { x: ux, y: uy } = this.transformPoint(this.graphicsState.ctm, startX, this.textState.y);
               result.positions.push({
                 text: textPiece,
-                x: startX,
-                y: this.textState.y,
+                x: ux,
+                y: uy,
                 width: currentX - startX,
                 fontSize: this.textState.fontSize,
                 charSpacing: this.textState.charSpacing,
@@ -759,15 +799,16 @@ export class ContentParser {
 
         case 'Tf': // Set text font and size
           if (operands.length === 2) {
-            const fontName = operands[0];
+            const fontName = typeof operands[0] === 'string' ? operands[0] : String(operands[0]);
             const fontSize = operands[1];
 
             this.textState.font = fontName;
             this.textState.fontSize = fontSize;
 
             // Look up font reference
-            if (this.fontDict.has(fontName)) {
-              this.textState.fontDict = this.fontDict.get(fontName)!;
+            const normalizedFontName = this.normalizeResourceName(fontName);
+            if (this.fontDict.has(normalizedFontName)) {
+              this.textState.fontDict = this.fontDict.get(normalizedFontName)!;
 
               // Get font info if font decoder available
               if (this.fontDecoder && this.pdfStructure) {
@@ -801,6 +842,14 @@ export class ContentParser {
           }
           if (this.textStateStack.length > 0) {
             this.textState = this.textStateStack.pop()!;
+          }
+          break;
+
+        case 'cm': // Concatenate matrix to current transformation matrix
+          if (operands.length === 6) {
+            const m = [...operands] as number[];
+            // New CTM = m * CTM (left-multiply)
+            this.graphicsState.ctm = this.multiplyMatrix(m, this.graphicsState.ctm);
           }
           break;
       }
@@ -884,22 +933,32 @@ export class ContentParser {
    * Multiply two transformation matrices
    */
   private multiplyMatrix(a: number[], b: number[]): number[] {
-    // PDF matrices are represented as [a b c d e f]
-    // which represents the matrix:
-    // | a b 0 |
-    // | c d 0 |
-    // | e f 1 |
-
+    // PDF matrices are represented as [a b c d e f] and transform points as:
+    // x' = a*x + c*y + e
+    // y' = b*x + d*y + f
+    //
+    // This function returns the concatenation a*b (apply b, then a).
     const a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3], a4 = a[4], a5 = a[5];
     const b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3], b4 = b[4], b5 = b[5];
 
     return [
-      a0 * b0 + a1 * b2,
-      a0 * b1 + a1 * b3,
-      a2 * b0 + a3 * b2,
-      a2 * b1 + a3 * b3,
-      a4 * b0 + a5 * b2 + b4,
-      a4 * b1 + a5 * b3 + b5
+      a0 * b0 + a2 * b1,
+      a1 * b0 + a3 * b1,
+      a0 * b2 + a2 * b3,
+      a1 * b2 + a3 * b3,
+      a0 * b4 + a2 * b5 + a4,
+      a1 * b4 + a3 * b5 + a5
     ];
+  }
+
+  /**
+   * Apply a transformation matrix to a point.
+   */
+  private transformPoint(m: number[], x: number, y: number): { x: number, y: number } {
+    const a = m[0], b = m[1], c = m[2], d = m[3], e = m[4], f = m[5];
+    return {
+      x: a * x + c * y + e,
+      y: b * x + d * y + f
+    };
   }
 } 

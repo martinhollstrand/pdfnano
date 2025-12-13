@@ -109,6 +109,11 @@ export interface FontInfo {
   customEncoding: Map<number, string> | null;
   toUnicode: Map<number, string> | null;
   isCIDFont?: boolean;
+  /**
+   * Best-effort glyph-id to Unicode mapping derived from embedded TrueType/OpenType cmap.
+   * Primarily used for CIDFontType2 + CIDToGIDMap /Identity when ToUnicode is incomplete.
+   */
+  gidToUnicode?: Map<number, string> | null;
 }
 
 /**
@@ -206,6 +211,27 @@ export class FontDecoder {
       isCIDFont = true;
     }
 
+    // Best-effort: for Type0 fonts, try to build a glyph-id -> Unicode map from the embedded font,
+    // since some generators provide extremely small /ToUnicode maps (not enough for real extraction).
+    // This is common for CIDFontType2 with /CIDToGIDMap /Identity, where CID == GID.
+    let gidToUnicode: Map<number, string> | null = null;
+    if (isCIDFont) {
+      try {
+        const descendants = dict.get('DescendantFonts');
+        if (descendants instanceof PDFArray && descendants.length > 0) {
+          const first = descendants.get(0);
+          const descendantObj = first instanceof PDFReference
+            ? this.pdfStructure.getObject(first.objectNumber, first.generation)
+            : first;
+          if (descendantObj instanceof PDFDictionary) {
+            gidToUnicode = this.buildGidToUnicodeFromCIDFontType2(descendantObj);
+          }
+        }
+      } catch {
+        // Best-effort only
+      }
+    }
+
     // Create font info and cache it
     const fontInfo: FontInfo = {
       fontName,
@@ -215,7 +241,8 @@ export class FontDecoder {
       isEmbedded,
       customEncoding,
       toUnicode: unicodeMap,
-      isCIDFont
+      isCIDFont,
+      gidToUnicode
     };
 
     this.fontCache.set(fontRef, fontInfo);
@@ -243,6 +270,9 @@ export class FontDecoder {
         if (fontInfo.toUnicode && fontInfo.toUnicode.has(cid)) {
           const uni = fontInfo.toUnicode.get(cid)!;
           result.push(uni);
+        } else if (fontInfo.gidToUnicode && fontInfo.gidToUnicode.has(cid)) {
+          // For CIDFontType2 + CIDToGIDMap /Identity, CID is the glyph id
+          result.push(fontInfo.gidToUnicode.get(cid)!);
         } else {
           result.push(String.fromCharCode(cid));
         }
@@ -294,6 +324,159 @@ export class FontDecoder {
     }
 
     return result.join('');
+  }
+
+  /**
+   * Build a GID->Unicode mapping from an embedded TrueType/OpenType font program.
+   * Only supports CIDFontType2 with CIDToGIDMap /Identity (common in modern PDFs).
+   */
+  private buildGidToUnicodeFromCIDFontType2(descendantFont: PDFDictionary): Map<number, string> | null {
+    const subtype = descendantFont.get('Subtype');
+    if (!(subtype instanceof PDFName) || subtype.name !== '/CIDFontType2') return null;
+
+    const cidToGidMap = descendantFont.get('CIDToGIDMap');
+    // We currently only support /Identity (CID == GID). Other forms require parsing a mapping stream.
+    if (!(cidToGidMap instanceof PDFName) || cidToGidMap.name !== '/Identity') return null;
+
+    const fd = descendantFont.get('FontDescriptor');
+    const fdObj = fd instanceof PDFReference ? this.pdfStructure.getObject(fd.objectNumber, fd.generation) : fd;
+    if (!(fdObj instanceof PDFDictionary)) return null;
+
+    const ff2 = fdObj.get('FontFile2');
+    const ff2Obj = ff2 instanceof PDFReference ? this.pdfStructure.getObject(ff2.objectNumber, ff2.generation) : ff2;
+    if (!(ff2Obj instanceof PDFStream)) return null;
+
+    const fontData = ff2Obj.getDecodedData();
+    if (!Buffer.isBuffer(fontData) || fontData.length < 12) return null;
+
+    return this.parseTrueTypeCmapGidToUnicode(fontData);
+  }
+
+  /**
+   * Parse a TrueType/OpenType 'cmap' table and produce a glyph-id -> Unicode map.
+   * Supports cmap format 4 (BMP) and 12 (full Unicode).
+   */
+  private parseTrueTypeCmapGidToUnicode(fontData: Buffer): Map<number, string> | null {
+    const readU16 = (off: number) => fontData.readUInt16BE(off);
+    const readI16 = (off: number) => fontData.readInt16BE(off);
+    const readU32 = (off: number) => fontData.readUInt32BE(off);
+
+    if (fontData.length < 12) return null;
+    const numTables = readU16(4);
+    const tableDirOffset = 12;
+    let cmapOffset = -1;
+    let cmapLength = 0;
+
+    for (let i = 0; i < numTables; i++) {
+      const recOff = tableDirOffset + i * 16;
+      if (recOff + 16 > fontData.length) break;
+      const tag = fontData.toString('ascii', recOff, recOff + 4);
+      const offset = readU32(recOff + 8);
+      const length = readU32(recOff + 12);
+      if (tag === 'cmap') {
+        cmapOffset = offset;
+        cmapLength = length;
+        break;
+      }
+    }
+
+    if (cmapOffset < 0 || cmapOffset + 4 > fontData.length) return null;
+    const cmapStart = cmapOffset;
+    const cmapNumSubtables = readU16(cmapStart + 2);
+
+    // Pick best subtable: prefer Windows Unicode (3,10) then (3,1), then Unicode (0,*)
+    type Sub = { platform: number; encoding: number; offset: number };
+    const subs: Sub[] = [];
+    for (let i = 0; i < cmapNumSubtables; i++) {
+      const off = cmapStart + 4 + i * 8;
+      if (off + 8 > fontData.length) break;
+      const platform = readU16(off);
+      const encoding = readU16(off + 2);
+      const subOffset = readU32(off + 4);
+      subs.push({ platform, encoding, offset: subOffset });
+    }
+
+    const pick = subs.find(s => s.platform === 3 && s.encoding === 10)
+      ?? subs.find(s => s.platform === 3 && s.encoding === 1)
+      ?? subs.find(s => s.platform === 0)
+      ?? subs[0];
+    if (!pick) return null;
+
+    const subStart = cmapStart + pick.offset;
+    if (subStart + 2 > fontData.length) return null;
+    const format = readU16(subStart);
+
+    const gidToUni = new Map<number, string>();
+    const setIfAbsent = (gid: number, codePoint: number) => {
+      if (gid === 0) return;
+      if (!gidToUni.has(gid)) {
+        gidToUni.set(gid, String.fromCodePoint(codePoint));
+      }
+    };
+
+    if (format === 4) {
+      if (subStart + 14 > fontData.length) return null;
+      const length = readU16(subStart + 2);
+      const segCount = readU16(subStart + 6) / 2;
+      const endCodeOff = subStart + 14;
+      const startCodeOff = endCodeOff + segCount * 2 + 2; // + reservedPad
+      const idDeltaOff = startCodeOff + segCount * 2;
+      const idRangeOffOff = idDeltaOff + segCount * 2;
+      const glyphArrayOff = idRangeOffOff + segCount * 2;
+
+      if (glyphArrayOff > subStart + length || glyphArrayOff > fontData.length) return null;
+
+      for (let seg = 0; seg < segCount; seg++) {
+        const endCode = readU16(endCodeOff + seg * 2);
+        const startCode = readU16(startCodeOff + seg * 2);
+        const idDelta = readI16(idDeltaOff + seg * 2);
+        const idRangeOffset = readU16(idRangeOffOff + seg * 2);
+
+        // Skip sentinel segment
+        if (startCode === 0xFFFF && endCode === 0xFFFF) continue;
+
+        for (let code = startCode; code <= endCode; code++) {
+          let gid = 0;
+          if (idRangeOffset === 0) {
+            gid = (code + idDelta) & 0xFFFF;
+          } else {
+            // Address of this segment's idRangeOffset word
+            const roWordAddr = idRangeOffOff + seg * 2;
+            const glyphIndexAddr = roWordAddr + idRangeOffset + (code - startCode) * 2;
+            if (glyphIndexAddr + 2 > fontData.length) continue;
+            const glyphIndex = readU16(glyphIndexAddr);
+            if (glyphIndex === 0) {
+              gid = 0;
+            } else {
+              gid = (glyphIndex + idDelta) & 0xFFFF;
+            }
+          }
+          if (gid !== 0) setIfAbsent(gid, code);
+        }
+      }
+
+      return gidToUni;
+    }
+
+    if (format === 12) {
+      if (subStart + 16 > fontData.length) return null;
+      const nGroups = readU32(subStart + 12);
+      let grpOff = subStart + 16;
+      for (let i = 0; i < nGroups; i++) {
+        if (grpOff + 12 > fontData.length) break;
+        const startChar = readU32(grpOff);
+        const endChar = readU32(grpOff + 4);
+        const startGlyph = readU32(grpOff + 8);
+        const count = endChar - startChar;
+        for (let c = 0; c <= count; c++) {
+          setIfAbsent(startGlyph + c, startChar + c);
+        }
+        grpOff += 12;
+      }
+      return gidToUni;
+    }
+
+    return gidToUni.size > 0 ? gidToUni : null;
   }
 
   /**
@@ -366,98 +549,85 @@ export class FontDecoder {
         streamData = raw.toString('utf8');
       }
 
-      // Find beginbfchar/endbfchar sections for simple mappings
-      const bfcharRegex = /beginbfchar\s+([\s\S]*?)endbfchar/g;
-      let match;
-
-      while ((match = bfcharRegex.exec(streamData)) !== null) {
-        const mappings = match[1].trim().split(/\s*\n\s*/);
-
-        for (const mapping of mappings) {
-          // Find all hex strings in the line (handles both space-separated and jammed formats)
-          const parts = mapping.match(/<[0-9a-fA-F]+>/g);
-
-          if (parts && parts.length >= 2) {
-            // Parse hex strings (support multi-byte CIDs and Unicode)
-            const srcHex = parts[0].replace(/<|>/g, '');
-            const dstHex = parts[1].replace(/<|>/g, '');
-            const cid = parseInt(srcHex, 16);
-            // Unicode can be >2 bytes, decode as UTF-16BE
-            let unicode = '';
-            if (dstHex.length % 4 === 0) {
-              for (let i = 0; i < dstHex.length; i += 4) {
-                const code = parseInt(dstHex.slice(i, i + 4), 16);
-                unicode += String.fromCharCode(code);
-              }
-            } else {
-              // Fallback: treat as single code point
-              unicode = String.fromCharCode(parseInt(dstHex, 16));
-            }
-            if (!isNaN(cid)) {
-              result.set(cid, unicode);
-            }
+      const decodeUtf16BeHex = (hex: string): string => {
+        if (!hex) return '';
+        // Most ToUnicode destinations are UTF-16BE code units.
+        // If it's an odd length (shouldn't happen), ignore the last nibble.
+        const normalized = hex.length % 2 === 0 ? hex : hex.slice(0, -1);
+        if (normalized.length % 4 === 0) {
+          let out = '';
+          for (let i = 0; i < normalized.length; i += 4) {
+            const codeUnit = parseInt(normalized.slice(i, i + 4), 16);
+            if (!isNaN(codeUnit)) out += String.fromCharCode(codeUnit);
           }
+          return out;
+        }
+        // Fallback: treat as bytes and map directly to code points
+        const bytes = Buffer.from(normalized, 'hex');
+        return bytes.toString('latin1');
+      };
+
+      // Some producers (notably Canva) may emit bfchar/bfrange mappings without newlines,
+      // or with multiple mappings on the same line. Parsing must be token-based, not line-based.
+
+      // beginbfchar/endbfchar sections (simple pairs: <src> <dst>)
+      const bfcharRegex = /beginbfchar\s+([\s\S]*?)endbfchar/g;
+      let match: RegExpExecArray | null;
+      while ((match = bfcharRegex.exec(streamData)) !== null) {
+        const block = match[1];
+        const tokens = block.match(/<[0-9a-fA-F]+>/g) || [];
+        for (let i = 0; i + 1 < tokens.length; i += 2) {
+          const srcHex = tokens[i].slice(1, -1);
+          const dstHex = tokens[i + 1].slice(1, -1);
+          const cid = parseInt(srcHex, 16);
+          if (isNaN(cid)) continue;
+          result.set(cid, decodeUtf16BeHex(dstHex));
         }
       }
 
-      // Find beginbfrange/endbfrange sections for range mappings
+      // beginbfrange/endbfrange sections (triples: <start> <end> <dst> OR <start> <end> [<v1>...])
       const bfrangeRegex = /beginbfrange\s+([\s\S]*?)endbfrange/g;
-
       while ((match = bfrangeRegex.exec(streamData)) !== null) {
-        const ranges = match[1].trim().split(/\s*\n\s*/);
+        const block = match[1];
+        const tokens = block.match(/\[[\s\S]*?\]|<[0-9a-fA-F]+>/g) || [];
+        let idx = 0;
+        while (idx + 2 < tokens.length) {
+          const startTok = tokens[idx++];
+          const endTok = tokens[idx++];
+          const dstTok = tokens[idx++];
 
-        for (const range of ranges) {
-          // Find all hex strings in the line
-          const parts = range.match(/<[0-9a-fA-F]+>/g);
+          if (!startTok.startsWith('<') || !endTok.startsWith('<')) continue;
 
-          if (parts && parts.length >= 3) {
-            const startHex = parts[0].replace(/<|>/g, '');
-            const endHex = parts[1].replace(/<|>/g, '');
-            const startCode = parseInt(startHex, 16);
-            const endCode = parseInt(endHex, 16);
+          const startCode = parseInt(startTok.slice(1, -1), 16);
+          const endCode = parseInt(endTok.slice(1, -1), 16);
+          if (isNaN(startCode) || isNaN(endCode)) continue;
 
-            // Check if the third part is an array (not fully supported by this regex approach if jammed)
-            // If jammed like <start><end>[<v1><v2>], the regex /<...>/g will just find start, end, v1, v2...
-            // We need to distinguish between range mapping <start><end><dst> and array mapping <start><end>[<v1>...]
-
-            const lineContent = range.trim();
-            const hasArray = lineContent.includes('[') && lineContent.includes(']');
-
-            if (!hasArray) {
-              const dstHex = parts[2].replace(/<|>/g, '');
-              // Unicode can be >2 bytes, decode as UTF-16BE
-              for (let i = 0; i <= endCode - startCode; i++) {
-                let unicode = '';
-                if (dstHex.length % 4 === 0) {
-                  for (let j = 0; j < dstHex.length; j += 4) {
-                    const code = parseInt(dstHex.slice(j, j + 4), 16) + i;
-                    unicode += String.fromCharCode(code);
-                  }
-                } else {
-                  unicode = String.fromCharCode(parseInt(dstHex, 16) + i);
+          if (dstTok.startsWith('<')) {
+            const dstHex = dstTok.slice(1, -1);
+            // Common case: a single UTF-16BE code unit for the start; subsequent codes increment by 1
+            if (dstHex.length === 4) {
+              const base = parseInt(dstHex, 16);
+              if (!isNaN(base)) {
+                for (let i = 0; i <= endCode - startCode; i++) {
+                  result.set(startCode + i, String.fromCharCode(base + i));
                 }
-                result.set(startCode + i, unicode);
               }
             } else {
-              // Array mapping: <start> <end> [ <v1> <v2> ... ]
-              // We can use the parts array, but we need to skip start and end
-              const dsts = parts.slice(2);
-              let current = startCode;
-              for (const dst of dsts) {
-                const dstHex = dst.replace(/<|>/g, '');
-                let unicode = '';
-                if (dstHex.length % 4 === 0) {
-                  for (let j = 0; j < dstHex.length; j += 4) {
-                    const code = parseInt(dstHex.slice(j, j + 4), 16);
-                    unicode += String.fromCharCode(code);
-                  }
-                } else if (dstHex.length > 0) {
-                  unicode = String.fromCharCode(parseInt(dstHex, 16));
-                }
-                result.set(current, unicode);
-                current++;
-                if (current > endCode) break;
+              // If it's longer, treat it as a fixed string for all entries (best-effort)
+              const fixed = decodeUtf16BeHex(dstHex);
+              for (let i = 0; i <= endCode - startCode; i++) {
+                result.set(startCode + i, fixed);
               }
+            }
+          } else if (dstTok.startsWith('[')) {
+            const inner = dstTok.slice(1, -1);
+            const dsts = inner.match(/<[0-9a-fA-F]+>/g) || [];
+            let current = startCode;
+            for (const dst of dsts) {
+              const dstHex = dst.slice(1, -1);
+              result.set(current, decodeUtf16BeHex(dstHex));
+              current++;
+              if (current > endCode) break;
             }
           }
         }

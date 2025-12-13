@@ -11,7 +11,7 @@
   "scripts": {
     "build": "node scripts/build.js",
     "build:ts": "tsc",
-    "test": "node test/parser.test.js",
+    "test": "npm run build:ts && node test/parser.test.js",
     "prepare": "npm run build",
     "example": "node examples/basic-usage.js",
     "example:ts": "node --max-old-space-size=4096 -r ts-node/register examples/enhanced-text-extraction.ts",

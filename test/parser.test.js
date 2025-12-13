@@ -127,6 +127,58 @@ async function runTests() {
     console.error('✗ file-based tests failed', e);
   }
 
+  // Regression test: Canva-generated PDF (test/test.pdf) should extract readable text
+  try {
+    const regressionPdf = path.join(__dirname, 'test.pdf');
+    if (!fs.existsSync(regressionPdf)) {
+      console.log('↷ regression PDF missing (skipping):', regressionPdf);
+    } else {
+      const res = await parser.parseFile(regressionPdf);
+      assert(res && Array.isArray(res.pages));
+      assert.strictEqual(res.pages.length, 1);
+
+      // Metadata sanity
+      assert(res.metadata);
+      assert.strictEqual(res.metadata.author, 'Winta');
+      assert(
+        typeof res.metadata.title === 'string' &&
+          res.metadata.title.includes('CV Resume')
+      );
+
+      // Text extraction sanity (high-signal phrases)
+      assert.strictEqual(typeof res.text, 'string');
+      assert(res.text.length > 500);
+      assert(res.text.includes('UTBILDNING'));
+      assert(res.text.includes('ARBETSERFARENHET'));
+      assert(res.text.includes('KONTAKTUPPGIFTER'));
+      assert(res.text.includes('winta.abraham@outlook.com'));
+      assert(res.text.includes('MTR'));
+      assert(res.text.includes('BIRKAGÅRDENS'));
+
+      console.log('✓ regression parse (test/test.pdf)');
+      console.log(res.text);
+    }
+  } catch (e) {
+    console.error('✗ regression parse (test/test.pdf) failed', e);
+  }
+
+  // Additional sample PDFs: just parse + print text (no content assertions)
+  for (const fileName of ['test2.pdf', 'test3.pdf', 'test4.pdf']) {
+    try {
+      const pdfPath = path.join(__dirname, fileName);
+      if (!fs.existsSync(pdfPath)) {
+        console.log(`↷ sample PDF missing (skipping): ${pdfPath}`);
+        continue;
+      }
+      const res = await parser.parseFile(pdfPath);
+      assert(res && Array.isArray(res.pages));
+      console.log(`✓ ===== PARSED (${fileName}) =====`);
+      console.log(res.text);
+    } catch (e) {
+      console.error(`✗ parse (${fileName}) failed`, e);
+    }
+  }
+
   console.log('All tests completed');
 }
 
