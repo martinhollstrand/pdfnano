@@ -754,6 +754,49 @@ export class PDFParser {
     // Get all resources (page + inherited)
     const resourcesDict = this.getAllResources(structure, pageDict);
 
+    const extractTextFromStream = (stream: PDFStream, label?: string): string => {
+      const decoded = stream.getDecodedData();
+      if (DEBUG) {
+        const tag = label ? ` ${label}` : '';
+        console.log(`Content stream${tag} found. Raw length: ${stream.data.length}, Decoded length: ${decoded.length}`);
+      }
+      const text = this.extractTextFromContentStream(decoded, resourcesDict, structure);
+      if (DEBUG) console.log(`Extracted text${label ? ` ${label}` : ''} length: ${text.length}`);
+      return text;
+    };
+
+    const extractTextFromContentsObject = (contentsObj: PDFObject, contextLabel: string): string => {
+      if (contentsObj instanceof PDFStream) {
+        return extractTextFromStream(contentsObj, contextLabel);
+      }
+
+      if (contentsObj instanceof PDFArray) {
+        if (DEBUG) console.log(`${contextLabel} resolved to an array of length ${contentsObj.length}`);
+        const textParts: string[] = [];
+        for (let i = 0; i < contentsObj.length; i++) {
+          const entry = contentsObj.get(i);
+
+          // Entries are usually references to streams, but can occasionally be direct streams.
+          let entryObj: PDFObject | null = null;
+          if (entry instanceof PDFReference) {
+            entryObj = structure.getObject(entry.objectNumber, entry.generation);
+          } else if (entry instanceof PDFStream) {
+            entryObj = entry;
+          }
+
+          if (entryObj instanceof PDFStream) {
+            textParts.push(extractTextFromStream(entryObj, `${contextLabel}[${i}]`));
+          } else {
+            if (DEBUG) console.log(`${contextLabel}[${i}] is not a stream (type=${entryObj ? entryObj.constructor.name : typeof entry})`);
+          }
+        }
+        return textParts.join('\n');
+      }
+
+      if (DEBUG) console.log(`${contextLabel} is of unexpected type: ${contentsObj.constructor.name}`);
+      return '';
+    };
+
     // Get contents
     const contents = pageDict.get('Contents');
 
@@ -762,36 +805,10 @@ export class PDFParser {
     } else if (contents instanceof PDFReference) {
       if (DEBUG) console.log(`/Contents is a reference: ${contents.objectNumber} ${contents.generation} R`);
       const contentObj = structure.getObject(contents.objectNumber, contents.generation);
-      if (contentObj instanceof PDFStream) {
-        const decoded = contentObj.getDecodedData();
-        if (DEBUG) console.log(`Content stream found. Raw length: ${contentObj.data.length}, Decoded length: ${decoded.length}`);
-        result.text = this.extractTextFromContentStream(decoded, resourcesDict, structure);
-        if (DEBUG) console.log(`Extracted text length: ${result.text.length}`);
-      } else {
-        if (DEBUG) console.log('Content object is not a PDFStream or is missing.');
-      }
+      result.text = extractTextFromContentsObject(contentObj, '/Contents(ref)');
     } else if (contents instanceof PDFArray) {
       if (DEBUG) console.log(`/Contents is an array of length ${contents.length}`);
-      const textParts: string[] = [];
-      for (let i = 0; i < contents.length; i++) {
-        const contentRef = contents.get(i);
-        if (contentRef instanceof PDFReference) {
-          const contentObj = structure.getObject(contentRef.objectNumber, contentRef.generation);
-          if (contentObj instanceof PDFStream) {
-            const decoded = contentObj.getDecodedData();
-            if (DEBUG) console.log(`Content stream [${i}] found. Raw length: ${contentObj.data.length}, Decoded length: ${decoded.length}`);
-            const part = this.extractTextFromContentStream(decoded, resourcesDict, structure);
-            if (DEBUG) console.log(`Extracted text part [${i}] length: ${part.length}`);
-            textParts.push(part);
-          } else {
-            if (DEBUG) console.log(`Content object [${i}] is not a PDFStream or is missing.`);
-          }
-        } else {
-          if (DEBUG) console.log(`Content array entry [${i}] is not a reference.`);
-        }
-      }
-      result.text = textParts.join('\n');
-      if (DEBUG) console.log(`Total extracted text length from array: ${result.text.length}`);
+      result.text = extractTextFromContentsObject(contents, '/Contents(array)');
     } else {
       if (DEBUG) console.log(`/Contents is of unexpected type: ${contents.constructor.name}`);
     }
@@ -965,16 +982,13 @@ export class PDFParser {
     parser.parse();
     const result = parser.interpret();
 
-    // Sort text by position (approximately top-to-bottom, left-to-right)
-    // This helps maintain reading order
-    result.positions.sort((a, b) => {
-      // Group text into lines based on y-coordinate (with some tolerance)
-      const yTolerance = 5;
-      if (Math.abs(a.y - b.y) > yTolerance) {
-        return b.y - a.y; // Sort top to bottom (note: PDF coordinates have origin at bottom-left)
-      }
-      return a.x - b.x; // Within a line, sort left to right
-    });
+    // IMPORTANT:
+    // We iterate positions in **content-stream order** by default.
+    // Many PDFs emit glyphs in correct reading order in the content stream,
+    // and global sorting by coordinates can scramble text (see test6.pdf).
+    //
+    // If we ever need coordinate-based ordering again, we can add a heuristic
+    // and do a best-of-two approach, but stream-order is a safer default.
 
     // Convert positions to text with proper spacing based on PDF character/word spacing
     let lastY = null;

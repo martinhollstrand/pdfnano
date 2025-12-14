@@ -162,8 +162,8 @@ async function runTests() {
     console.error('✗ regression parse (test/test.pdf) failed', e);
   }
 
-  // Additional sample PDFs: just parse + print text (no content assertions)
-  for (const fileName of ['test2.pdf', 'test3.pdf', 'test4.pdf']) {
+  // Additional sample PDFs: parse + print text (light assertions for known edge-cases)
+  for (const fileName of ['test2.pdf', 'test3.pdf', 'test4.pdf', 'test5.pdf', 'test6.pdf', 'test7.pdf', 'test8.pdf']) {
     try {
       const pdfPath = path.join(__dirname, fileName);
       if (!fs.existsSync(pdfPath)) {
@@ -172,6 +172,26 @@ async function runTests() {
       }
       const res = await parser.parseFile(pdfPath);
       assert(res && Array.isArray(res.pages));
+
+      // Regression: test5.pdf uses a referenced /Contents array; page 1 should not be empty.
+      if (fileName === 'test5.pdf') {
+        assert.strictEqual(res.pages.length, 2);
+        assert.strictEqual(typeof res.pages[0].text, 'string');
+        assert(res.pages[0].text.length > 500);
+        assert(res.pages[0].text.includes('Luca'));
+        assert(res.pages[0].text.toUpperCase().includes('PROFILE'));
+      }
+
+      // Regression: test6.pdf text is in sensible content-stream order; avoid scrambling via position sorting.
+      if (fileName === 'test6.pdf') {
+        assert(res.pages.length >= 1);
+        assert.strictEqual(typeof res.text, 'string');
+        assert(res.text.length > 1000);
+        assert(res.text.includes('Therese'));
+        assert(res.text.includes('Arbetslivserfarenhet'));
+        assert(res.text.toLowerCase().includes('therese.wernang@gmail.com'));
+      }
+
       console.log(`✓ ===== PARSED (${fileName}) =====`);
       console.log(res.text);
     } catch (e) {

@@ -528,6 +528,27 @@ export class ContentParser {
     for (const operation of this.operations) {
       const { operator, operands } = operation;
 
+      const getTextRenderingMatrix = (): number[] => {
+        // PDF text rendering matrix is: Trm = CTM * Tm
+        // (ignoring text state parameters like rise for now; good enough for ordering).
+        return this.multiplyMatrix(this.graphicsState.ctm, this.textState.matrix);
+      };
+
+      const getUserSpacePoint = (): { x: number, y: number } => {
+        const trm = getTextRenderingMatrix();
+        return this.transformPoint(trm, 0, 0);
+      };
+
+      const advanceTextMatrix = (tx: number): void => {
+        // Advance in text space by tx (post-multiply the current text matrix).
+        // New origin becomes currentMatrix(tx, 0).
+        const translate: number[] = [1, 0, 0, 1, tx, 0];
+        this.textState.matrix = this.multiplyMatrix(this.textState.matrix, translate);
+        // Keep legacy x/y in sync with matrix translation for any remaining callers.
+        this.textState.x = this.textState.matrix[4];
+        this.textState.y = this.textState.matrix[5];
+      };
+
       // Text operators
       switch (operator) {
         case 'BT': // Begin text object
@@ -547,9 +568,9 @@ export class ContentParser {
           if (operands.length === 6) {
             this.textState.matrix = [...operands];
             this.textState.lineMatrix = [...operands];
-            // Update current position
-            this.textState.x = operands[4];
-            this.textState.y = operands[5];
+            // Keep legacy x/y in sync with translation terms.
+            this.textState.x = this.textState.matrix[4];
+            this.textState.y = this.textState.matrix[5];
           }
           break;
 
@@ -562,9 +583,9 @@ export class ContentParser {
             ];
             this.textState.matrix = this.multiplyMatrix(newMatrix, this.textState.lineMatrix);
             this.textState.lineMatrix = [...this.textState.matrix];
-            // Update current position
-            this.textState.x += tx;
-            this.textState.y += ty;
+            // Keep legacy x/y in sync
+            this.textState.x = this.textState.matrix[4];
+            this.textState.y = this.textState.matrix[5];
           }
           break;
 
@@ -579,9 +600,9 @@ export class ContentParser {
             ];
             this.textState.matrix = this.multiplyMatrix(newMatrix, this.textState.lineMatrix);
             this.textState.lineMatrix = [...this.textState.matrix];
-            // Update current position
-            this.textState.x += tx;
-            this.textState.y += ty;
+            // Keep legacy x/y in sync
+            this.textState.x = this.textState.matrix[4];
+            this.textState.y = this.textState.matrix[5];
           }
           break;
 
@@ -594,9 +615,9 @@ export class ContentParser {
           ];
           this.textState.matrix = this.multiplyMatrix(newMatrix, this.textState.lineMatrix);
           this.textState.lineMatrix = [...this.textState.matrix];
-          // Update current position
-          this.textState.x += tx;
-          this.textState.y += ty;
+          // Keep legacy x/y in sync
+          this.textState.x = this.textState.matrix[4];
+          this.textState.y = this.textState.matrix[5];
           break;
 
         // Text showing operators
@@ -612,19 +633,23 @@ export class ContentParser {
             // Character spacing is applied between characters, so for a string of length n,
             // we add (n-1) * charSpacing to the width
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
-            const { x: ux, y: uy } = this.transformPoint(this.graphicsState.ctm, this.textState.x, this.textState.y);
+            const { x: ux, y: uy } = getUserSpacePoint();
+            // Estimate width in user space by transforming (totalWidth,0) through Trm.
+            const trm = getTextRenderingMatrix();
+            const end = this.transformPoint(trm, totalWidth, 0);
+            const userWidth = Math.hypot(end.x - ux, end.y - uy);
             result.positions.push({
               text: decodedText,
               x: ux,
               y: uy,
-              width: totalWidth,
+              width: userWidth,
               fontSize: this.textState.fontSize,
               charSpacing: this.textState.charSpacing,
               wordSpacing: this.textState.wordSpacing
             });
 
-            // Advance position
-            this.textState.x += totalWidth;
+            // Advance the text matrix in text space
+            advanceTextMatrix(totalWidth);
           }
           break;
 
@@ -650,19 +675,22 @@ export class ContentParser {
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
 
             result.text += decodedText;
-            const { x: ux, y: uy } = this.transformPoint(this.graphicsState.ctm, this.textState.x, this.textState.y);
+            const { x: ux, y: uy } = getUserSpacePoint();
+            const trm = getTextRenderingMatrix();
+            const end = this.transformPoint(trm, totalWidth, 0);
+            const userWidth = Math.hypot(end.x - ux, end.y - uy);
             result.positions.push({
               text: decodedText,
               x: ux,
               y: uy,
-              width: totalWidth,
+              width: userWidth,
               fontSize: this.textState.fontSize,
               charSpacing: this.textState.charSpacing,
               wordSpacing: this.textState.wordSpacing
             });
 
-            // Advance position
-            this.textState.x += totalWidth;
+            // Advance the text matrix in text space
+            advanceTextMatrix(totalWidth);
           }
           break;
 
@@ -692,19 +720,22 @@ export class ContentParser {
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
 
             result.text += decodedText;
-            const { x: ux, y: uy } = this.transformPoint(this.graphicsState.ctm, this.textState.x, this.textState.y);
+            const { x: ux, y: uy } = getUserSpacePoint();
+            const trm = getTextRenderingMatrix();
+            const end = this.transformPoint(trm, totalWidth, 0);
+            const userWidth = Math.hypot(end.x - ux, end.y - uy);
             result.positions.push({
               text: decodedText,
               x: ux,
               y: uy,
-              width: totalWidth,
+              width: userWidth,
               fontSize: this.textState.fontSize,
               charSpacing: this.textState.charSpacing,
               wordSpacing: this.textState.wordSpacing
             });
 
-            // Advance position
-            this.textState.x += totalWidth;
+            // Advance the text matrix in text space
+            advanceTextMatrix(totalWidth);
           }
           break;
 
@@ -712,10 +743,11 @@ export class ContentParser {
           if (operands.length === 1 && Array.isArray(operands[0])) {
             const textArray = operands[0];
             let textPiece = '';
-            const startX = this.textState.x;
-            let currentX = startX;
+            const startPoint = getUserSpacePoint();
+            const startTextMatrix = [...this.textState.matrix];
+            const startTrm = this.multiplyMatrix(this.graphicsState.ctm, startTextMatrix);
+            let currentAdvance = 0;
             let lastWasText = false;
-            let lastTextEndX = startX;
 
             for (const item of textArray) {
               if (typeof item === 'string') {
@@ -723,15 +755,16 @@ export class ContentParser {
                 const decodedItem = this.decodeText(item);
                 textPiece += decodedItem;
                 const itemWidth = this.getEstimatedWidth(decodedItem);
-                currentX += itemWidth;
-                lastTextEndX = currentX;
+                currentAdvance += itemWidth;
                 lastWasText = decodedItem.length > 0;
+                advanceTextMatrix(itemWidth);
               } else if (typeof item === 'number') {
                 // In TJ arrays, numbers adjust spacing (in thousandths of a unit of text space)
                 // Negative numbers move the text position right (reduce spacing)
                 // Positive numbers move the text position left (increase spacing)
-                const adjustment = -item / 1000 * this.textState.fontSize;
-                currentX += adjustment;
+                const adjustment = -item / 1000 * this.textState.fontSize * (this.textState.horizontalScale / 100);
+                currentAdvance += adjustment;
+                advanceTextMatrix(adjustment);
 
                 // The adjustment already accounts for character spacing and word spacing
                 // We only add a space in the output text if this is a significant gap
@@ -749,25 +782,27 @@ export class ContentParser {
                 const decodedItem = this.decodeText(item);
                 textPiece += decodedItem;
                 const itemWidth = this.getEstimatedWidth(decodedItem);
-                currentX += itemWidth;
-                lastTextEndX = currentX;
+                currentAdvance += itemWidth;
                 lastWasText = decodedItem.length > 0;
+                advanceTextMatrix(itemWidth);
               }
             }
 
             if (textPiece) {
               result.text += textPiece;
-              const { x: ux, y: uy } = this.transformPoint(this.graphicsState.ctm, startX, this.textState.y);
+              const ux = startPoint.x;
+              const uy = startPoint.y;
+              const end = this.transformPoint(startTrm, currentAdvance, 0);
+              const userWidth = Math.hypot(end.x - ux, end.y - uy);
               result.positions.push({
                 text: textPiece,
                 x: ux,
                 y: uy,
-                width: currentX - startX,
+                width: userWidth,
                 fontSize: this.textState.fontSize,
                 charSpacing: this.textState.charSpacing,
                 wordSpacing: this.textState.wordSpacing
               });
-              this.textState.x = currentX;
             }
           }
           break;
@@ -857,11 +892,11 @@ export class ContentParser {
 
     // Sort text positions for correct reading order
     // Group by Y coordinate (with tolerance for same line) then sort by X
-    const sortedPositions = this.sortTextPositions(result.positions);
-
-    // Rebuild text from sorted positions
-    result.text = sortedPositions.map(p => p.text).join('');
-    result.positions = sortedPositions;
+    // NOTE:
+    // We intentionally keep `result.positions` in **content-stream order**.
+    // Some PDFs (notably Word/Office exports) emit glyphs in a sensible reading order
+    // in the content stream, but their absolute positions can cause global sorting to
+    // scramble text. Higher-level extraction can still choose to sort if needed.
 
     return result;
   }
