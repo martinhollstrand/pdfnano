@@ -121,7 +121,7 @@ export interface FontInfo {
  */
 export class FontDecoder {
   private pdfStructure: PDFStructure;
-  private fontCache: Map<string, FontInfo> = new Map();
+  private fontCache: Map<string | PDFDictionary, FontInfo> = new Map();
 
   constructor(pdfStructure: PDFStructure) {
     this.pdfStructure = pdfStructure;
@@ -134,9 +134,11 @@ export class FontDecoder {
    */
   public getFont(fontDict: PDFDictionary | PDFReference): FontInfo | null {
     let dict: PDFDictionary;
+    let cacheKey: string | PDFDictionary;
 
     // Resolve reference if needed
     if (fontDict instanceof PDFReference) {
+      cacheKey = fontDict.toString();
       const obj = this.pdfStructure.getObject(fontDict.objectNumber, fontDict.generation);
       if (!(obj instanceof PDFDictionary)) {
         return null;
@@ -144,12 +146,12 @@ export class FontDecoder {
       dict = obj;
     } else {
       dict = fontDict;
+      cacheKey = dict;
     }
 
     // Check if we've already processed this font
-    const fontRef = dict.toString();
-    if (this.fontCache.has(fontRef)) {
-      return this.fontCache.get(fontRef)!;
+    if (this.fontCache.has(cacheKey)) {
+      return this.fontCache.get(cacheKey)!;
     }
 
     // Extract basic font information
@@ -245,7 +247,7 @@ export class FontDecoder {
       gidToUnicode
     };
 
-    this.fontCache.set(fontRef, fontInfo);
+    this.fontCache.set(cacheKey, fontInfo);
     return fontInfo;
   }
 
@@ -573,6 +575,7 @@ export class FontDecoder {
       // beginbfchar/endbfchar sections (simple pairs: <src> <dst>)
       const bfcharRegex = /beginbfchar\s+([\s\S]*?)endbfchar/g;
       let match: RegExpExecArray | null;
+      let count = 0;
       while ((match = bfcharRegex.exec(streamData)) !== null) {
         const block = match[1];
         const tokens = block.match(/<[0-9a-fA-F]+>/g) || [];
@@ -582,6 +585,7 @@ export class FontDecoder {
           const cid = parseInt(srcHex, 16);
           if (isNaN(cid)) continue;
           result.set(cid, decodeUtf16BeHex(dstHex));
+          count++;
         }
       }
 

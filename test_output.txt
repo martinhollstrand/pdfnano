@@ -1,0 +1,8512 @@
+Running PDFNano parser tests...
+✓ Instantiation
+Warning: Invalid xref table marker at offset 0, attempting to reconstruct
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 4 objects in chunk [0, 389), total so far: 4
+XRef reconstruction complete. Total objects found: 4
+Scanning for Object Streams...
+Found 0 Object Streams containing 0 additional objects.
+✓ parseBuffer
+Warning: Invalid xref table marker at offset 0, attempting to reconstruct
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 4 objects in chunk [0, 389), total so far: 4
+XRef reconstruction complete. Total objects found: 4
+Scanning for Object Streams...
+Found 0 Object Streams containing 0 additional objects.
+✓ parseBufferToMarkdown
+Warning: Invalid xref table marker at offset 0, attempting to reconstruct
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 4 objects in chunk [0, 389), total so far: 4
+XRef reconstruction complete. Total objects found: 4
+Scanning for Object Streams...
+Found 0 Object Streams containing 0 additional objects.
+✓ parseBufferToJSON
+Warning: Invalid xref table marker at offset 0, attempting to reconstruct
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 4 objects in chunk [0, 389), total so far: 4
+XRef reconstruction complete. Total objects found: 4
+Scanning for Object Streams...
+Found 0 Object Streams containing 0 additional objects.
+✓ extractImagesFromBuffer
+Warning: Error in parse method: Error: Invalid PDF: Could not determine PDF version
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 0 objects in chunk [0, 22), total so far: 0
+XRef reconstruction complete. Total objects found: 0
+Scanning for Object Streams...
+Found 0 Object Streams containing 0 additional objects.
+Warning: Could not find Root Catalog after searching 0 objects.
+✓ invalid buffer rejected
+Warning: Invalid xref table marker at offset 0, attempting to reconstruct
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 4 objects in chunk [0, 389), total so far: 4
+XRef reconstruction complete. Total objects found: 4
+Scanning for Object Streams...
+Found 0 Object Streams containing 0 additional objects.
+✓ parseFile
+Warning: Invalid xref table marker at offset 0, attempting to reconstruct
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 4 objects in chunk [0, 389), total so far: 4
+XRef reconstruction complete. Total objects found: 4
+Scanning for Object Streams...
+Found 0 Object Streams containing 0 additional objects.
+✓ parseFileToMarkdown
+Warning: Invalid xref table marker at offset 0, attempting to reconstruct
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 4 objects in chunk [0, 389), total so far: 4
+XRef reconstruction complete. Total objects found: 4
+Scanning for Object Streams...
+Found 0 Object Streams containing 0 additional objects.
+✓ parseFileToJSON
+Warning: Invalid xref table marker at offset 0, attempting to reconstruct
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 4 objects in chunk [0, 389), total so far: 4
+XRef reconstruction complete. Total objects found: 4
+Scanning for Object Streams...
+Found 0 Object Streams containing 0 additional objects.
+✓ extractImagesFromFile
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 75 0 R...
+ToUnicode Data Length: 469
+Parsed 4 bfchar entries
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 77 0 R...
+ToUnicode Data Length: 483
+Parsed 2 bfchar entries
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 79 0 R...
+ToUnicode Data Length: 666
+Parsed 12 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 81 0 R...
+ToUnicode Data Length: 540
+Parsed 12 bfchar entries
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 83 0 R...
+ToUnicode Data Length: 673
+Parsed 17 bfchar entries
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 85 0 R...
+ToUnicode Data Length: 953
+Parsed 37 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+✓ regression parse (test/test.pdf)
+WINTAABRAHAM
+KONTAKTUPPGIFTER
+073-905 85 66
+winta.abraham@outlook.com
+PERSONLIGA
+EGENSKAPER
+Initiativtagande
+Motiverad
+Organiserad
+Service-minded
+Samarbetsvillig
+SPRÅK
+Svenska
+Engelska
+Tigrinja
+FÄRDIGHETER
+MicrosoftOffice
+AdobeCreative Cloud
+iWork
+Korrekturläsning
+UTBILDNING
+LUNDSUNIVERSITET
+Förlags- ochbokmarknadskunskap | 2023
+SÖDERTÖRNSHÖGSKOLA
+Psykologi A-B | 2017-2018
+ARBETSERFARENHET
+KUNDSERVICEVÄRD
+MTR/SLHittegods | 2022 - 2023
+- Kundbemötandevia telefonoch mailsamt administrativtarbete
+- Skötteinterna beställningar, bokningaroch provningar på
+arbetsuniformertill medarbetare
+- Hanteringoch arkivering avhittegods frånkollektivtrafiken
+HANDLÄGGARE
+TrimTab | 2021 - 2022
+- Kartladeoch identifieradebehov avstöd hosdeltagare inskrivna på
+Arbetsförmedlingen
+- Förmedladekontakt mellanarbetsgivare och -sökande
+- Leddeintervjuträning, hjälptedeltagare attsammanställa CV/personliga
+brevoch delade utuppgifter på enveckobasis
+STATIONSVÄRD
+MTRTunnelbanan | 2019 - 2021 (säsongsarbete)
+- Hanteradebiljettförsäljning
+- Rapporteradeoch hanteradesäkerhetsavvikelser ocharbetade proaktivt
+föratt förebyggaolyckoristationsmiljö
+- Informeradevid trafikstörningarsom påverkadekollektivtrafikenMUSEIVÄRD/BOKHANDELSPERSONAL
+Junibacken | 2015 - 2019
+- Hanteradekassaförsäljningimuseet ochbokhandeln, förbereddeinför
+teaterföreställningar
+- Dekorerademontrar införboksläpp ellerenligt olikateman, förberedde
+införkvällsevent
+ÖVRIGARBETSERFARENHET
+Transkriberare/korrekturläsare - Appen (2021-2022)
+Butiksbiträde (Lindex, UNIQLO,Cervera) - RetailStaffing (2019-2020, 2024)
+Marknadsundersökare påBra Röster (2012-2014)
+BIRKAGÅRDENSFOLKHÖGSKOLA
+Allmänkurs inriktningekonomi ochjuridik | 2015-2017
+OPERATIONSCOORDINATOR
+(vikariat) Intertek | 2024-
+- Planerar, koordineraroch schemaläggerrevisioner förinternationella och
+nordiskakunder
+- Utförvarierande administrativauppgifter, blafakturering, utfärdar
+certifikat, kundkontaktvia mail, registrerarärenden, utvecklarprocesser
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /FontDescriptor, /ToUnicode, /FirstChar, /LastChar, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 134 0 R...
+ToUnicode Data Length: 1315
+Parsed 0 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /FontDescriptor, /ToUnicode, /FirstChar, /LastChar, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 137 0 R...
+ToUnicode Data Length: 1194
+Parsed 0 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /FontDescriptor, /Encoding, /FirstChar, /LastChar, /Widths
+ToUnicode type: undefined
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /FontDescriptor, /Encoding, /FirstChar, /LastChar, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /FontDescriptor, /Encoding, /FirstChar, /LastChar, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /FontDescriptor, /ToUnicode, /FirstChar, /LastChar, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 137 0 R...
+ToUnicode Data Length: 1194
+Parsed 0 bfchar entries
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /FontDescriptor, /ToUnicode, /FirstChar, /LastChar, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 134 0 R...
+ToUnicode Data Length: 1315
+Parsed 0 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /FontDescriptor, /Encoding, /FirstChar, /LastChar, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+ 
+===============================================
+✓ ===== PARSED (test2.pdf) =====
+===============================================
+ 
+    
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+PHONE 
++46 76
+〰゠
+242 28 87 
+EMAIL 
+olenasw21@gmail.com 
+ 
+SAMMANFATTNING  
+Jagkom 
+ti
+llSverige pågrund avkrigetiUkraina ochjag hoppaskunna hi
+tt
+a e
+tt
+ 
+jobb såsnart sommöjligt.  
+Jag är enansvarsfull, posi
+ti
+v, arbetsam, tolerantoch målorienteradkvinna. Jag 
+sökerjobb inombyggbranschen ellerinom ekonomioch administra
+ti
+on. 
+Jagförbä
+tt
+rarständigt minapersonliga ochprofessionella kunskaperinom mi
+tt
+ 
+yrkeoch lärmig svenskaspråket för a
+tt
+ kommainidet svenskasamhället 
+snabbare.  
+Jaghar enbred erfarenhetsom byggnadsingenjörsamt inomlogis
+ti
+k och 
+transportoch jagkan jobbainom 
+fl
+eratekniska yrken. 
+ARBETSLIVSERFARENHET 
+2014–2022 Företagschef, BiolenLTD, JivatransservisLTD, Ukraina                         
+(10 anställda, ledareför samtliga)  
+Företaget är enaktör inomtransportbranschen ochtransporterar varor påden 
+ukrainskamarknaden. 
+Jagarbetade bre
+tt
+ medkoordinering avtransporter ochlogis
+ti
+k
+fl
+ödensamt 
+underhållsarbeten. Jaghar ävenvarit ansvarigför företagsredovisning.   
+Underdessa årdeltog jag ak
+ti
+vtiprivatabygg- ochunderhållsprojekt. 
+2011 – 2014 Företagsledare, ShymchukkLTD, Ukraina                                                 
+(15 anställda, ledaresom samtliga) 
+Företaget är enaktör inomtransport ochunderhållsbranschen. Jagarbetade med 
+strategiarbete, 
+fi
+nansiering, dokumenta
+ti
+on, arbetsmiljö (inklusivegenomförande 
+avutbildningar) ochföretagsrevision.  
+2008–2011 Biträdandechef, Radema-Plus, Ukraina                                                  
+(17 anställda, ledareför 14 avdem) 
+Jagarbetade medprojektering ochuppska
+tt
+ningsunderlag, dri
+ft
+sä
+tt
+ning avobjekt, 
+förhandlingaroch avtal, personaldataoch internakontroller av 
+redovisningsunderlag.  
+2003–2008 ByggnadsingenjörRadema-Plus, Ukraina    
+Jagarbetade meddesign ochkoordinering avbyggnadsarbeten ochprocesser.  
+2001–2003 Föräldraledighet 
+1999–2001 Administrator, FrysaLTD, Ukraina (10 anställda) 
+Kontorsledning, kontroll avinkommande ochutgående dokumenta
+ti
+on av 
+företaget. 
+OLENAOZKAN  
+BYGGNAD/LOGISTIK/ 
+TRANSPORT/LEDARSKAP
+SPRÅKKUNSKAPER  
+Ukrainska -modersmål 
+Ryska-
+fl
+ytande 
+Svenska- SVAgrund 2 
+Engelska- nybörjare A2 
+ÖVRIGT 
+• B-Körkort 
+
+UTBILDNING 
+2005 
+FilialenRivne förStatliga akademinför sta
+ti
+s
+ti
+k, bokföringoch revision, 
+Ukraina 
+〰゠
+ 
+2000–2001 
+Ins
+ti
+tutetför utbildning e
+ft
+erexamen vidRivnes Statensstatliga tekniska 
+universitet, Ukraina 
+Inriktningoch behörighet; manageroch ekonom 
+〰゠
+ 
+1994–1999 
+Rivnesstatliga tekniskauniversitet , Ukraina 
+Inriktningen “Industrielloch civilbyggnadsverksamhet” 
+Inriktningoch behörighet; specialistoch byggnadsingenjör 
+UHR 
+2024.09.19  
+UHRbedömer a
+tt
+ utbildningenmotsvarar svenskcivilingenjörsexamen 
+(SeQFnivå 7). 
+Kurser 
+2024 SFIkursDsvenska 
+2024 SFIkursCsvenska 
+2024 FastCare UkrainianEntrepreneurship, SvIFF, Sverige 
+2023 BusinessAdministra
+ti
+onand Economy inSweden,  
+          ELVIRAKunskapsutveckling, Sverige 
+2023 Entrepreneurship, ELVIRAKunskapsutveckling, Sverige 
+2023 Svenska, ABF, Sverige 
+2023 Engelska, ABF, Sverige 
+KOMPETENSER 
+• Byggnadsingenjör 
+• Logis
+ti
+k & Transport 
+• Företagsredovisning 
+• Ledarskap
+getFont called
+Font keys: /Type, /Subtype, /Name, /BaseFont, /Encoding, /FontDescriptor, /FirstChar, /LastChar, /Widths
+ToUnicode type: undefined
+getFont called
+Font keys: /Type, /Subtype, /Name, /BaseFont, /Encoding, /FontDescriptor, /FirstChar, /LastChar, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /Name, /BaseFont, /Encoding, /FontDescriptor, /FirstChar, /LastChar, /Widths
+ToUnicode type: undefined
+getFont called
+Font keys: /Type, /Subtype, /Name, /BaseFont, /Encoding, /FontDescriptor, /FirstChar, /LastChar, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 193 0 R...
+ToUnicode Data Length: 337
+Parsed 1 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /Name, /BaseFont, /Encoding, /FontDescriptor, /FirstChar, /LastChar, /Widths
+ToUnicode type: undefined
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 203 0 R...
+ToUnicode Data Length: 337
+Parsed 1 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 199 0 R...
+ToUnicode Data Length: 337
+Parsed 1 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+ 
+===============================================
+✓ ===== PARSED (test3.pdf) =====
+===============================================
+ 
+ 
+ 
+ 
+ 
+RAMY  
+KASHKOL 
+ 
+
+ 
+PROFIL 
+Engageradoch målmedvetenperson 
+medbred erfarenhetinom industri, 
+lager, logistikoch service. Jag är 
+snabblärd, noggrannoch trivsmed att 
+arbetabåde självständigtochiteam. 
+Minförmåga attfokusera ocharbeta 
+struktureratgör attjag snabbtsätter 
+migininya uppgifteroch 
+arbetsmiljöer. Jagser minautism som 
+enstyrka – denger migskärpa, 
+ordningssinneoch detaljfokus. 
+Jag ärflexibel, flyttbaroch öppenför 
+nyamöjligheter därjag kanbidra 
+medengagemang ochkvalitet. 
+ 
+KONTAKT 
+TELEFON: 
+070–415 77 98 
+ 
+E-POST: 
+ramikashkol1@outlook.com 
+SPRÅKKUNSKAPER  
+Svenska   –   Modersmål 
+Engelska  –  Godakunskaper 
+Kurdiska   –  Godakunskaper 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Referenser 
+Lämnasgärna påbegäran. 
+ 
+ 
+UTBILDNING 
+WenströmskaGymnasiet, Västerås –  
+Augusti 2012 – Juni 2015 
+Industrioch anläggning 
+ARBETSLIVSERFARENHET 
+ABBRobotics / Adecco, Västerås — Truckförare & Montör  
+Juni 2025 – September 2025 
+Truckkörning (motviktoch ledstaplare) 
+Plock, packning, in- ochutleveranser 
+Monteringsarbeteenligt ritningoch instruktion 
+Arbeteiteaminom produktion 
+  
+MaxHamburgare, Västerås — Restaurangbiträde   
+Mars 2022 – Mars 2025  
+Arbetadeikök, kassaoch Drive- 
+Tillagning, serveringoch packning avbeställningar 
+Kundserviceoch Restaurangbiträde 
+  
+Bulten AB / BestBemanning, Hallstahammar — Maskinoperatör   
+Maj 2023 – Juli 2023 
+Maskinkörning, truckkörningoch packning 
+Plockoch logistikarbeteinom produktion 
+  
+ForslundsTvätt / Rikstvätt, Västerås — Tvättbiträde 
+Juni 2022 – December 2023  
+Sorteringoch hantering avhotelltextilier 
+Truckkörningoch samarbetemed produktionoch distribution 
+ 
+KOMPETENSER 
+Truckkörning: A1–A4, B1, B6, D1 
+Traverskort: A1–2, B1–2, C1–2, D1–2, E1–2, F1–2 
+B-körkort 
+Grundläggandedatorkunskaper 
+Erfarenhet avmontering, packning, sortering, ochlagerhantering 
+Godservicekänsla ochsamarbetsförmåga 
+ 
+ 
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /ToUnicode, /DescendantFonts
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 195 0 R...
+ToUnicode Data Length: 1539
+Parsed 81 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /ToUnicode, /DescendantFonts
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 195 0 R...
+ToUnicode Data Length: 1539
+Parsed 81 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /ToUnicode, /DescendantFonts
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 195 0 R...
+ToUnicode Data Length: 1539
+Parsed 81 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /ToUnicode, /DescendantFonts
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 195 0 R...
+ToUnicode Data Length: 1539
+Parsed 81 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /ToUnicode, /DescendantFonts
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 195 0 R...
+ToUnicode Data Length: 1539
+Parsed 81 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /ToUnicode, /DescendantFonts
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 195 0 R...
+ToUnicode Data Length: 1539
+Parsed 81 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /ToUnicode, /DescendantFonts
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 195 0 R...
+ToUnicode Data Length: 1539
+Parsed 81 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+ 
+===============================================
+✓ ===== PARSED (test4.pdf) =====
+===============================================
+ 
+   
+Contact
+martin@hollstrand.com
+www.linkedin.com/in/
+martinhollstrand (LinkedIn)
+TopSkills
+ManagementConsulting
+DevelopmentTools
+ValueStream Mapping
+Languages
+Swedish (Native orBilingual)
+English (ProfessionalWorking)
+MartinHollstrand
+Techand innovationleader | Coachand Mentor
+Sweden
+Summary
+Heythere, future-makers! I'm Martin, a skateboarder atheart turned
+serialentrepreneur andleader inProduct Development, Tech, and
+Entrepreneurship. 
+Who Am I?
+Co-Founder ofBecause Mondaysand SCRIIN. Strategicallyinvolved
+in It's inthe Node. I blendthe audacity ofskate culturewith the
+innovation oftech, creatingauniquevortex wherefreelancers,
+leaders, andaspiring entrepreneurscan redefinethe future.
+MyWhy
+Thefuture isn't somethingthat justhappens to us—it's something we
+make. That's whyIbelieve inempowering YOU tocarve yourown
+path. Inaworldwhere techevolves atlight speed, it's crucialthat
+humanvalues aren't left inthe dust.
+HowDoIDo It?
+1️️ BecauseMondays: We'renot justanother freelancingplatform;
+we'reamovementthat simplifiesthe freelancinglife throughcutting-
+edgetools, personalizedcoaching, and anever-growingcommunity.
+2️️ It's inthe Node: Settingstrategies andOKRs isoftenacorporate
+buzzkill, butnot with us. Werevolutionize thisspace withablend of
+AIand humancoaching tomake youreveryday meaningful.
+WhatIOffer
+TailoredLeadership Coaching
+FreelancerEmpowerment
+Human-centricTechnology Solutions
+StrategicMindset
+Code, ifthat’s what ittakes
+  Page 1 of 7
+
+   
+Whetheryou'reacuriousindividual, anaspiring freelancer, a CEO,
+oranyone inbetween—let's connectand makethe futurehappen. 
+Let's TalkMetrics
+Ifyou lovedata-drivendecisions asmuch asIdo, let's engage. I
+measure myimpact throughqualitative feedback, followergrowth,
+andengagement metrics. Andhey, ifyou'vegotastory toshare, let's
+amplify ittogether. 
+️ Jointhe Movement
+I oftenshare thoughtleadership articles, podcastsnippets, personal
+stories, andeven quickskateboarding tips tokeep usall onour toes.
+Sohit that 'Follow' buttonfor yourdaily dose ofinspo andinnovation!
+Dropmealine orshoot overaconnectionrequest. Let's skate
+towardsthe future, shall we? 
+Experience
+BecauseMondays
+Co-Founder, Coachand Chairman ofthe board
+October 2019 - Present (4 years 3 months)
+Sweden
+Weofferasmooth way tostart freelancingwith greatcoaching, freedomand
+zerounnecessary administration. Interested? Contact usforachat.
+It's inthe Node
+Chairman ofthe Board
+March 2023 - Present (10 months)
+Åre, JamtlandCounty, Sweden
+Growwith Objectives & KeyResults (OKRs) thatask formeaningful change.
+Wehelp youget towork withyour strategicexecution throughexpert
+consultingand lightweightOKR software.
+Asthe Chairman ofthe boardIhelpthe company toexecute on anupdated
+strategyand nextlevel technology tohelp theuser toset bettergoals andget
+help toachieve them.
+SCRIIN.
+Co-Founderand Chairman ofthe board
+  Page 2 of 7
+
+   
+October 2017 - Present (6 years 3 months)
+Wehelp youngpeople findingbalance inour digitalworld withsmart
+technology.
+Znsei
+FullstackEntrepreneur
+2016 - Present (7 years)
+Stockholm, Sweden
+Yourspeed andhappiness isour focus - Wework withambitious software
+teams tomove faster
+NetOnNet
+OrganisationalCoach (Consultant)
+October 2021 - February 2023 (1 year 5 months)
+I guideNet onNet tobecomeamore agileorganisation bybuilding Product
+teams, coach inDevOps mindsetand inspireabout OKRs toset inclusive
+strategy.
+Baemingo
+LeadershipCoach (Consultant)
+April 2022 - November 2022 (8 months)
+Coachand Mentorfor theleadership team atBaemingo. Bothfor individuals
+andfor thewhole team.
+AlmiFöretagspartner
+BusinessMentor
+April 2019 - May 2022 (3 years 2 months)
+Åre
+Mentor inthe Almimentoring program.
+CordelNorge AS
+StrategicAdvisor (Consultant)
+August 2017 - January 2022 (4 years 6 months)
+AsaStrategicadvisor andcoachIhelped transformthis companyfrom legacy
+managementand ways ofworking toamodernSaaS companywith great
+success! Cordelisaleading softwarecompany withintheir space.
+ClasOhlson
+Organisationaland AgileCoach (Consultant)
+May 2019 - September 2021 (2 years 5 months)
+  Page 3 of 7
+
+   
+Leadand coachedClas Ohlson tobecomeamore Agileorganisation. From
+inclusivestrategy development, agileteams andDevOps mindset.
+SBAB
+InterimManager forProduct Owners (Consultant)
+May 2017 - February 2018 (10 months)
+Stockholm
+Asaleaderfor theproduct ownersItransformedthe way ofworking tomore
+agileand autonomousteams whilegrowing thepeople inthe organisation.
+NetEnt
+Leanand DevOpsorganisational coach (Consultant)
+February 2017 - April 2017 (3 months)
+Stockholm, Sverige
+CambioHealthcare Systems
+AdvisorLean andDevOps transformation
+September 2016 - November 2016 (3 months)
+Stockholm
+H&M
+Head ofDevelopment & OperationsOffice
+September 2014 - September 2016 (2 years 1 month)
+Leadingthe journeytowardsamore efficient ITdelivery. Focus onestablishing
+coachnetworks, Leanmeasures, improvementmodels, DevOps, Continuous
+Deliveryand anAgile mindset.
+At H&M I havepromoted Leanand Agileways ofthinking andworking to
+reduceTime-to-Marketand increasedefficiency andstability.
+Brightstep, nowpart ofAccenture Interactive
+BusinessArea Manager
+August 2013 - September 2014 (1 year 2 months)
+Stockholm, Sweden
+Managingthe hybrisbusiness area.
+DigitalRoute
+DeliveryManager
+August 2012 - August 2013 (1 year 1 month)
+  Page 4 of 7
+
+   
+Managingthe team ofproduct managers. Ultimatelyresponsible fordelivery
+ofthe product. Responsiblefor thebalance ofInnovation & Prototyping,
+Customeritems andRoadmap.
+H&M
+3 years 1 month
+ISRSite Managementfor Otherbrands
+January 2011 - August 2012 (1 year 8 months)
+ITService Responsiblefor e-commerceand websites forbrands likeCOS,
+Monki, Cheapmonday andWeekday. Atthis positionIranprojects tocreate
+the e-commerceplatforms aswell asmanaging theservice areaswhen they
+wereset in toproduction. 
+I directlymanagedateam ofChief Analysts, ChiefArchitects andSystem
+managersand developmentteams both in-houseand outsourced. Thearea I
+managedconsisted of 35 people intotal.
+SystemsManager
+August 2009 - December 2010 (1 year 5 months)
+Systemmanager forawebsite platform, Ember, used byseveral brands
+includingwww.hm.comand www.cosstores.com. Emberisasystem built on
+Java, Spring, JSF, Seam, RichfacesandaOracle database.
+COS
+Agileprogram manager
+June 2008 - December 2010 (2 years 7 months)
+Stockholm, Sweden
+I leadthe program tocreateabrand newonline channelwithaunique concept
+forthe brandCOS. Theproject includedboth thegraphical designprocess as
+well asthe technicalimplementation. A uniqueagile routinecovering design
+agencyand softwareteams madethis projectahugesuccess, delivered on
+time, onbudget andwithashiny andinnovative result.
+H&M
+2 years 2 months
+Scrummaster
+April 2007 - June 2008 (1 year 3 months)
+Scrummaster andJava developer inthe developmentteam forwww.hm.com
+Developmentmanager
+May 2006 - June 2008 (2 years 2 months)
+  Page 5 of 7
+
+   
+H&M isone ofthe largestfashion retailers inthe world. 
+At H&M I workedwith theonline channels, websites and e-commerce. As
+thedevelopment managerfor www.hm.comImanagethe team ofJava
+developers, DBA, testers, flashdevelopers andGUI developers. Occasionally I
+developedfeatures myself.
+Duringthis periodIintroducedScrum andAgile ways ofworking at H&M, being
+thefirst teamstarting theagile transformation. The H&M website isone ofthe
+largestfashion websites inthe worldwith massiveamount oftraffic everyday. 
+Challenges atthis position:
+- Largescale website withmany users
+- Contentmanagement systemspublishing newcontent daily
+- Datacaching andglobal reachthrough Akamai
+- Localisation ofthe website withlanguages spreadingfrom China, Japanand
+alleuropean languagesand ofcourse english.
+- Making anagile organization
+Bredbandsbolaget
+Systemmanager anddeveloper
+September 2000 - May 2006 (5 years 9 months)
+Bredbandsbolaget isone oflargest internetservice providers inSweden
+alwayspushing thelimits inbandwidth. Bredbandsbolagetwas thefirst high
+speedinternet serviceprovider forend customers.
+Mywork atBredbandsbolaget included:
+- Designingand developingnew contentservices like, radiostations, Internet
+TV, Video onDemand
+- Responsiblefor theweb sitesand customerportals
+- Managethe developmentand designteams forweb sitesand onlineservices
+- Projectmanager fornew ITprojects withregards tothe onlinechannels
+- Developerand Architect
+- Developedthe firstversion ofVideo onDemand service SF-Anytime
+Dressmart.com
+Webmastercoordinator
+January 2000 - September 2000 (9 months)
+Dressmart.comwas one ofthe first e-commerceweb siteselling fashiononline
+formen in 9 europeancountries.
+  Page 6 of 7
+
+   
+Mywork included:
+- Designingweb sitesand conceptsfor allmarkets
+- Co-ordinatedthe 9 marketweb sitepublishing activities
+- Developedthe userinterface withHTML, Javascript
+- Designedand developedonline advertisingand banners
+- Co-workedclose todesign agencies tomake re-design
+Studiowest
+Soundengineer
+January 1999 - December 1999 (1 year)
+SanDiego, USA
+Sound/musicengineer inSan Diegoslargest musicrecording studio.
+Producersand engineersIworkedwith:
+- JerryFinn (GooGoo Dolls, GreenDay, Rancid)
+- JonMathias (Kiss, ArethaFranklin DireStraits)
+- DanAbernathy
+- DarrelHarvey
+- LarryCzoka
+ArtistsIworkedwith:
+- Blink 182
+- UnwrittenLaw
+- Walela
+- RitaCoolidge
+- WayneNelson
+- Giovanni
+www.studiowest.com
+Education
+KantzowskaMedia
+Mediatechnology · (1997 - 1999)
+  Page 7 of 7
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Name, /Subtype, /Type, /Widths
+ToUnicode type: undefined
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Name, /Subtype, /Type, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Name, /Subtype, /Type, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Name, /Subtype, /Type, /Widths
+ToUnicode type: undefined
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Name, /Subtype, /Type, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 36 0 R...
+ToUnicode Data Length: 337
+Parsed 1 bfchar entries
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 43 0 R...
+ToUnicode Data Length: 1079
+Parsed 14 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Name, /Subtype, /Type, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Name, /Subtype, /Type, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 54 0 R...
+ToUnicode Data Length: 337
+Parsed 1 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Name, /Subtype, /Type, /Widths
+ToUnicode type: undefined
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+ 
+===============================================
+✓ ===== PARSED (test5.pdf) =====
+===============================================
+ 
+LucaPergola 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CONTACT   
+ 
+ 
+    LucaPergola 
+    Potenza, Italy, 07-03-1992  
+    D. License:  B 
+ 
+  Address: 
+Rasånduvagen 19,Solna 
+Sweden 
+ 
+Phone: 
++46 (0) 73 51 90 830 
+ 
+Email: 
+lucapergola@live.it 
+ 
+ 
+Available: Worldwide 
+ 
+LANGUAGES  
+ 
+ 
+  Italian: Motherthong  
+ 
+English- C1 
+ 
+French - B2 
+ 
+Spanish - A2 
+ 
+SKILLS 
+-  Problemsolving. 
+-  Riskmanagement. 
+-  Hazardand risk 
+analysis. 
+-  Environment. 
+-  Equipmentinspection. 
+-  Teamwork. 
+-  Businessdevelopment. 
+-  MicrosoftSoftware 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+PROFILE 
+   
+ 
+QHSE  Specialist, bringingLeadership andexperience abilitiesdeveloped 
+over 6-year inOIL andGAS careerand 4-yr inInfrastructure projects WW. 
+Solidbackground designingand implementingprocedures tomanaging 
+start-upproject, permit towork, riskanalysis, MSDSand MOS. 
+Specialist inATEX andcommissioning areas, working atheight, confined 
+space, hotworks, LOTO, ISO 45001regulations, managinginterference 
+withinother EPCcontractors duringthe constructionsand commissioning 
+phase. 
+ 
+WORKEXPERIENCE  
+ 
+QHSE  Coordinator 
+ItineraMetro Projects       May/2022-Ongoing 
+Project:  
+➢ MetroSection “HammarbyKanal”. (Value €90 million) 
+➢ MetroSection "Arenastaden - SödraHagalund”.(Value:€125 million)   
+Tasks: 
+Supportingthe BasUduringthe start upphase ofthe project, issuing 
+procedure, MOS, MSDSprotocol, internaltraining for FFmaneuvers, 
+workswith explosivecartridge forblasting. 
+Leadinginternal inspectionensuring thecorrect method ofwork and 
+ensuring ansafe workenvironment inthe tunnelarea. 
+ 
+QHSESpecialist   
+ItineraKHPT HospitalDenmark            May/2020 – May/2022 
+Project:  
+➢ JVKHPT Hospital, Denmark (Value: €430 million) 
+Tasks: 
+ 
+Performinginspection onsite forScaffolding, Liftingdevice, W&H, Earth 
+movements, andall dailybasis inspectionnecessary duringthe construction 
+phase. Issuingrisk assessment, internaltraining, inc/accidents  statistical 
+analysisand incidentinvestigation reportaccording tostandard ISO 45001. 
+ 
+QHSESpecialist ATEXand Commissioning  
+JV(Techint, Sener) TSLNGFrance   October /2015 – October/ 2019 
+Project:  
+➢ DunkirkLNG Termina ( Value: > 1B. €) 
+Tasks:  
+Performinternal training onPTW (workpermits), LOTO, confinedspaces, 
+hotworks, work atheight anduse ofmobile andfixed scaffolding). 
+WorkProcedure Officer, TBT, JSA, MSDScontrol (featuresand uses of 
+chemicalproducts insafety), investigationand compilation ofreports inthe 
+event ofaccidents. 
+FireFighting teamManager forfirst intervention incommissioning plant. 
+QHSESupervisor TSLNG France 
+JV(Techint, Sener) TSLNGFrance  Oct/2013 – October / 2015 
+Project: 
+➢ DunkirkLNG Termina ( Value: > 1B. €) 
+Tasks: 
+Fildsupervisor incharge ofsupervising forPPE compliance, liftingtools, 
+electricaltolls, hotworks, civilworks, communalareas standardand 
+requirements, environment. Incidentreport andanalysis followingthe directory 
+ofOHSAS 18001. 
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+EDUCATION, CERTIFICATIONS  
+ 
+•  ITIS G.CardanoHight SchoolDiploma 2006/2011 
+•  BAS-U & BAS-P BuildingWork EnvironmentCoordinator (JA 
+kompetens) 
+•  TOEFL (Citycollege ofSan Francisco CA)  
+•  RSPP/ASPP(ESAARCOconfederation)  
+•  VOL-VCA (BE00025/2/EN/000002) 
+•  ATEXarea 94/9, 99/92 (Ineris) 
+•  H0B0 Electricalinspection (Apave)  
+•  Seveso 82/501/CE (Ineris) 
+• FireFighting Manageradvanced course (Silpa, 120h) 
+•  OHSAS 18001 Regulationcompliances  
+•  ISO 9001 Conformityregulation. 
+ 
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 219 0 R...
+ToUnicode Data Length: 645
+Parsed 6 bfchar entries
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 223 0 R...
+ToUnicode Data Length: 631
+Parsed 11 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 227 0 R...
+ToUnicode Data Length: 560
+Parsed 6 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 231 0 R...
+ToUnicode Data Length: 546
+Parsed 8 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 231 0 R...
+ToUnicode Data Length: 546
+Parsed 8 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 219 0 R...
+ToUnicode Data Length: 645
+Parsed 6 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 227 0 R...
+ToUnicode Data Length: 560
+Parsed 6 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 223 0 R...
+ToUnicode Data Length: 631
+Parsed 11 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 235 0 R...
+ToUnicode Data Length: 338
+Parsed 1 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 223 0 R...
+ToUnicode Data Length: 631
+Parsed 11 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 219 0 R...
+ToUnicode Data Length: 645
+Parsed 6 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 227 0 R...
+ToUnicode Data Length: 560
+Parsed 6 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 223 0 R...
+ToUnicode Data Length: 631
+Parsed 11 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 219 0 R...
+ToUnicode Data Length: 645
+Parsed 6 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 227 0 R...
+ToUnicode Data Length: 560
+Parsed 6 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 219 0 R...
+ToUnicode Data Length: 645
+Parsed 6 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 227 0 R...
+ToUnicode Data Length: 560
+Parsed 6 bfchar entries
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 223 0 R...
+ToUnicode Data Length: 631
+Parsed 11 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 235 0 R...
+ToUnicode Data Length: 338
+Parsed 1 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+ 
+===============================================
+✓ ===== PARSED (test6.pdf) =====
+===============================================
+ 
+CV  Namn:  ThereseWernäng  
+Adress: SanktSigfridsgatan 39  
+              521 35 Falköping  
+Telefon: 0760 - 340007  
+E-post:  therese.wernang@gmail.com  
+Arbetslivserfarenhet 
+Gruppträning- ochEventansvarig
+​​​​​​
+2024 - nuvarande 
+PULSGym AB 
+Gruppträningsansvar 
+- Ansvaraför schemaläggning avgruppträningspass ochsäkerställa ettvarierat ochattraktivt utbud. 
+- Rekrytera, introduceraoch coachagruppträningsinstruktörer. 
+- Följaupp ochutvärdera gruppträningenför attsäkerställa högkvalitet ochmedlemsnöjdhet genomatt föraoch 
+följastatistik ochnyckeltal samtgenomföra NKI-undersökningar. 
+- Arbetakontinuerligt medutveckling ochförnyelse avgruppträningskoncept ochpass. 
+- Marknadsföraoch kommuniceragymmets gruppträningsaktivitetergymmets kanaleroch därigenomäven lyfta 
+”tröga” passsom intehar sammabokningsfrekvens. 
+- Säkerställaatt allutrustning förgruppträning ärigottskick ochatt lokalerna ärvälskötta. 
+ 
+Event- ochaktivitetsansvar 
+- Planera, organiseraoch genomförainterna ochexterna eventsoch aktivitetersom stärkergymmets varumärkeoch 
+ökarmedlemsengagemanget. 
+- Samarbetamed samarbetspartnersoch leverantörervid eventplanering. 
+- Marknadsföraoch kommuniceraevent ochaktiviteter viagymmets kanaler. 
+- Följaupp ochutvärdera genomfördaevent ochaktiviteter föratt säkerställaförbättringar införframtiden. 
+ 
+Övrigaarbetsuppgifter 
+- Bemannareceptionen och geprofessionell servicetill medlemmaroch besökare. 
+- Säljamedlemskap ochprodukter samt geinformation omgymmets utbudoch tjänster. 
+- Introduceranya medlemmaroch hjälpadem attkomma igångmed sinträning. 
+- Bidratill ordningoch trivselgenom attstäda ochhålla anläggningenren ochorganiserad. 
+- Utföraandra förekommandearbetsuppgifter inomgymmets verksamhetvid behovefter önskemålfrån 
+platsansvarigalternativ verksamhetschef. 
+ Reseproducent  
+​​​​​​​​
+2023 - 2024 
+ScubaTravel ABResebyråchef 
+​​​​​​​​​
+2022 - 2023 (1 år) 
+SvanbergsResebyrå EtcResesäljare/Reseförsäljare/Resekonsult  
+​​​​​
+2017 - 2022 (5 år)  
+SvanbergsResebyrå Etc  
+-
+​
+Arbetesom resesäljaremed försäljning avprivatresor, affärsresorsamt grupp- ochkonferensresor. 
+-
+​
+Försäljningenbestod avbåde färdigapaket samtatt sättaihop individuellalösningar enligtkundens 
+önskemål.  
+-
+​
+Bokning avmark arrangemangsom hotell, transporter 
+ 
+Tempot ärofta högtoch därför ärdet viktigtatt kunnastrukturera och gesnabba lösningar. Attvara stresstålig är 
+elementärtidennabransch dådet ärviktigt attutföra samtligabokningar medhögst noggrannhettrots pressade 
+
+situationer. Dådet är enutsatt branschmed mångakonkurrenter viabla näthandeln ärdet viktigtatt möta, samt 
+överträffakundens förväntningar, vilketger mervärdeför bådekund ochresebyrå. 
+ Ägare ​​​​​​​​​​ 2010 - 2017 (7 år)  
+EMFönster AB - Dinpersonliga fönsterleverantör 
+-
+​
+Planering, ledning, utveckling avföretaget 
+-
+​
+Förhandlingsansvarigisambandmed leverantörer 
+-
+​
+Ansvarigimport frånPolen samtDanmark 
+-
+​
+Ansvarigexport Polen - Uruguay av 1000 stenheter, AliquantumAvis Financial 
+-
+​
+Försäljningtill privatpersoneroch fastighetsbolag 
+-
+​
+Samarbetsavtalmed underentreprenörervid installation 
+-
+​
+Förhandlinginför totalentreprenadför  fastighetsbolag, ex O’Balder, Visionsgruppen, MBBygg, Senäte 
+etc.  
+-
+​
+Samarbetsavtalmed återförsäljare; FredellsByggvaruhus, Optimera, FogsäljarnaHenån.  
+-
+​
+Personalansvar; intervju, anställningsavtal, löneadministration 
+-
+​
+Bokföringsansvarig  
+-
+​
+Marknadsföringsansvarig 
+-
+​
+Planering, bokningoch projekteringvid mässorsamt övrigaevent 
+ 
+Klimatsmarta, miljövänliga, hållbaraoch energieffektivafönster tillett förmånligtpris medpersonlig service. Produkterna 
+höllhög standard pågrund avvår specifikakravlista jagförhandlade fram avvåra leverantörer. Detbidrog tillsnabb 
+utveckling. Styrkaniföretagetförutom dekonkurrens kraftiga produkterna vierbjöd marknadenvar vårlyhördhet åtvåra 
+kunder. Vårfokus varatt överträffakundernas förväntan, samtatt fåkunderna attkänna sigvärdefulla.   
+Suppleantoch företagsrådgivare ​​​​​​  2010 - 2017 (7 år)   
+SkandinaviskaUtegym  
+-
+​
+Medbestämmandevid inköpoch strategier 
+-
+​
+Medverkandevid invigningar avnya parker 
+ 
+Våraffärsidé bygger påatt erbjudaeffektiva, enklaträningsredskap placeradeivårnärmiljö.  Vivill skapaaktiva 
+mötesplatsermed utegym, träningsredskaplämpliga försåväl gammalsom  ung. Enaffärsidé sprungen ur enlång 
+erfarenhet avhälsovård, idrottoch kinesiskmedicin. SkandinaviskaUtegym ABerbjuder olikabaspaket medutegym, 
+försåväl offentligsom privatmiljö. Vidspeciella önskemålskräddarsyr viträningspaket anpassadeefter kundensbehov. 
+Vårautegym är avyttersta kvalitet, levererade avKinas störstaoch äldstaleverantör av  träningsredskapför 
+utomhusbruk.  
+ Distriktsansvarigsäljare, RegionVäst ​​​​​ 2009 - 2011 (1,5 år)  
+Folkduschen AB  
+-
+​
+Utesäljare avduschväggaridistrikt VästraGötaland.  
+-
+​
+Tjänstenkrävde attman ärsjälvgående,  kreativoch disciplineratkontaktsökande förnya samt 
+befintligakunder. Jagansvarade över  mittområde genomhela säljprocessen. Tjänsteninnebar 
+regelbundnaresor och  övernattningar påolika orter, deltagandeimässoroch upphandlingar. 
+ 
+Servitrisoch hovmästare 
+​​​​​​​
+2000 - 2001 (2 år)   
+JoeFarellis  Rekryteringsansvarig ​​​​​​​​ 1999 - 2000 (11 mån) 
+BreakwaterHospitality AB  
+-
+​
+Personalansvar 
+-
+​
+ 
+-
+​
+ 
+BreakwaterHospitality varett av deförsta företagenvilka hyrde utsamt rekryteradepersonal tillHotellbranschen. 
+Närjag börjademin anställning påBreakwater Hospitalitybemannade  firmanendast hotellreceptionistertill 
+Stockholmshotell. Straxefter minanställningsstart  utveckladejag engren inombolaget där viäven bemannade 
+
+hotellenmed servitriseroch  frukostpersonal. Välute hosvåra kunderupptäckte jagbristen påbarkunskap hosflertalet 
+nattportierer, vilkaofta hade enlobbybar attansvara för. Därmedutvecklade jagkurseribarteknik samt 
+dryckeskunskapsom jaghöll. Dessakurser blevmycket uppskattade dåhotellen fickmycket brafeedback frånsina 
+gästerför extrafin service.  
+Närjag slutadebemannade vi 27 sthotelliStockholms stad. Jagansvarade för 30 stanställda somsamtliga hade 
+heltidoch merdärtill när deönskade.  Servitrisoch Hovmästare
+​​​​​​​
+1998 - 1999 (2 år)   
+GG12  
+En avGöteborgs finastefisk- ochskaldjursrestaurang medplacering mitt påAvenyn. Här  serverade vimaten med så 
+kallat "finedining" -serveringvilket innebäratt det ärförstklassig  service. Samtligaansvarade försina egnastationer 
+mensåg alltidtill attstötta varandra såatt  samtligagäster skullekänna sigspeciellt utvalda.  Massöroch Spa-terapeut, 1996 - 1998 (2 år)  
+Årevital  
+Jagoch minmor startadedet förstasvenska hotell-SPA, Årevital påHotell Årevidden. Här  utförde viSPA-behandlingar, 
+massage, föreläsningar, konferensevent, vattengympa. Detvar en  otroligtrolig ochutvecklande tid.  Servitris, hovmästare, receptionist, bartender​​​​​ 1993 - 1998 (6 år)  
+ÅreFjällby  
+ 
+Projektanställningar/Extrauppdrag  
+Föreläsareoch kursledare ​​​​​​​ 2017 - fortlöpande ​  
+Masesgården,   
+Yinyoga, KinesiskMedicin, Medvetenträning, Meditation, SPA-terapeaut, Massör 
+Midsommarvärdinnamed fulltansvar avaktiviteterna underdenna vecka. Gruppträningsinstruktör ​​​​​​​ 2009 - pågående  
+NordicWellness, SeamGym ochYoga, Atlantica, Form  
+YinYoga, Bodybalance, Bodyjam, Sh´Bam, FunctionalMoves, MindfulnessMoves, Muskelpass,  Freestyler, Aerobic,   Teamleader, Eventansvarig​​​​​​​ 2001 - 2003 (3 år)  
+Berndtson   
+Produktpromotion, Genomförande avevent, Bartender, PersonalansvarLärare Idrottsmassör​​​​​​​​ 2000 - 2003  
+SISUIdrottsutbildarna Väst  
+Idrottsmassageutbildningifyrasteg. Detvå förstastegen utgör engrundutbildning och  efterföljs, vid 
+tillräckligtdeltagarunderlag, av defördjupade kursernaIdrottsmassage 3  respektive 4.  Idrottsmassage 1 - fokus påkroppens övredelar  
+Effekter avmassage, massagegrepp, ryggoch armar.  Idrottsmassage 2 - fokus påkroppens nedredelar  
+Kroppensoch muskelnsuppbyggnad, skelettmuskulatur, praktik påsätet, benetsfram- och  baksida, vadoch bröst.  Idrottsmassage 3 – fördjupning avinnehålletiIdrottsmassage 1 och 2  
+Terapeutiskstretch, behandling avnacke, hals, rotatorkuffsamt fördjupning avrygg-, ben- och  sätesmassage.  
+Bar- ochPersonalansvarig
+​​​​​​​
+1999 01 - 1999 04 (3 månader)  
+HöglekardalensFjällhotell  
+Underdenna periodvar jagprojektanställd föratt organisera, struktureraoch utbilda  personalen pådetta fjällhotell. 
+Jagskapade engenomtänkt ochhållbar dryckesinventarielista tillbaren samt enbarmeny meduttänkt tema avfjällen. 
+
+Personalenutbildadesibarteknik och  dryckeskunskapför attkunna ökaförsäljningen samtatt blirekommenderad 
+inomÅres fjällvärld.  Förtroendeuppdrag​​​​​​​​ 2013 - 2014  
+ValberedningeniFöretagarföreningenUtbildningar ochkurser  
+Komvux,​​​​​​​​​ 2020 - 2022 
+Naturkunskap 2 
+Matematik 2b Läkemedel-ochmedicinteknisk säljareoch/inköpare  ​​​​ 2007 - 2009   
+MEDTEC, - YH-utbildning,  
+Pluskompetens  
+Dennautbildning ärutvecklad föratt skräddarsy enmedicinteknisk-/Läkemedelskonsulent.  Ämnensom ingick i 
+dennautbildning varbland annat: Anatomi, Fysiologi, Farmakologi,  Marknadsföring, Säljteknik B2B, Juridik, 
+Inköp, LOU, Företagsekonomi, Incoterms, Logistik  LIA-praktik: 
+HelaPharma - Naturläkemedelsföretag  
+Bauerfeind - Medicinteknisktföretag medspecialitet medicinskakompressionsstrumpor samtortoser  
+DiplomeradResekonsult ​​​​​​​ 2001 - 2003  
+TRAC- TravelAcademy, KY-utbildning 
+BurgårdenGöteborg  TRAC - DiplomeradResekonsult är engrundläggande 2-årigkvalificerad yrkesutbildning. Till  utbildningarnafinns 
+knutnareferensgrupper medaktiv medverkanfrån reseindustrin.   
+Lärareoch handledarehar enbred yrkeserfarenhetfrån rese- ochturistindustrin. Företaginom  rese- ochturistindustrin 
+medverkarockså aktivtför attutbildningen helatiden äruppdaterad  ochmotsvarar dekrav sombranschen har.  
+Utbildningen äruppbyggdiolika moduleroch omfattarbland annatföljande: - Branschkunskap 
+ochproduktkännedom  
+- Olikabokningssystem inklusivebokning ochbiljettering  
+- Affärskunskapsom gerinblickiresebyrårelaterad ekonomioch juridikoch attkorrekt kunna  uttryckasig på         
+svenskaoch engelska  
+- Affärsmannaskapsom syftartill attskapa lönsamhetgenom godkommunikation och  säljteknik  
+- Omvärldskunskapmed geografioch kultur  
+- Personaloch organisationsutveckling  
+- Praktiksamt projekt- ochexamensarbete  
+ 
+LIA-praktik: 
+ExcaliburTours undertvå LIA-perioder  
+GOTHIATravel 
+ 
+Sturebadet, Stockholm, 1996 
+SPA-Terapeaut, KerstinFlorian  SISU ​​​​​​​​​​​ 1996  
+DiplomeradIdrottsmassageterapeut   
+Massage; Teorioch Praktik, Muskelanatomimed Rörelselära, Cell- ochVävnadslära,  Nervanatomi, 
+Fysiologi, Näringslära, Idrottsskadekunskap, Avslappningsteknik   
+
+ÅreSkola​​​​​​​​​​ 1996  
+Bartenderutbildning  
+ 
+Turist, Hotelloch restaurangprogrammet
+​​​​​​
+1993 - 1996 
+ÅreSkola, Racklöfska,  
+ IT-kompetens  
+MicrosoftOffice 
+​
+  
+IATA   
+Amadeus  
+VismaLön  
+VismaBusiness  
+MyBusiness   
+FortNox 
+Fidelio
+​​
+Novasequr 
+HotSoft  
+Rebus 
+Tiger  
+ 
+Språk  
+Svenskamodersmål   
+Engelskaflytandeital ochskrift  
+Tyska, 3 årunder högstadiet  
+Norska, Förstårutan svårigheter 
+Danska, Förstårmycket braÖvrigt  
+B-körkort  
+AdvancedDiver - PADIReferenser 
+Lämnasgärna vidförfrågan. 
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 28 objects in chunk [0, 143771), total so far: 28
+XRef reconstruction complete. Total objects found: 28
+Scanning for Object Streams...
+Found 1 Object Streams containing 14 additional objects.
+Warning: Could not find trailer, reconstructing xref table...
+Reconstructing xref table from objects in PDF...
+XRef reconstruction: Found 28 objects in chunk [0, 143771), total so far: 28
+XRef reconstruction complete. Total objects found: 28
+Scanning for Object Streams...
+Found 1 Object Streams containing 14 additional objects.
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 27 0 R...
+ToUnicode Data Length: 1018
+Parsed 53 bfchar entries
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 22 0 R...
+ToUnicode Data Length: 1252
+Parsed 71 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 22 0 R...
+ToUnicode Data Length: 1252
+Parsed 71 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 27 0 R...
+ToUnicode Data Length: 1018
+Parsed 53 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 22 0 R...
+ToUnicode Data Length: 1252
+Parsed 71 bfchar entries
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 27 0 R...
+ToUnicode Data Length: 1018
+Parsed 53 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+ 
+===============================================
+✓ ===== PARSED (test7.pdf) =====
+===============================================
+ 
+PaulineBerndtsson
+CV
+Personuppgifter
+PaulineBerndtsson
+pauline@pressence.se
+0739-608031
+ÖstraKennelvägen 37 23735
+pressence.se
+linkedin.
+com/in/paulineberndtsson
+Referenser
+Referenserlämnas påbegäran.
+Profil
+Jagkombinerar minerfarenhet ochkompetens inommarknadsföring och 
+kommunikationmed rekrytering & executivesearch. Minledstjärna äratt lyftamin 
+uppdragsgivaresvarumärkeialla lägen. Personligarelationer, närvarooch 
+skrivandelöper som enröd trådidetjag företarmig. Tidigarekollegor och 
+arbetsgivarehar beskrivitmig som enrak ochprestigelös personsom äromtyckt 
+inomföretaget ochger ettförtroendeingivande intrycktill dejag möter.
+Arbetslivserfarenhet
+Grundareoch konsult, rekrytering & 
+kommunikation
+okt 2016 - Nutid
+PRessence, Bjärred
+Rekrytering & Executivesearch. Erbjuderhjälp medhela ellerdelar av 
+rekryteringsprocessen. CertifieradiJobmatchTalent - testverktygför träffsäkra 
+rekryteringar. Hjälperföretag med PRoch kommunikation - frånövergripande 
+strategiertill operativtarbete. Kommunikationsplaner, pressinformation, 
+medieträningoch workshops. Skriverpressmeddelanden, skötermediakontakter 
+ochcoachar talespersoner.
+Konsult, rekrytering & executivesearch aug 2021 - sep 2024
+PointpeopleRekrytering & ExecutiveSearch, Stockholm
+Ansvaradeför företagetsverksamhetiÖresundsregionen. Rekrytering & 
+ExecutiveSearch. Stöttadeföretag ochkandidater genomhela 
+rekryteringsprocessen. CertifieradiJobMatchTalent – verktygför träffsäkra 
+rekryteringstester. Arbetadebland annatiWorkbuster.
+Kommunikationskonsultmar 2020 - sep 2022
+IdentitetKommunikation, Malmö
+Arbetade påuppdrag hosSTR , SverigesTrafikutbildares Riksförbund, med 
+strategiskoch operativkommunikation. Stöttadeförbundsordförande, VDoch 
+andratalespersonerimedia- ochkommunikationsfrågor, skrevnyhetsartiklar, 
+inläggisocialamedier ochnyhetsbrev. Nygrafisk profil, strategier, rutineroch 
+arbetssättkopplat tillkommunikationsområdet. Arbetadeiblandannat Episerver, 
+Lime, Photoshopoch Meltwater. 
+Press- ochkommunikationsansvarig maj 2018 - dec 2019
+FOJAB  Arkitektbyrå, Malmö
+Attskriva pressmeddelanden, debattartiklaroch contenttill webboch sociala 
+mediervar endel avmin vardag, liksomatt stöttatalespersoner ochhantera det 
+dagliga PR-arbetetmed svenskaoch internationellapresskontakter. I mittuppdrag 
+ingickarbete medkommunikationsstrategi ochkommunikationsplan, internoch 
+externkommunikation samtansvaret försociala medier. Undermin tidgav ökat 
+fokus på PRoch kommunikationett stortantal ökadeinförandenivalda medier. 
+Arbetadebland annatiWordPress, Mynewsdesk , Apsis, Teamtailoroch 
+Meltwater.
+Kommunikatör / Presskommunikatörmaj 2017 - maj 2018
+Trafikverket, Malmö
+Ettårigtuppdrag sområdgivare/kommunikationsexpert. Stöttade i 
+kommunikationsfrågorkring störreoch mindreprojekt påvägar ochjärnvägar. 
+Arbetademed kommunikationsbedömningar, kommunikationsplaneroch 
+pressinformation. Presskommunikatördirekt underställdPresschefen. 
+Medieträningoch stöttning avtalespersoner, pressträffar, interninformation, 
+
+socialamedier ochdialog medallmänhet ochresenärer ingickocksåimitt 
+uppdrag. Arbetadeipressjour. Användemig avbland annatEpiserver och 
+Sharepoint.
+CommunicationsDIrector aug 2007 - sep 2016
+SolresoriSverige AB , Malmö
+Ingickiföretagetsledningsgrupp ochrapporterade direkttill VD . Ingickiföretagets 
+kristeamsamtiflygbolaget PrimeraAirs kristeam. Ytterstansvarig förextern och 
+interninformation. Talespersonimediamed ettstort antalintervjueripress, radio 
+och TV. Hanteradeflera kriseroch oförutseddahändelser, somtill exempelden 
+arabiskavåren ochaskmolnet frånIsland, medkoordinering avkommunikation i 
+såvälSverige som påresmål runtomivärlden. Genomfördeårligen flera 
+pressresor. Ansvarigför avdelningenför kundserviceoch 
+marknadskommunikation.
+Marknads - ochinformationschef jan 1997 - aug 2007
+Yasuragi AB , Saltsjö-Boo
+Ingickiföretagetsledningsgrupp. Var en av dedrivande bakomskapandet avdet 
+framgångsrikaYasuragikonceptet somledde till enomsättningsökning från 26 till 
+119 MSEK  påtre år. Drevsom varumärkesansvarigigenom namnändringoch ny 
+grafiskprofil tvågånger undermina tio år påföretaget. Ageradepresstalesperson 
+medintervjueripress, radiooch TVsamt coachade VDsom talesperson.
+Reseproducent / TourCoordinator maj 1994 - dec 1996
+TumlareCorporation, Stockholm
+ProduceraderesoriSverige förjapanska turister. Ansvaradeför företagets 
+verksamhetför studieresoroch företagsbesökoch konceptualiseradedetta i 
+samarbetemed StockholmStad.
+Utbildning
+Grundkursjan 2022 - jun 2022
+JobmatchTalent, Distans
+Certifieringsutbildningianalysverktygför rekryterings- ochutvecklingsarbete.
+Distansstudier  -  Organisation & Ledarskap 
+5p, Marknadsföring 5p
+jan 2002 - maj 2002
+Linnéuniversitetet, Kalmar
+Filkandiföretagsekonomi medinriktning 
+marknadsföring
+jan 1991 - jan 1994
+Linnéuniversitetet, Kalmar
+Turism & Ekonomi 80p 
+Företagsekonomi 41-60p inriktningmarknadsföring 
+Informationsteknik 20p 
+EG-rätt 5p 
+Kurser
+Jaghar genomåren deltagitiettantal utbildningaroch workshopsinom 
+kommunikationsområdet, såsom PR , socialamedier ochContent Marketing. Jag 
+harmedietränats ochgått enledarskapsutbildning genomSinova. Jaghar deltagit 
+i utbildningarinom PowerPoint, verktygför webbproduktion, samtolika kortare 
+utbildningariCopyWriting.
+
+Förtroendeuppdrag
+Styrelseledamot, sekreteraremar 2023 - Nutid
+Företagarna, Lund
+Somstyrelseledamot ärjag en av dedrivande bakomföreningens arbete. Jag 
+ansvararför medlemskommunikation, socialamedier, medlemsarrangemangsom 
+luncheroch föredragsamt utnämningen avÅrets Företagareoch ÅretsUnga 
+Företagare. Jag ärockså involveradienomfattande totalrenovering av 
+Företagarnas 175-årigafastighet, framföralltikontakt med arkitekt, 
+inredningsarkitektoch ljusdesigner.
+Styrelseledamotsep 2024 - Nutid
+BorgerskapetsUnderstödsstiftelse, Lund
+Teamkoordinatorokt 2017 - dec 2018
+BNIInternational, Malmö
+Somteamkoordinator hadejag enframträdande rollvid deveckovisa 
+nätverksmötena. Jagingickiteamledningen ochansvarade förintroduktion och 
+mentorskapför nyamedlemmar.
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 10 0 R...
+ToUnicode Data Length: 1064
+Parsed 53 bfchar entries
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 15 0 R...
+ToUnicode Data Length: 1274
+Parsed 68 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 15 0 R...
+ToUnicode Data Length: 1274
+Parsed 68 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 10 0 R...
+ToUnicode Data Length: 1064
+Parsed 53 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 15 0 R...
+ToUnicode Data Length: 1274
+Parsed 68 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 10 0 R...
+ToUnicode Data Length: 1064
+Parsed 53 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+ 
+===============================================
+✓ ===== PARSED (test8.pdf) =====
+===============================================
+ 
+AHM AD
+YOUSEF
+ROLL
+•Arbetsmiljösam ordnare/
+Bygg-&projektledare
+KOMPETENSER
+•Arbetsmiljö&säkerhet
+•BAS-P/BAS-U
+•Riskbedömningar
+•Byggledning
+•Berg&sprängning
+•Högspänning
+•Industrisäkerhet
+•Entreprenadjuridik
+SPRÅK
+•Svenska–Professionell
+•Engelska–God
+•Arabiska–M odersmål
+UTBILDNING
+•Lärarprogram m et,SU(2005–
+2008)
+•BAS-P/BAS-U
+•ESA14/Industri
+•APV(1–3)
+PROFIL
+AhmadYousefärenerfarenErfarenarbetsm iljösamordnareochbyggledarem ed
+17+årserfarenhetinombygg,anläggningochtungindustri.
+Starkistruktur,säkerhet,riskhanteringochledarskapikomplexam iljöer.
+Bygg-ochprojektledareinommark-,anläggnings-ochbergsarbeten.Hanhar
+sedan2008arbetatirollersomplatschef,byggledare,BAS-P/-Usam t
+arbetsmiljöansvarigiprojektförsåvälprivatasomoffentligabeställare.Bland
+Ahmadserfarenheterkannäm nasarbetenmedkulvertar,elkanalisationochVA
+ledningaritrafikintensivmiljösam tolikatyperavkvalificeradebergarbeten.
+Ahmadhargodvanaavsam ordningmellanm ark,VA,el,fjärrvärm e,optomfl
+m arktekniskadiscipliner.Iproduktionsskedetharhanstortfokuspåattsamordna
+ochoptimeram ark-ochledningsarbetenmedledningsägare,entreprenörer,
+m yndigheterochboende.
+YRKESERFARENHET
+JennyLindsVäg–Uppsalakom m un
+Byggledare|2024–09–2025–12
+•Internkulvertförsesmedsekundärvärm e,KV,VVochVVC–omfattande
+förnyelsebehov.
+•Schakt,kulvertbytestam /servis,kopplingsbrunnarochnyaventileriförråd.
+•Planering,upphandlingochtekniskgranskning.
+•Samordningavm arkentreprenörer,VS-m ontörerochförvaltare.
+•Kvalitetssäkringavkulvert,brunnar,ventiler,vattentäthetochbetäckningar.
+•Tidplan,budgetuppföljningochsäkerschaktverksamhet.
+•Dokumentation:DU-underlag,injustering,trycktester.
+•Totalprojektkostnad:25000000SEK
+RT25Finnslätten–Vattenfall
+Arbetsmiljösam ordnareBAS-P|2025–04–2025–12
+•Arbetsmiljöarbeteihögspänningsm iljöpåFinnslätten.
+•Samordningavsäkerhetocharbetsm iljöenligtESAochinternakrav.
+•Arbetsberedning,riskhanteringochsäkerhetsdokumentation.
+•Närasamarbetem edbeställareochentreprenörer.
+•Totalprojektkostnad:500000000SEK
+
+•AMAAnläggning
+•EntreprenadjuridikAB/ABT
+IndustrihallForsbacka–IPCOSwedenAB
+Samordningsansvarig/Byggledare|2023–01–2023–12
+•Arbetsmiljöochsam ordningistålverksmiljöm edhögspänning.
+•Elsäkerhet,höjdarbeteochutsattamiljöer.
+•BAS-P/BAS-U,riskhanteringochskyddsronder.
+•Projektledningförmark&VA.
+•Totalprojektkostnad:370000000SEK
+Hälsovägen–NYAB/FABEGE
+Projektledare|2022–01–2023–06
+•M ark-,grundläggnings-,VA-,berg-ochinfrastrukturarbeten.
+•BAS-P/BAS-Uansvargenomhelaprojektet.
+•Säkerställdeschakt,kabelförläggningochbergarbetenenligtkrav.
+•Totalprojektkostnad:11000000SEK
+FörbifartenEkerövägen–Trafikverket
+Byggledare|2021–01–2021–12
+•Byggledningförsprängningaritunnelpassage(Ekerö–Lindö).
+•Avtalshantering,samordningocharbetsm iljöarbete.
+•M iljöanpassadplaneringikänsligtrafik-ochstadsmiljö.
+•Totalprojektkostnad:300000000SEK
+STAX25–Trafikverket
+Platschef/BAS-U|2020–01–2020–12
+•Förstärkningavbanvallstödben.
+•Samordningaventreprenörer,arbetsmiljöarbete.
+•Schakt,sprängningochhanteringavmassor.
+•Totalprojektkostnad:25000000SEK
+Tidigareprojekt–Olikakunder
+Arbetsledare/Platschef/BAS-U/Byggledare/Entreprenadingenjör|2009–2020
+•Sprängning,schakt,väg-ochbroprojekt.
+•Bergschakt&injekteringinnerstad–25M SEK.
+•SprängningTele2Arena–20M SEK.
+
+•Riksbankenspåkörningsskydd–5M SEK.
+•SamordningavVA,kulvert,kablaritrafikmiljö.
+•Samarbetem edTrafikverket,Peab,Skanska,NCC
+KURSER
+•Systematisktarbetsm iljöarbeteA–2025
+•ElsäkerhetHög/Lågspänning–2025
+•BAS-P/BAS-UUppdatering–2016/2025
+•ESAInstrueradPerson–2025
+•ArbetePåVäg1.1–2012/2022
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 145 0 R...
+ToUnicode Data Length: 1045
+Parsed 60 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 148 0 R...
+ToUnicode Data Length: 889
+Parsed 47 bfchar entries
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 142 0 R...
+ToUnicode Data Length: 721
+Parsed 28 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 145 0 R...
+ToUnicode Data Length: 1045
+Parsed 60 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 148 0 R...
+ToUnicode Data Length: 889
+Parsed 47 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 145 0 R...
+ToUnicode Data Length: 1045
+Parsed 60 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 148 0 R...
+ToUnicode Data Length: 889
+Parsed 47 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 145 0 R...
+ToUnicode Data Length: 1045
+Parsed 60 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 148 0 R...
+ToUnicode Data Length: 889
+Parsed 47 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 145 0 R...
+ToUnicode Data Length: 1045
+Parsed 60 bfchar entries
+getFont called
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 145 0 R...
+ToUnicode Data Length: 1045
+Parsed 60 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 148 0 R...
+ToUnicode Data Length: 889
+Parsed 47 bfchar entries
+getFont called
+getFont called
+Font keys: /BaseFont, /DescendantFonts, /Encoding, /Subtype, /ToUnicode, /Type
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 142 0 R...
+ToUnicode Data Length: 721
+Parsed 28 bfchar entries
+getFont called
+Font keys: /BaseFont, /Encoding, /FirstChar, /FontDescriptor, /LastChar, /Subtype, /ToUnicode, /Type, /Widths
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 145 0 R...
+ToUnicode Data Length: 1045
+Parsed 60 bfchar entries
+ 
+===============================================
+✓ ===== PARSED (test9.pdf) =====
+===============================================
+ 
+2025 AntonBenke
+Ledningsn344rakommunikation och sj344lvg345endeleveranskraft. Tarfram 
+strategi, budskapoch beslutsunderlagoch genomf366r sj344lv n344r detbeh366vs. 
+Fr345n kommunikationsplanertill f344rdigapresentationer, pressmeddelanden 
+ochannat.
+Trygghetikommunikationstrategi, kriskommunikationoch 
+f366r344ndringskommunikation
+Vana avproaktivt ochreaktivt pressarbetesamt god f366rst345else f366r 
+medielogikoch opinionsbildning.
+ 
+Enlugn ochnyfiken rådgivaresom skapartydlighet, samsynoch 
+engagemangbland medarbetareoch chefer
+Trygghetitempooch komplexitet.Jag 344r vanatt arbetamed h366ga 
+verksamhetskritiska fr345gor. Ut366varstarkt sj344lvledarskapoch taransvar.  
+Moderntarbetss344tt .  Leder 366dmjuktprojekt, m344nniskoroch anv344nder AI f366r 
+attdriva smartoch effektivtkommunikationsarbete somskapar tydlighet 
+ochskillnad. P345 svenskaoch engelska.
+Erfarenhet fr345n energiintensivindustri fokus p345 industriellspillv344rmeoch 
+energi345tervinning.
+Utvalderfarenhet Jagbidrar med
+Jaghar 15 345rserfarenhet avatt arbetamed varum344rke, 
+kommunikationoch PR. Jagtrivsiledningsn344raroller 
+d344r jag f345r kombinerastrategiskt t344nkmed atthugga i.  
+ 
+Uppdragetmatchar min f366rm345gaatt utifr345n en 
+ledningsn344raroll skapatydlighet ochriktning, bygga 
+f366rtroendeoch levererakommunikation somfunkar. 
+Jag 344r tillg344nglig fr345n februari 2026.  
+2023 226 Januari 2026 | Communication, WA3RM 
+Proffesionaliseratkommunikation ochvarum344rkeunder kommersialisering. 
+Driverextern kommunikation, PRoch varum344rke f366r impactbolag 
+inomcirkul344r industri. Jobbar n344raledning medstrategi, budskap, och 
+medieralelationer. 
+2020 226 2023 | C reativeLead/Copywriter, HultaforsGroup 
+Strategisk r345dgivaretill koncernledningeniutveckling av l345ngsiktig 
+strategi. Ledde f366r344ndringskommunikationiglobalorganisation ochbyggde 
+attraktivavarum344rkenoch kommunikationsprocesser 366ver 70 marknader.
+2018 226 2020 | C
+ 
+Strategisk r345dgivning, kommunikationoch produktion f366r privataoch 
+offentligakunder. Bidrogtill att f366renabyr345nsstyrkor inom PRoch offentlig 
+sektormed merkreativ kommunikation.
+2015 226 2018 | CreativeDirector/strategist, Matter
+Ansvarade f366r strategi, konceptoch produktion f366r bl.a UNICEF, R366daKorset, 
+Semconoch Telenor. Kombineradestrategi medproduktion fr345n koncepttill 
++46 76 101 70 89  
+antbenke@gmail.com  
+linkedin.com/in/antonbenke
+Fullständigt CVfinns h344r
+getFont called
+Font keys: /CharProcs, /Encoding, /FontBBox, /FontMatrix, /Type, /ToUnicode, /FirstChar, /LastChar, /Widths, /Resources, /Subtype, /FontDescriptor
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 1070 0 R...
+ToUnicode Data Length: 9308
+Parsed 247 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /CharProcs, /Encoding, /FontBBox, /FontMatrix, /Type, /ToUnicode, /FirstChar, /LastChar, /Widths, /Resources, /Subtype, /FontDescriptor
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 572 0 R...
+ToUnicode Data Length: 4448
+Parsed 114 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /CharProcs, /Encoding, /FontBBox, /FontMatrix, /Type, /ToUnicode, /FirstChar, /LastChar, /Widths, /Resources, /Subtype, /FontDescriptor
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 340 0 R...
+ToUnicode Data Length: 6304
+Parsed 165 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+ 
+===============================================
+✓ ===== PARSED (test10.pdf) =====
+===============================================
+ 
+t  testletletlltltrtltlitllt rtiteltl tlitlltrteit itetrtsltlst  t itslteltett l
+t  tlgtltrtsitlet it  tllte tl gtttlltstiteePts tsitltrtltltet e
+tsrtsgtesteit itsttt t rttrtertsltlttti
+t  tlgtltrtsitlet it  tllte tl gt ttiteetsrts tltllte ttetrtt tltlettst ttlttgt  
+t  
+t it  t  t itsetsitletsittttsteit itsttt t rttrtertsltlttti
+t rtllttttrtl tlettstllte tl gt ttiteetettsitetrtllts t  
+t  
+t it  t  t itsetsitletsittttsteit itsttt t rttrtertsltlttti
+t  tllte tl gt ttiteet  tsittttstl ttstsit rt s
+tstötrtlltt testsgtetittlt ttltlitllts tetltrtllt rteititsttt t rttrtertsltlttti
+tsttstsit ltetltit  tllte tl gtttlltstiteePts tsitltrtltltet s
+t  
+tretrbrielle Billstetlr         
+selptletsictlltiPtslP-ttlPteit ititetselteltetÖ 
+tsetet/teätlejtsits see
+terjöts tlåfts tlhtllt rteititsttt t rttrtertsltlttti
+teätlejtsits se 
+t  
+selttttlltletiselts tlgtsit rtesteititsttt t rttrtertsltlttti
+tsttstsit ltetltit  tllte tl gtttllr
+
+t  
+tetrtltletlett tsictltiselterteititsttt t rttrtertsltlttti
+tsttstsit ltetltit  tllte tl gtttllts /t  tlltltests tsitröts /tseM
+
+t  
+tritlltlltlttstsitrlteit itsttt t rttrtertsltlttstt l
+tetsitletlltetiselttstlitl tetests t e
+t  
+t  test ttrtsitl t r et si es e  tr et e   r trtrt  
+gtsitt ts tltlltletletll sstt tltletletetrtllt t ttgsrrtsitltle ssctessri
+  t e  e p te:// ti       sr se ei s  s  ei    se s  s  te e  ei ts tl el ei   flsre el tlsesre/
+
+ et4 ss et e  ss1992
+  r     e  l     s  s     t     i il  l i   t  s ll     t     i ie l  ie li ls  r it  l  t it
+2 et21t i irt i2 et2  r 2 et22t i irt i2 et24
+2 et1 estiirt i2 et19
+2 et21
+ ri rl ri rl r 
+ ri rlriett r 
+ ri rl ri rl r 
+2 et19t i irt i2 et21
+es  ls  t  s  r     e ie l  ie ie lilse setlesl it  l
+e ee  
+2 et24
+2 et1 e 
+  e it  t  s  s  e
+trittrtereetteltsltriseleettrttrtltttreeteetttrtlst rte e steltelttlte t rtltseltrtsltltese  t  ttrte e stste  tete st  eltslttltlte  ttrtsr
+selt  tslterttrtieete stltttreetteltsr
+Ptitslt rtsltetitslP
+tltestsettr
+eeteststtetsel
+eiet   tritsltltt  Ptltttrte tetete stlstlttsltetsleett rtitsleeteete stlsttrtertelttre  t  ttrtlt  rt  t itetrseltstttrtlt
+2 et2 tr
+2 et2 tr
+2 et2 tr
+2 et24
+2 et2ei 
+2 et21
+2 et22
+2 et24
+2 et24
+2 et21
+2 et2 et
+te ótlehtlltetrtsitsteit itltttrtsrt  elseltsee st  t iteepågåtllttttstllt  
+teeGkdtafiskkttdesikdgn/tritlltt ttttstllte tl gt ttekttkttkttykttkttktkktkktYellktt
+ktkktdekYtkYgktkkYgekYgkttocktkkttwebbktkktkktdkdkkdY
+tlttlltttsitletleteit itsttt t rttrtertsltlttsttiteepågåtllt tttstllt  
+teeGkdtafiskkttdesikdgntekttkttkttykttgkdtkdkkddktkkkttkddkdtokddlkttocktkktt
+kdkkdkkYtktYkdklkkYkttktkkokYtkddkdkkekYgkdg
+techttetlet rtttllctl teititsttt t rttrtertsltlttti
+teeGkdtafiskkttdesikdgn/seltstrtittstl tstllct rtltest t/tritlltt ttttstllte tl gt ttekttktt
+VktkktkktYellkttktkktdekYtkYgktkkYgekYgkkYkttbktYkYgktkkktkkddkdtokddlkdkkdkkYgekdtktkkdklkkYktte-ktkkdkkYtktdelkdY
+KatkdtinkttkkYist,kttktdkddYKJAVIK
+
+teeGkdtafiskkttdesikdgntekttkttkkgogokYgykddkttocktkkttkttktkktkktkkYgkokdtkYgkdt
+VikdtkdginkttVintakdge,kttSkddkdgCKkktkdgkkdkkYktd
+teeGkdtafiskkYtkktikdgitalkttdesikdgn,kttkkdkdkpkkgtekttkkgogokYgykddkkYktt
+gkdtkdkkddktkkkttktkktdekYtkYgktkkYgekYgkkYkttkkdkkkkYtktkkYgekdtktdektkktkgkYtkttkkdkkkkdtkttkddokdd-
+ktYkddbktYkYgktkkkkYkttktdektkktkgkYtkttocktkkttcokddykttkkdkkkkdtkttkdtokkkekkYkttkttktkktdeoktkkkYktt
+kttktkktkktkkYgkokdtkYgkkYkttkddoktkkYgekdtktkkkYkttwebbktdektkktkgkYtkdt
+t  testletletlltltrtltlitllt rtiteltl tlitllt rt itrtllts tstsite tetllt tteititetrtsltlst  t itsltelM
+
+teetitlltsittst itesftittstllte tl gt tt etiLogoyssisypiscocyosiscgcyoayscskisc
+isodcsycioyssisoysscsyyssisccccisscyoisc“sommacyocsycioiscpåisccisL.iciiscMacsscssacyoisccccisscyoisc
+yocoMcsyciyiscmaisocssyosacioysscsycyoisociogiscacyoyssisosysscsycyociyisccccisysisoskaisc
+posysscsycyosciyiscskisycssyssacyoiscacssisccssogoyssisyp.
+
+
+t itsipptrlt itrtl srrtllteteit itetrtsltlst  t itsltelM
+
+teetetesctl tsitletitettllttstl tsititettsit ttsigtlltsteisccysoiooyississisoiocyoisctissocississ
+iooisoiocisccsiicsccsiscgissficoicsissicsocyycsiissisciscdcsiicsissiccoicycsiisoicycsiicsgcsitiss
+yiiiocicscscisciocdiyoisscysoisctcsiisctisscicscsiioctoicsissiooåissiooisoioctiyciyoiss
+tetrltletlitltite ttettttstl tletlltsteit itsttt t rttrtertsltlttti
+teetsttstsit ltetltittstllte tl gttteiicogotisciosiso
+iisaisicsscsoiscyostccidissosciiisccisÖiiscyciisysoiiyMiic
+teeGcysayssskiscdcsosissgcicteisciisogotissiosissocississ
+ficcicsiosiosccsyisyccsisygiysdcsciysccsgisi
+ccccsocyscsoscsoiscMocssisscicciiiscGÖccccycBOiioG
+
+teeGcysayssskiscdcsosissgcicteissiisogotissioc
+iiyciciiiaiscFcyscsodcsocsscssciiiscGÖccccycBOiioG
+
+teeGcysayssskiscdcsosissgcicteisciisogotissios
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 253 0 R...
+ToUnicode Data Length: 623
+Parsed 6 bfchar entries
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 255 0 R...
+ToUnicode Data Length: 757
+Parsed 20 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 257 0 R...
+ToUnicode Data Length: 591
+Parsed 19 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 259 0 R...
+ToUnicode Data Length: 904
+Parsed 32 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 259 0 R...
+ToUnicode Data Length: 904
+Parsed 32 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 259 0 R...
+ToUnicode Data Length: 904
+Parsed 32 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 262 0 R...
+ToUnicode Data Length: 560
+Parsed 6 bfchar entries
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 264 0 R...
+ToUnicode Data Length: 591
+Parsed 19 bfchar entries
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 266 0 R...
+ToUnicode Data Length: 1101
+Parsed 37 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+getFont called
+Font keys: /Type, /Subtype, /BaseFont, /Encoding, /DescendantFonts, /ToUnicode
+ToUnicode type: PDFReference
+Parsing ToUnicode ref 268 0 R...
+ToUnicode Data Length: 771
+Parsed 21 bfchar entries
+getFont called
+getFont called
+getFont called
+getFont called
+ 
+===============================================
+✓ ===== PARSED (test11.pdf) =====
+===============================================
+ 
+KARINASAXVALL
+073-718 43 63
+kombyran.sekarina@ kombyran.se
+Ekvägen 39, Falun
+S EN IO R  S T R A T EG IS K  K O M M U N IK A T Ö R  
+P R - O C H  K O M M U N IK A T IO N S K O N S U LT
+ICASverige AB
+Kombyrån
+Hallbyggarna 
+Jonsereds AB
+Borlängekom m un
+m aj 2015 - juli 2017
+m ars 2023 - nu
+augusti 2017 - m ars 2018
+m ars 2019 - februari 2023
+Kom m unikationsansvarig
+PR- ochkom m unikationskonsult 
+M arknads- ochkom m unikationskoordinator 
+PROFIL
+Seniorstrategisk kom m unikatör m edöver 25 årserfarenhet avstrategisk ochoperativ kom m unikation i
+offentligoch samhällsviktig verksamhet. Vanvid ledningsnärarådgivning, press- ochkriskom m unikation,
+förändringskom m unikationsamttidsbegränsade uppdragmedhöga krav påtem po, strukturoch
+förtroende. Tryggikomplexa organisationerdär kom m unikation ärverksam hetskritiskoch oftasker under
+högtförtroendetryck, i frågor avstort allmänintresse.
+Kom m unikationsstödtill ledningsgruppiverksamhetskritiskmiljö.
+Logistikenheten.
+intern- ochförändringskom m unikation
+pressoch externkom m unikation
+m edlem  i krisgruppsom  kom m unikationsexpert
+Strategiskkom m unikation, PRoch kriskom m unikationför kunder i
+privatoch offentligsektor.
+Uppdrag omfattar blandannat:
+strategiskrådgivning tillledning ochchefer
+press- ochmedierelationer
+förändrings- ochprojektkom m unikation
+utveckling avbudskap, positioneringoch kom m unikationsplaner
+Arbetaroftaitidsbegränsade uppdragdär snabbförståelse för
+verksamheten ochoperativ leverans äravgörande.
+Koncernövergripandeansvar förkom m unikationochmarknadsföring
+i nordiskverksam het.
+Strategi, innehåll, PR, digitalakanaler ochstöd tillledning.
+linkedin.com /in/karina-saxvall
+ERFARENHET
+Strategiskkom m unikatör
+Ledningsnärakom m unikationsstödinom  kom m unensverksam heter,
+främ stsam hällsbyggnadssektornoch störreutvecklingsprojekt.
+ 
+Ansvaradeför:
+strategiskintern ochextern kom m unikation
+press- ochmediehantering
+kriskom m unikation
+kom m unikationsplaneringoch genomförande
+rådgivningtill cheferoch projektledare
+
+TID IGARE ERFARENHET (urval)
+KARINASAXVALL
+S EN IO R  S T R A T EG IS K  K O M M U N IK A T Ö R  
+P R - O C H  K O M M U N IK A T IO N S K O N S U LT
+Tidigareuppdrag inom  kom m unikation, m arknadsföringoch projektledningirollersom :
+Kom m unikationskonsult / Creativepartner (K CreativeConsulting 2011–2019)
+Externkom m unikationskonsult (Sogetivia Proffice 2007–2011)
+Event- ochprojektledare (JPEvents Sweden AB 2004–2005)
+Kom m unikations- ochmarknadsrollerinom  retailoch byrå (1996–2004)
+Detaljerläm nasgärna vidbehov.
+STYRELSE- O C H  FÖRTRO ENDEUPPD RAG
+Styrelseledam ot, FöretagarnaFalun
+Styrelseledam ot, YallaBorlänge
+Regionkoordinator, SverigesKom m unikatörer (M ellerstaregionen)
+KOMPETENSER
+Strategiskkom m unikation
+Ledningsnärarådgivning
+Press- ochmedierelationer
+Kriskom m unikation
+Förändringskom m unikation
+Internoch externkom m unikation
+Kom m unikationsplanering
+Offentligoch samhällsviktig verksamhet
+U TBILDNIN G
+BerghsSchool ofCom m unication – EventMarketing
+BerghsSchool ofCom m unication – Projektledning
+Övrigrelevant utbildninginom  kom m unikation, m arknadoch samhällsvetenskap
+073-718 43 63
+kombyran.sekarina@ kombyran.se
+Ekvägen 39, Falun
+linkedin.com /in/karina-saxvall
+All tests completed

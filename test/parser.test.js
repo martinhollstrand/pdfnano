@@ -163,7 +163,7 @@ async function runTests() {
   }
 
   // Additional sample PDFs: parse + print text (light assertions for known edge-cases)
-  for (const fileName of ['test2.pdf', 'test3.pdf', 'test4.pdf', 'test5.pdf', 'test6.pdf', 'test7.pdf', 'test8.pdf', 'test9.pdf']) {
+  for (const fileName of ['test2.pdf', 'test3.pdf', 'test4.pdf', 'test5.pdf', 'test6.pdf', 'test7.pdf', 'test8.pdf', 'test9.pdf', 'test10.pdf', 'test11.pdf']) {
     try {
       const pdfPath = path.join(__dirname, fileName);
       if (!fs.existsSync(pdfPath)) {
@@ -192,7 +192,11 @@ async function runTests() {
         assert(res.text.toLowerCase().includes('therese.wernang@gmail.com'));
       }
 
+      console.log(" ");
+      console.log(`===============================================`);
       console.log(`✓ ===== PARSED (${fileName}) =====`);
+      console.log(`===============================================`);
+      console.log(" ");
       console.log(res.text);
     } catch (e) {
       console.error(`✗ parse (${fileName}) failed`, e);

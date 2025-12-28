@@ -4,8 +4,8 @@
  * Handles parsing and interpretation of PDF content streams,
  * including text extraction with positioning and font handling.
  */
-import { PDFDictionary, PDFReference } from './objects';
-import { PDFStructure } from './structure';
+import { PDFDictionary, PDFReference, PDFName, PDFStream, PDFObject, PDFArray, PDFNumber, PDFString } from './objects';
+import { PDFStructure, DEBUG } from './structure';
 import { FontDecoder, FontInfo } from './font-decoder';
 import { ContentLexer, ContentOperation } from './content-lexer';
 import { multiplyMatrix, transformPoint } from './geometry';
@@ -82,8 +82,12 @@ export interface GraphicsState {
  */
 export class ContentParser {
   private buffer: Buffer;
+  private resources: PDFDictionary | undefined;
   private fontDict: Map<string, PDFDictionary | PDFReference> = new Map();
+  private xObjectDict: Map<string, PDFReference | PDFStream> = new Map();
+  private propertiesDict: Map<string, PDFDictionary | PDFObject> = new Map();
   private operations: ContentOperation[] = [];
+  private markedContentStack: boolean[] = []; // true if content extraction is suppressed
   private textState: TextState = {
     charSpacing: 0,
     wordSpacing: 0,
@@ -131,6 +135,7 @@ export class ContentParser {
    */
   constructor(buffer: Buffer, resources?: PDFDictionary, structure?: PDFStructure) {
     this.buffer = buffer;
+    this.resources = resources;
     this.pdfStructure = structure || null;
 
     if (this.pdfStructure) {
@@ -178,6 +183,55 @@ export class ContentParser {
         this.fontDict.set(normalized, fontRef);
       }
     }
+
+    // Extract XObjects from resources
+    const xObjEntry = resources.get('XObject');
+    let xObjDict: PDFDictionary | null = null;
+
+    if (xObjEntry instanceof PDFDictionary) {
+      xObjDict = xObjEntry;
+    } else if (xObjEntry instanceof PDFReference && this.pdfStructure) {
+      const resolved = this.pdfStructure.getObject(xObjEntry.objectNumber, xObjEntry.generation);
+      if (resolved instanceof PDFDictionary) {
+        xObjDict = resolved;
+      }
+    }
+
+    if (xObjDict) {
+      for (const [name, xObjRef] of xObjDict.entries.entries()) {
+        const normalized = this.normalizeResourceName(name);
+        if (xObjRef instanceof PDFReference || xObjRef instanceof PDFStream) {
+          this.xObjectDict.set(normalized, xObjRef);
+        }
+      }
+    }
+
+    // Extract Properties from resources
+    const propsEntry = resources.get('Properties');
+    let propsDict: PDFDictionary | null = null;
+    if (propsEntry instanceof PDFDictionary) {
+      propsDict = propsEntry;
+    } else if (propsEntry instanceof PDFReference && this.pdfStructure) {
+      const resolved = this.pdfStructure.getObject(propsEntry.objectNumber, propsEntry.generation);
+      if (resolved instanceof PDFDictionary) {
+        propsDict = resolved;
+      }
+    }
+    
+    if (propsDict) {
+      for (const [name, ref] of propsDict.entries.entries()) {
+        const normalized = this.normalizeResourceName(name);
+        // Resolve if reference
+        if (ref instanceof PDFReference && this.pdfStructure) {
+            try {
+                const resolved = this.pdfStructure.getObject(ref.objectNumber, ref.generation);
+                this.propertiesDict.set(normalized, resolved);
+            } catch (e) { /* ignore */ }
+        } else {
+            this.propertiesDict.set(normalized, ref);
+        }
+      }
+    }
   }
 
   /**
@@ -220,10 +274,12 @@ export class ContentParser {
       x: 0,
       y: 0
     };
+    this.markedContentStack = [];
 
     // Process each operation
     for (const operation of this.operations) {
       const { operator, operands } = operation;
+      const isSuppressed = this.markedContentStack.length > 0 && this.markedContentStack[this.markedContentStack.length - 1];
 
       const getTextRenderingMatrix = (): number[] => {
         // PDF text rendering matrix is: Trm = CTM * Tm
@@ -258,6 +314,87 @@ export class ContentParser {
 
         case 'ET': // End text object
           // No-op for now
+          break;
+        
+        case 'BDC': // Begin Marked Content with properties
+          if (DEBUG) console.log('BDC', operands);
+          if (operands.length >= 2) {
+             const tag = operands[0]; // Name (string)
+             let properties = operands[1]; // Dictionary (object) or Name (string)
+             
+             // Resolve Name to Dictionary if needed
+             if (typeof properties === 'string' && properties.startsWith('/')) {
+                 if (this.propertiesDict.has(properties)) {
+                     properties = this.propertiesDict.get(properties);
+                 }
+             }
+
+             let actualText: string | null = null;
+             
+             // Check for ActualText
+             if (properties) {
+                 let rawActualText: string | null = null;
+                 // Case 1: JS Object (inline dict from Lexer)
+                 if (!(properties instanceof PDFObject) && typeof properties === 'object') {
+                     const val = properties['/ActualText'];
+                     if (val) {
+                         // val is { str, buf } or string? ContentLexer returns { str, buf } for strings
+                         if (val.str) {
+                             rawActualText = val.str; 
+                         } else if (typeof val === 'string') {
+                             rawActualText = val; // Assuming already decoded? Lexer only returns {str, buf} for (string)
+                         }
+                     }
+                 }
+                 // Case 2: PDFDictionary (from resources)
+                 else if (properties instanceof PDFDictionary) {
+                     const val = properties.get('ActualText');
+                     if (val instanceof PDFString) {
+                         rawActualText = val.value;
+                     }
+                 }
+                 
+                 if (rawActualText !== null) {
+                     actualText = this.decodePDFTextString(rawActualText);
+                     if (DEBUG) console.log('Found ActualText:', actualText);
+                 }
+             }
+             
+             if (actualText !== null && !isSuppressed) {
+                 // Add ActualText to result
+                 result.text += actualText;
+                 const { x: ux, y: uy } = getUserSpacePoint();
+                 // Estimate width
+                 const width = this.getEstimatedWidth(actualText);
+                 
+                 result.positions.push({
+                    text: actualText,
+                    x: ux, y: uy, width,
+                    fontSize: this.textState.fontSize,
+                    charSpacing: this.textState.charSpacing,
+                    wordSpacing: this.textState.wordSpacing
+                 });
+                 
+                 // Suppress inner content
+                 this.markedContentStack.push(true);
+             } else {
+                 // No ActualText, push current suppression state (inherit)
+                 this.markedContentStack.push(isSuppressed);
+             }
+          } else {
+             // Malformed BDC?
+             this.markedContentStack.push(isSuppressed);
+          }
+          break;
+        
+        case 'BMC': // Begin Marked Content
+          this.markedContentStack.push(isSuppressed);
+          break;
+
+        case 'EMC': // End Marked Content
+          if (this.markedContentStack.length > 0) {
+            this.markedContentStack.pop();
+          }
           break;
 
         // Text positioning operators
@@ -324,26 +461,30 @@ export class ContentParser {
             // Decode text with font information if available
             const decodedText = this.decodeText(rawText);
 
-            // Add text to result
-            result.text += decodedText;
+            // Calculate width and update matrix regardless of suppression
             const width = this.getEstimatedWidth(decodedText);
-            // Character spacing is applied between characters, so for a string of length n,
-            // we add (n-1) * charSpacing to the width
+            // Character spacing is applied between characters
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
-            const { x: ux, y: uy } = getUserSpacePoint();
-            // Estimate width in user space by transforming (totalWidth,0) through Trm.
-            const trm = getTextRenderingMatrix();
-            const end = transformPoint(trm, totalWidth, 0);
-            const userWidth = Math.hypot(end.x - ux, end.y - uy);
-            result.positions.push({
-              text: decodedText,
-              x: ux,
-              y: uy,
-              width: userWidth,
-              fontSize: this.textState.fontSize,
-              charSpacing: this.textState.charSpacing,
-              wordSpacing: this.textState.wordSpacing
-            });
+            
+            if (!isSuppressed) {
+              // Add text to result
+              result.text += decodedText;
+              
+              const { x: ux, y: uy } = getUserSpacePoint();
+              // Estimate width in user space
+              const trm = getTextRenderingMatrix();
+              const end = transformPoint(trm, totalWidth, 0);
+              const userWidth = Math.hypot(end.x - ux, end.y - uy);
+              result.positions.push({
+                text: decodedText,
+                x: ux,
+                y: uy,
+                width: userWidth,
+                fontSize: this.textState.fontSize,
+                charSpacing: this.textState.charSpacing,
+                wordSpacing: this.textState.wordSpacing
+              });
+            }
 
             // Advance the text matrix in text space
             advanceTextMatrix(totalWidth);
@@ -368,23 +509,24 @@ export class ContentParser {
             const rawText = operands[0];
             const decodedText = this.decodeText(rawText);
             const width = this.getEstimatedWidth(decodedText);
-            // Character spacing is applied between characters
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
 
-            result.text += decodedText;
-            const { x: ux, y: uy } = getUserSpacePoint();
-            const trm = getTextRenderingMatrix();
-            const end = transformPoint(trm, totalWidth, 0);
-            const userWidth = Math.hypot(end.x - ux, end.y - uy);
-            result.positions.push({
-              text: decodedText,
-              x: ux,
-              y: uy,
-              width: userWidth,
-              fontSize: this.textState.fontSize,
-              charSpacing: this.textState.charSpacing,
-              wordSpacing: this.textState.wordSpacing
-            });
+            if (!isSuppressed) {
+              result.text += decodedText;
+              const { x: ux, y: uy } = getUserSpacePoint();
+              const trm = getTextRenderingMatrix();
+              const end = transformPoint(trm, totalWidth, 0);
+              const userWidth = Math.hypot(end.x - ux, end.y - uy);
+              result.positions.push({
+                text: decodedText,
+                x: ux,
+                y: uy,
+                width: userWidth,
+                fontSize: this.textState.fontSize,
+                charSpacing: this.textState.charSpacing,
+                wordSpacing: this.textState.wordSpacing
+              });
+            }
 
             // Advance the text matrix in text space
             advanceTextMatrix(totalWidth);
@@ -413,23 +555,24 @@ export class ContentParser {
             const rawText = operands[2];
             const decodedText = this.decodeText(rawText);
             const width = this.getEstimatedWidth(decodedText);
-            // Character spacing is applied between characters
             const totalWidth = width + (decodedText.length > 1 ? (decodedText.length - 1) * this.textState.charSpacing : 0);
 
-            result.text += decodedText;
-            const { x: ux, y: uy } = getUserSpacePoint();
-            const trm = getTextRenderingMatrix();
-            const end = transformPoint(trm, totalWidth, 0);
-            const userWidth = Math.hypot(end.x - ux, end.y - uy);
-            result.positions.push({
-              text: decodedText,
-              x: ux,
-              y: uy,
-              width: userWidth,
-              fontSize: this.textState.fontSize,
-              charSpacing: this.textState.charSpacing,
-              wordSpacing: this.textState.wordSpacing
-            });
+            if (!isSuppressed) {
+              result.text += decodedText;
+              const { x: ux, y: uy } = getUserSpacePoint();
+              const trm = getTextRenderingMatrix();
+              const end = transformPoint(trm, totalWidth, 0);
+              const userWidth = Math.hypot(end.x - ux, end.y - uy);
+              result.positions.push({
+                text: decodedText,
+                x: ux,
+                y: uy,
+                width: userWidth,
+                fontSize: this.textState.fontSize,
+                charSpacing: this.textState.charSpacing,
+                wordSpacing: this.textState.wordSpacing
+              });
+            }
 
             // Advance the text matrix in text space
             advanceTextMatrix(totalWidth);
@@ -450,34 +593,32 @@ export class ContentParser {
               if (typeof item === 'string') {
                 // Decode and add text
                 const decodedItem = this.decodeText(item);
-                textPiece += decodedItem;
+                if (!isSuppressed) {
+                    textPiece += decodedItem;
+                }
                 const itemWidth = this.getEstimatedWidth(decodedItem);
                 currentAdvance += itemWidth;
                 lastWasText = decodedItem.length > 0;
                 advanceTextMatrix(itemWidth);
               } else if (typeof item === 'number') {
-                // In TJ arrays, numbers adjust spacing (in thousandths of a unit of text space)
-                // Negative numbers move the text position right (reduce spacing)
-                // Positive numbers move the text position left (increase spacing)
                 const adjustment = -item / 1000 * this.textState.fontSize * (this.textState.horizontalScale / 100);
                 currentAdvance += adjustment;
                 advanceTextMatrix(adjustment);
 
-                // The adjustment already accounts for character spacing and word spacing
-                // We only add a space in the output text if this is a significant gap
-                // Use word spacing as a threshold - if adjustment is close to word spacing, it's likely a word break
                 const wordSpacingThreshold = Math.max(
-                  this.textState.wordSpacing * 0.7,  // 70% of word spacing
-                  this.textState.fontSize * 0.4      // Or 40% of font size
+                  this.textState.wordSpacing * 0.7,
+                  this.textState.fontSize * 0.4
                 );
-                if (adjustment > wordSpacingThreshold && textPiece && lastWasText) {
+                if (adjustment > wordSpacingThreshold && textPiece && lastWasText && !isSuppressed) {
                   textPiece += ' ';
                 }
                 lastWasText = false;
               } else if (item && item.str) {
                 // If item is an object with str/buf (from string/hex parsing)
                 const decodedItem = this.decodeText(item);
-                textPiece += decodedItem;
+                if (!isSuppressed) {
+                    textPiece += decodedItem;
+                }
                 const itemWidth = this.getEstimatedWidth(decodedItem);
                 currentAdvance += itemWidth;
                 lastWasText = decodedItem.length > 0;
@@ -485,7 +626,7 @@ export class ContentParser {
               }
             }
 
-            if (textPiece) {
+            if (textPiece && !isSuppressed) {
               result.text += textPiece;
               const ux = startPoint.x;
               const uy = startPoint.y;
@@ -584,6 +725,102 @@ export class ContentParser {
             this.graphicsState.ctm = multiplyMatrix(m, this.graphicsState.ctm);
           }
           break;
+
+        case 'Do': // Invoke XObject
+          if (operands.length === 1) {
+            const name = operands[0];
+            const normalizedName = this.normalizeResourceName(name);
+            
+            if (this.xObjectDict.has(normalizedName)) {
+              const xObjRef = this.xObjectDict.get(normalizedName)!;
+              // Resolve reference
+              let xObj: PDFObject | null = null;
+              
+              if (xObjRef instanceof PDFReference) {
+                 if (this.pdfStructure) {
+                    xObj = this.pdfStructure.getObject(xObjRef.objectNumber, xObjRef.generation);
+                 }
+              } else {
+                 xObj = xObjRef;
+              }
+
+              if (xObj instanceof PDFStream) {
+                const subtype = xObj.dictionary.get('Subtype');
+                if (subtype instanceof PDFName && subtype.name === '/Form') {
+                  // It's a Form XObject! Extract text recursively.
+                  
+                  // 1. Get Form Resources
+                  const formRes = xObj.dictionary.get('Resources');
+                  let formResDict: PDFDictionary | undefined;
+                  
+                  if (formRes instanceof PDFDictionary) {
+                    formResDict = formRes;
+                  } else if (formRes instanceof PDFReference && this.pdfStructure) {
+                    const resolved = this.pdfStructure.getObject(formRes.objectNumber, formRes.generation);
+                    if (resolved instanceof PDFDictionary) formResDict = resolved;
+                  }
+                  
+                  const resourcesToUse = formResDict || this.resources;
+
+                  // 2. Handle Form Matrix (default is identity)
+                  let formMatrix = [1, 0, 0, 1, 0, 0];
+                  const matrixObj = xObj.dictionary.get('Matrix');
+                  if (matrixObj instanceof PDFArray && matrixObj.length === 6) {
+                    formMatrix = matrixObj.items.map(item => (item instanceof PDFNumber) ? item.value : 0);
+                  }
+
+                  // 3. Save graphics state
+                  this.graphicsStateStack.push({ ...this.graphicsState });
+                  this.textStateStack.push({ ...this.textState });
+
+                  // 4. Apply Form Matrix to CTM
+                  this.graphicsState.ctm = multiplyMatrix(formMatrix, this.graphicsState.ctm);
+
+                  // 5. Parse Form Content
+                  try {
+                    const formParser = new ContentParser(xObj.getDecodedData(), resourcesToUse, this.pdfStructure || undefined);
+                    formParser.parse();
+                    const formResult = formParser.interpret();
+                    
+                    // 6. Transform and append results
+                    if (!isSuppressed) {
+                        result.text += formResult.text; // Append text
+                        
+                        for (const pos of formResult.positions) {
+                          const transformed = transformPoint(this.graphicsState.ctm, pos.x, pos.y);
+                          const scaleX = Math.hypot(this.graphicsState.ctm[0], this.graphicsState.ctm[1]);
+                          const scaleY = Math.hypot(this.graphicsState.ctm[2], this.graphicsState.ctm[3]);
+                          // const scale = Math.sqrt(scaleX * scaleY);
+
+                          result.positions.push({
+                            text: pos.text,
+                            x: transformed.x,
+                            y: transformed.y,
+                            width: pos.width * scaleX,
+                            fontSize: pos.fontSize * scaleY,
+                            charSpacing: pos.charSpacing * scaleX,
+                            wordSpacing: pos.wordSpacing * scaleX
+                          });
+                        }
+                    }
+                  } catch (e) {
+                    if (this.pdfStructure && (this.pdfStructure as any).DEBUG) {
+                       console.log('Error parsing Form XObject:', e);
+                    }
+                  }
+
+                  // 7. Restore graphics state
+                  if (this.graphicsStateStack.length > 0) {
+                    this.graphicsState = this.graphicsStateStack.pop()!;
+                  }
+                  if (this.textStateStack.length > 0) {
+                    this.textState = this.textStateStack.pop()!;
+                  }
+                }
+              }
+            }
+          }
+          break;
       }
     }
 
@@ -621,6 +858,23 @@ export class ContentParser {
     });
 
     return sorted;
+  }
+
+  /**
+   * Decode PDF Text String (PDFDocEncoding or UTF-16BE)
+   */
+  private decodePDFTextString(str: string): string {
+    // Check for UTF-16BE BOM (FE FF)
+    if (str.length >= 2 && str.charCodeAt(0) === 0xFE && str.charCodeAt(1) === 0xFF) {
+      let res = '';
+      for (let i = 2; i < str.length; i += 2) {
+        const charCode = (str.charCodeAt(i) << 8) | (i + 1 < str.length ? str.charCodeAt(i + 1) : 0);
+        res += String.fromCharCode(charCode);
+      }
+      return res;
+    }
+    // Assume standard encoding (pass through for now, as PDFDocEncoding is close to ASCII/Latin1)
+    return str;
   }
 
   /**
