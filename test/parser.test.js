@@ -163,7 +163,7 @@ async function runTests() {
   }
 
   // Additional sample PDFs: parse + print text (light assertions for known edge-cases)
-  for (const fileName of ['test2.pdf', 'test3.pdf', 'test4.pdf', 'test5.pdf', 'test6.pdf', 'test7.pdf', 'test8.pdf']) {
+  for (const fileName of ['test2.pdf', 'test3.pdf', 'test4.pdf', 'test5.pdf', 'test6.pdf', 'test7.pdf', 'test8.pdf', 'test9.pdf']) {
     try {
       const pdfPath = path.join(__dirname, fileName);
       if (!fs.existsSync(pdfPath)) {
